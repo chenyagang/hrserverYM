@@ -34,13 +34,22 @@
                                                                                           style="margin-right: 5px"></i>{{fileUploadBtnText}}
             </el-button>
           </el-upload>
+          <el-upload
+            :show-file-list="false"
+            accept="application/vnd.ms-excel"
+            action="/employee/basic/importEmp"
+            :on-success="uploadResumeSuccess"
+            :on-error="uploadResumeError" :disabled="fileUploadBtnText=='正在导入'"
+            :before-upload="beforeFileUpload" style="display: inline">
+            <el-button size="mini" type="primary" :loading="fileUploadBtnText=='正在导入'"><i class="fa fa-lg fa-level-up"
+                                                                                          style="margin-right: 5px"></i>{{uploadResumeBtnText}}
+            </el-button>
+          </el-upload>
           <el-button type="success" size="mini" @click="exportEmps"><i class="fa fa-lg fa-level-down"
                                                                        style="margin-right: 5px"></i>导出数据
           </el-button>
-          <el-button type="primary" size="mini" icon="el-icon-plus"
-                     @click="showAddEmpView">
-            添加员工
-          </el-button>
+
+
         </div>
       </el-header>
       <el-main style="padding-left: 0px;padding-top: 0px">
@@ -603,6 +612,7 @@
         emps: [],
         keywords: '',
         fileUploadBtnText: '导入数据',
+        uploadResumeBtnText: '上传简历',
         beginDateScope: '',
         faangledoubleup: 'fa-angle-double-up',
         faangledoubledown: 'fa-angle-double-down',
@@ -712,9 +722,20 @@
         this.loadEmps();
         this.fileUploadBtnText = '导入数据';
       },
+      uploadResumeSuccess(response, file, fileList){
+        if (response) {
+          this.$message({type: response.status, message: response.msg});
+        }
+        this.loadEmps();
+        this.fileUploadBtnText = '上传简历';
+      },
       fileUploadError(err, file, fileList){
         this.$message({type: 'error', message: "导入失败!"});
         this.fileUploadBtnText = '导入数据';
+      },
+      uploadResumeError(err, file, fileList){
+        this.$message({type: 'error', message: "导入失败!"});
+        this.fileUploadBtnText = '上传简历';
       },
       beforeFileUpload(file){
         this.fileUploadBtnText = '正在导入';
@@ -897,7 +918,7 @@
         this.dialogVisible = true;
       },
       showAddEmpView(){
-        this.dialogTitle = "添加员工";
+        this.dialogTitle = "上传简历";
         this.dialogVisible = true;
         var _this = this;
         this.getRequest("/employee/basic/maxWorkID").then(resp=> {
