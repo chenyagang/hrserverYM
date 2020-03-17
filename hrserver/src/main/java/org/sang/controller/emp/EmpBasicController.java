@@ -126,4 +126,17 @@ public class EmpBasicController {
         }
         return RespBean.error("导入失败!");
     }
+
+    @RequestMapping(value = "/uploadResume", method = RequestMethod.POST)
+    public RespBean uploadResume(MultipartFile file) {
+        List<Employee> emps = PoiUtils.importEmp2List(file,
+                empService.getAllNations(), empService.getAllPolitics(),
+                departmentService.getAllDeps(), positionService.getAllPos(),
+                jobLevelService.getAllJobLevels());
+        if (empService.addEmps(emps) == emps.size()) {
+            return RespBean.ok("导入成功!");
+        }
+        return RespBean.error("导入失败!");
+    }
+
 }

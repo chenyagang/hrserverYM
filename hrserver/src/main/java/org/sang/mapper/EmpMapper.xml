@@ -6,6 +6,9 @@
     <select id="getAllNations" resultType="org.sang.bean.Nation">
         select * from nation;
     </select>
+    <select id="getAllEmployee" resultType="org.sang.bean.Employee">
+        select * from employee;
+    </select>
     <select id="getAllPolitics" resultType="org.sang.bean.PoliticsStatus">
         select * from politicsstatus;
     </select>

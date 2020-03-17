@@ -30,6 +30,9 @@ public class EmpService {
     public List<Nation> getAllNations() {
         return empMapper.getAllNations();
     }
+    public List<Employee> getAllEmployee() {
+        return empMapper.getAllEmployee();
+    }
 
     public List<PoliticsStatus> getAllPolitics() {
         return empMapper.getAllPolitics();

@@ -14,6 +14,8 @@ import java.util.List;
 public interface EmpMapper {
     List<Nation> getAllNations();
 
+    List<Employee> getAllEmployee();
+
     List<PoliticsStatus> getAllPolitics();
 
     int addEmp(Employee employee);
