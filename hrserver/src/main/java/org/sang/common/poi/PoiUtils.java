@@ -347,11 +347,6 @@ public class PoiUtils {
         return emps;
     }
 
-    public static List<Employee> importEmp2List(MultipartFile file,
-                                                List<Nation> allNations) {
-
-    }
-
 
 
     public static List<TalentPool> importTalent2List(MultipartFile file,List<Hr> hrList ) {
