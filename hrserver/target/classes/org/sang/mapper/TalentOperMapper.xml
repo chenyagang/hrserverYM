@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sang.mapper.TalentOperMapper">
+    <resultMap id="baseResultMap" type="TalentOper">
+        <id column="operId" property="operId"/>
+        <result column="hrId" property="hrId"/>
+        <result column="talentId" property="talentId"/>
+        <result column="operTime" property="operTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+    <select id="selectById" parameterType="string" resultMap="baseResultMap">
+        select * from talent_oper where operId = #{id}
+    </select>
+    <insert id="insert" keyProperty="operId" parameterType="TalentOper" useGeneratedKeys="true">
+        insert into talent_oper
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="operId != null">
+                operId,
+            </if>
+            <if test="hrId != null">
+                hrId,
+            </if>
+            <if test="talentId != null">
+                talentId,
+            </if>
+            <if test="operTime != null">
+                operTime,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="operId != null">
+                #{operId},
+            </if>
+            <if test="hrId != null">
+                #{hrId},
+            </if>
+            <if test="talentId != null">
+                #{talentId},
+            </if>
+            <if test="operTime != null">
+                #{operTime},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+        </trim>
+    </insert>
+
+
+
+    <select id="selectAllForCount" parameterType="map" resultMap="baseResultMap">
+        select A.*,B.name as hrName from (select * from talent_oper
+        <where>
+            <if test="hrId != null">
+                and hrId = #{hrId}
+            </if>
+            <if test="countStartTime != null">
+                and operTime &gt;= #{countStartTime}
+            </if>
+            <if test="countEndTime != null">
+                and operTime &lt;= #{countEndTime}
+            </if>
+        </where>
+        ) A join hr B on A.hrId = B.id
+    </select>
+
+</mapper>
