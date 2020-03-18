@@ -3,6 +3,8 @@ package org.sang.common.poi;
 import org.apache.poi.hpsf.DocumentSummaryInformation;
 import org.apache.poi.hpsf.SummaryInformation;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,10 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -167,7 +168,7 @@ public class PoiUtils {
             cell24.setCellValue("合同终止日期");
             cell24.setCellStyle(headerStyle);
             //6.装数据
-            for (int i = 0; i < emps.size(); i++) {
+/*            for (int i = 0; i < emps.size(); i++) {
                 HSSFRow row = sheet.createRow(i + 1);
                 Employee emp = emps.get(i);
                 row.createCell(0).setCellValue(emp.getId());
@@ -203,7 +204,7 @@ public class PoiUtils {
                 HSSFCell endContractCell = row.createCell(24);
                 endContractCell.setCellValue(emp.getEndContract());
                 endContractCell.setCellStyle(dateCellStyle);
-            }
+            }*/
             headers = new HttpHeaders();
             headers.setContentDispositionFormData("attachment",
                     new String("员工表.xls".getBytes("UTF-8"), "iso-8859-1"));
@@ -214,6 +215,48 @@ public class PoiUtils {
             e.printStackTrace();
         }
         return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.CREATED);
+    }
+
+    public static ResponseEntity<byte[]> exportWord(Employee emp) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        InputStream in = null;
+        HWPFDocument document = null;
+
+        try {
+            in = new FileInputStream(new File(System.getProperty("user.dir")+"/static/moban.docx"));
+            document = new HWPFDocument(in);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 读取文本内容
+        Range bodyRange = document.getRange();
+        System.out.println(bodyRange.toString());
+        System.out.println(bodyRange.text());
+        // 替换内容
+        bodyRange.replaceText("${name}",emp.getName());
+        bodyRange.replaceText("${sex}",emp.getGender());
+
+        bodyRange.replaceText("${interviewTime}",formatter.format(emp.getInterviewTime()));
+        bodyRange.replaceText("${workTime}",formatter.format(emp.getWorkTime()));
+        bodyRange.replaceText("${phone}",emp.getPhone());
+        bodyRange.replaceText("${introduction}",emp.getIntroduction());
+        bodyRange.replaceText("${degree}",emp.getTiptopDegree());
+        bodyRange.replaceText("${workExperience}",emp.getWorkExperience());
+        bodyRange.replaceText("${projectExperience}",emp.getProjectExperience());
+        //导出到文件
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            document.write((OutputStream)byteArrayOutputStream);
+            OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir")+"/static/wendang.docx");
+            outputStream.write(byteArrayOutputStream.toByteArray());
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static List<Employee> importEmp2List(MultipartFile file,
@@ -253,86 +296,30 @@ public class PoiUtils {
                 case 1:
                     employee.setName(cellValue);
                     break;
-                case 2:
-                    employee.setWorkID(cellValue);
-                    break;
                 case 3:
                     employee.setGender(cellValue);
-                    break;
-                case 5:
-                    employee.setIdCard(cellValue);
                     break;
                 case 6:
                     employee.setWedlock(cellValue);
                     break;
-                case 7:
-                    int nationIndex = allNations.indexOf(new Nation(cellValue));
-                    employee.setNationId(allNations.get(nationIndex).getId());
-                    break;
-                case 8:
-                    employee.setNativePlace(cellValue);
-                    break;
-                case 9:
-                    int psIndex = allPolitics.indexOf(new PoliticsStatus(cellValue));
-                    employee.setPoliticId(allPolitics.get(psIndex).getId());
-                    break;
+
                 case 10:
                     employee.setPhone(cellValue);
-                    break;
-                case 11:
-                    employee.setAddress(cellValue);
-                    break;
-                case 12:
-                    int depIndex = allDeps.indexOf(new Department(cellValue));
-                    employee.setDepartmentId(allDeps.get(depIndex).getId());
-                    break;
-                case 13:
-                    int jlIndex = allJobLevels.indexOf(new JobLevel(cellValue));
-                    employee.setJobLevelId(allJobLevels.get(jlIndex).getId());
-                    break;
-                case 14:
-                    int posIndex = allPos.indexOf(new Position(cellValue));
-                    employee.setPosId(allPos.get(posIndex).getId());
-                    break;
-                case 15:
-                    employee.setEngageForm(cellValue);
                     break;
                 case 16:
                     employee.setTiptopDegree(cellValue);
                     break;
-                case 17:
-                    employee.setSpecialty(cellValue);
-                    break;
+
                 case 18:
                     employee.setSchool(cellValue);
                     break;
                 case 19:
-                case 20:
-                    employee.setWorkState(cellValue);
-                    break;
-                case 21:
-                    employee.setEmail(cellValue);
-                    break;
             }
         }
         break;
         default: {
             switch (k) {
-                case 4:
-                    employee.setBirthday(cell.getDateCellValue());
-                    break;
-                case 19:
-                    employee.setBeginDate(cell.getDateCellValue());
-                    break;
-                case 22:
-                    employee.setContractTerm(cell.getNumericCellValue());
-                    break;
-                case 23:
-                    employee.setBeginContract(cell.getDateCellValue());
-                    break;
-                case 24:
-                    employee.setEndContract(cell.getDateCellValue());
-                    break;
+
             }
         }
             break;
