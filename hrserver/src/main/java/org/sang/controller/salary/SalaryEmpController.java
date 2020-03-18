@@ -43,7 +43,7 @@ public class SalaryEmpController {
     public Map<String, Object> getEmployeeByPage(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         Map<String, Object> map = new HashMap<>();
         List<Employee> employeeByPage = empService.getEmployeeByPageShort(page, size);
-        Long count = empService.getCountByKeywords("", null, null, null, null, null, null, null);
+        Long count = empService.getCountByName("");
         map.put("emps", employeeByPage);
         map.put("count", count);
         return map;
