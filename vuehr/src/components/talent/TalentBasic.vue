@@ -129,11 +129,7 @@
             @selection-change="handleSelectionChange"
             size="mini"
             style="width: 100%;border:1px solid gray;">
-            <!--<el-table-column
-              type="selection"
-              align="center"
-              width="30">
-            </el-table-column>-->
+
             <el-table-column
               align="center"
               prop="name"
