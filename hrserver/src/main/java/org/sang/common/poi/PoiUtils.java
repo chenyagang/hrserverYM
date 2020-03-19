@@ -8,6 +8,7 @@ import org.apache.poi.hwpf.usermodel.Range;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.sang.bean.*;
 import org.sang.utils.DateTimeUtil;
 import org.springframework.http.HttpHeaders;
@@ -217,47 +218,48 @@ public class PoiUtils {
         return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.CREATED);
     }
 
-    public static ResponseEntity<byte[]> exportWord(Employee emp) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        InputStream in = null;
-        HWPFDocument document = null;
+//    public static ResponseEntity<byte[]> exportWord(Employee emp) {
+//        HttpHeaders headers = null;
+//        ByteArrayOutputStream baos = null;
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        InputStream in = null;
+//        XWPFDocument document = null;
+//
+//        try {
+//            in = new FileInputStream(new File(System.getProperty("user.dir")+"/hrserver/src/main/resources/static/moban.docx"));
+//            document = new XWPFDocument(in);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }catch (IOException e) {
+//            e.printStackTrace();
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//
+//        // 读取文本内容
+//        Range bodyRange = document.getRange();
+//        System.out.println(bodyRange.toString());
+//        System.out.println(bodyRange.text());
+//        // 替换内容
 
-        try {
-            in = new FileInputStream(new File(System.getProperty("user.dir")+"/static/moban.docx"));
-            document = new HWPFDocument(in);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // 读取文本内容
-        Range bodyRange = document.getRange();
-        System.out.println(bodyRange.toString());
-        System.out.println(bodyRange.text());
-        // 替换内容
-        bodyRange.replaceText("${name}",emp.getName());
-        bodyRange.replaceText("${sex}",emp.getGender());
-
-        bodyRange.replaceText("${interviewTime}",formatter.format(emp.getInterviewTime()));
-        bodyRange.replaceText("${workTime}",formatter.format(emp.getWorkTime()));
-        bodyRange.replaceText("${phone}",emp.getPhone());
-        bodyRange.replaceText("${introduction}",emp.getIntroduction());
-        bodyRange.replaceText("${degree}",emp.getTiptopDegree());
-        bodyRange.replaceText("${workExperience}",emp.getWorkExperience());
-        bodyRange.replaceText("${projectExperience}",emp.getProjectExperience());
-        //导出到文件
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            document.write((OutputStream)byteArrayOutputStream);
-            OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir")+"/static/wendang.docx");
-            outputStream.write(byteArrayOutputStream.toByteArray());
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//        //导出到文件
+//        try {
+//            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//            document.write((OutputStream)byteArrayOutputStream);
+//            OutputStream outputStream = new FileOutputStream(System.getProperty("user.dir")+"/hrserver/src/main/resources/static/wendang.docx");
+//            outputStream.write(byteArrayOutputStream.toByteArray());
+//
+//            headers = new HttpHeaders();
+//            headers.setContentDispositionFormData("attachment",
+//                    new String("wendang.docx".getBytes("UTF-8"), "iso-8859-1"));
+//            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//            outputStream.close();
+//            return new ResponseEntity<byte[]>(byteArrayOutputStream.toByteArray(), headers, HttpStatus.CREATED);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     public static List<Employee> importEmp2List(MultipartFile file,
                                                 List<Nation> allNations,

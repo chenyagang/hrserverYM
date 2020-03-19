@@ -1,5 +1,6 @@
 package org.sang.controller.emp;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.sang.bean.Employee;
 import org.sang.bean.Position;
 import org.sang.bean.RespBean;
@@ -9,6 +10,7 @@ import org.sang.service.DepartmentService;
 import org.sang.service.EmpService;
 import org.sang.service.JobLevelService;
 import org.sang.service.PositionService;
+import org.sang.utils.WordDocx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,8 +114,22 @@ public class EmpBasicController {
     }
 
     @RequestMapping(value = "/exportWord", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> exportWord() {
-        return PoiUtils.exportEmp2Excel(empService.getAllEmployees());
+    public ResponseEntity<byte[]> exportWord(String id) throws IOException, InvalidFormatException {
+        Employee emp=empService.getById(id);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String inFile=System.getProperty("user.dir")+"/hrserver/src/main/resources/static/moban.docx";
+        Map<String, Object> data=new HashMap<>();
+        data.put("name",emp.getName());
+        data.put("sex",emp.getGender());
+        data.put("interviewTime",formatter.format(emp.getInterviewTime()));
+        data.put("workTime",formatter.format(emp.getWorkTime()));
+        data.put("phone",emp.getPhone());
+        data.put("introduction",emp.getIntroduction());
+        data.put("degree",emp.getTiptopDegree());
+        data.put("workExperience",emp.getWorkExperience());
+        data.put("projectExperience",emp.getProjectExperience());
+
+        return WordDocx.readwriteWord(inFile,data);
     }
 
     @RequestMapping(value = "/importEmp", method = RequestMethod.POST)

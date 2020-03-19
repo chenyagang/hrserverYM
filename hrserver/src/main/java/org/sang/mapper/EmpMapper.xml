@@ -40,6 +40,10 @@
         </if>
     </select>
 
+    <select id="getById" resultType="org.sang.bean.Employee">
+        SELECT * FROM employee WHERE id =#{id}
+    </select>
+
     <delete id="deleteEmpById">
         DELETE FROM employee WHERE id IN
         <foreach collection="ids" separator="," open="(" close=")" item="id">

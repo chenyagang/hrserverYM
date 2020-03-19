@@ -217,7 +217,7 @@
                            size="mini">编辑
                 </el-button>
                 <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
-                           @click="exportEmp(scope.row)" size="mini">导出模板
+                           @click="exportWord(scope.row)" size="mini">导出模板
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="deleteEmp(scope.row)">导入表格
@@ -654,8 +654,8 @@
       exportEmps() {
         window.open("/employee/basic/exportEmp", "_parent");
       },
-      exportWord() {
-        window.open("/employee/basic/exportWord", "_parent");
+      exportWord(row ) {
+        window.open("/employee/basic/exportWord?id="+row.id, "_parent");
       },
       cancelSearch() {
         this.advanceSearchViewVisible = false;

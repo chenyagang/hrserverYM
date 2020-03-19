@@ -64,6 +64,14 @@ public class EmpService {
         return null;
     }
 
+    public Employee getById(String id){
+        try {
+            return empMapper.getById(id);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 
     public boolean deleteEmpById(String ids) {
         String[] split = ids.split(",");

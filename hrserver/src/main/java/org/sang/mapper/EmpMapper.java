@@ -26,6 +26,8 @@ public interface EmpMapper {
 
     Long getCountByName(@Param("name") String name);
 
+    Employee getById(String id);
+
     int updateEmp(@Param("emp") Employee employee);
 
     int deleteEmpById(@Param("ids") String[] ids);
