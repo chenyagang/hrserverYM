@@ -465,7 +465,7 @@
                     type="textarea"
                     rows="8"
                     col="24"
-                    style="width: 1030px"
+                    style="margin-left:20px;width: 1030px"
                     placeholder="简介">
                   </el-input>
                 </el-form-item>
