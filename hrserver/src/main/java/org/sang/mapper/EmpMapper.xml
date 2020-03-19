@@ -120,4 +120,8 @@
         </foreach>
     </delete>
 
+    <select id="getEmpByNameAndPhone" resultType="org.sang.bean.Employee">
+        select * from employee WHERE username=#{name} and password=#{phone};
+    </select>
+
 </mapper>

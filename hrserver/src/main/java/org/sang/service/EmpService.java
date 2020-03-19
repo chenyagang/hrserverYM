@@ -86,6 +86,10 @@ public class EmpService {
         return empMapper.addEmps(emps);
     }
 
+    public int addEmp(Employee emp) {
+        return empMapper.addEmp(emp);
+    }
+
     public int updateEmp(Employee emp) {
         try {
             int i=empMapper.updateEmp(emp);
@@ -102,4 +106,10 @@ public class EmpService {
         int start = (page - 1) * size;
         return empMapper.getEmployeeByPageShort(start, size);
     }
+
+    public Employee getEmpByNameAndPhone(String name,String phone) {
+        return empMapper.getEmpByNameAndPhone(name,phone);
+    }
+
+
 }

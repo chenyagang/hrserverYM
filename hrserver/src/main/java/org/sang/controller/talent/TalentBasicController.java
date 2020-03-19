@@ -2,11 +2,10 @@ package org.sang.controller.talent;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.sang.bean.*;
-import org.sang.common.ExportField;
-import org.sang.common.HrUtils;
-import org.sang.common.ResponseData;
-import org.sang.common.ResultCodeEnum;
+import org.sang.common.*;
+import org.sang.common.poi.PoiParseWord;
 import org.sang.common.poi.PoiUtils;
+import org.sang.service.EmpService;
 import org.sang.service.HrService;
 import org.sang.service.TalentOperServiceImpl;
 import org.sang.service.TalentPoolService;
@@ -14,15 +13,21 @@ import org.sang.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/talent/basic")
@@ -37,6 +42,8 @@ public class TalentBasicController {
     @Autowired
     private TalentOperServiceImpl talentOperService;
 
+    @Autowired
+    private EmpService empService;
 
     private String [] statusTextArr = {"通话中","预约成功",  "预约失败", "参加内面",  "未参加内面","内面成功", "内面失败","参加客面","未参加客面","客面成功", "客面失败", "offer成功", "offer失败","入职成功", "入职失败", "已完成","未完成"};
 
@@ -292,4 +299,83 @@ public class TalentBasicController {
         TalentPool talentPool = talentPoolService.queryById(id);
         return ResultCodeEnum.SUCCESS.getResponse(talentPool);
     }
+
+
+    /*
+     * @author ll
+     * @Description 导入数据
+     * @date 2018/11/13 15:50
+     * @param [file]
+     * @return org.sang.common.ResponseData
+     */
+    @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
+    public ResponseData importEmp(@RequestParam("file")MultipartFile file, HttpServletRequest request) {
+        if(null == file || file.getOriginalFilename().lastIndexOf(".") == -1){
+            Map<String, Object> map = new HashMap<>();
+            return new ResponseData(commonUtis.FAIL_1,"文件是空或者文件类型错误");
+        }
+        String suffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
+        if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName) || PoiParseWord.PDF.equals(suffixName)) {
+        }else {
+            Map<String, Object> map = new HashMap<>();
+            return  new ResponseData(commonUtis.FAIL_1,"文件类型错误,目前只支持: .doc .docx .pdf 格式文件");
+        }
+        ResponseData fileResponseData = uploadFile(file,request);//上传文件
+        if( fileResponseData.getResultCode()==1){//上传文件失败 返回
+            return fileResponseData;
+        }
+
+        Employee employee = new Employee();
+        if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
+            employee = PoiParseWord.readWord(file,employee);
+        }else {
+            employee = PoiParseWord.readPDF(file,employee);
+        }
+        employee.setFileURL(fileResponseData.getMessage());
+        employee.setHR(HrUtils.getCurrentHr().getName());
+        Employee employeeNameAndPhone;
+        employeeNameAndPhone = empService.getEmpByNameAndPhone(employee.getName(),employee.getPhone());
+        if(null != employeeNameAndPhone){
+            commonUtis.deleteFile(fileResponseData.getMessage());
+            return new ResponseData(commonUtis.FAIL_1,"重复上传！姓名,手机号码 已存在!");
+        }
+        int i = empService.addEmp(employee);
+        if(empService.addEmp(employee)==0){
+            commonUtis.deleteFile(fileResponseData.getMessage());
+            return new ResponseData(commonUtis.FAIL_1,"插入数据失败");
+        }
+
+        return new ResponseData(commonUtis.SUCCESS_0,"上传成功!");
+    }
+
+    @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
+    public ResponseData uploadFile(@RequestParam("file")MultipartFile file, HttpServletRequest request) {
+        String uuid = UUID.randomUUID().toString().trim();
+        String fileN=file.getOriginalFilename();
+        int index=fileN.indexOf(".");
+        String fileName=uuid+fileN.substring(index);
+        String filePathName;
+        try {
+            File fileMkdir=new File("F:\\photoTest");
+            if(!fileMkdir.exists()) {
+                fileMkdir.mkdir();
+            }
+            filePathName = fileMkdir.getPath()+"\\"+fileName;
+            //定义输出流 将文件保存在F盘  file.getOriginalFilename()为获得文件的名字
+            FileOutputStream os = new FileOutputStream(fileMkdir.getPath()+"\\"+fileName);
+            InputStream in = file.getInputStream();
+            int b = 0;
+            while((b=in.read())!=-1){ //读取文件
+                os.write(b);
+            }
+            os.flush(); //关闭流
+            in.close();
+            os.close();
+        } catch (Exception e) {
+            return new ResponseData(commonUtis.FAIL_1,"上传失败");
+        }
+        return new ResponseData(commonUtis.SUCCESS_0,filePathName);
+    }
+
+
 }

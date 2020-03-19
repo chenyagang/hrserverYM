@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 
 public class Employee {
+
+
+
     private Long id;
     private String name;
     private String phone;
@@ -27,6 +30,43 @@ public class Employee {
     private String introduction;
     private String workExperience;
     private String projectExperience;
+
+    private String education;
+    private String post;
+    private String workingPlace;
+    private String fileURL;
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
+    }
+
+    public String getWorkingPlace() {
+        return workingPlace;
+    }
+
+    public void setWorkingPlace(String workingPlace) {
+        this.workingPlace = workingPlace;
+    }
+
+    public String getFileURL() {
+        return fileURL;
+    }
+
+    public void setFileURL(String fileURL) {
+        this.fileURL = fileURL;
+    }
 
     public Date getInterviewTime() {
         return interviewTime;
