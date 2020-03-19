@@ -86,6 +86,18 @@ public class EmpService {
         return empMapper.addEmps(emps);
     }
 
+    public int updateEmp(Employee emp) {
+        try {
+            int i=empMapper.updateEmp(emp);
+            return i;
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return 0;
+    }
+
+
     public List<Employee> getEmployeeByPageShort(Integer page, Integer size) {
         int start = (page - 1) * size;
         return empMapper.getEmployeeByPageShort(start, size);

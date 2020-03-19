@@ -19,13 +19,82 @@
      #{projectExperience,jdbcType=VARCHAR}
       )
     </insert>
+    <update id="updateEmp" parameterType="org.sang.bean.Employee">
+        update employee
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="school != null and school != ''">
+                school = #{school,jdbcType=VARCHAR},
+            </if>
+            <if test="tiptopDegree != null and tiptopDegree != ''">
+                tiptopDegree =#{tiptopDegree,jdbcType=VARCHAR},
+            </if>
+            <if test="graduationTime != null">
+                graduationTime= #{graduationTime,jdbcType=DATE},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender= #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="workplace != null and workplace != ''">
+                workplace= #{workplace,jdbcType=VARCHAR},
+            </if>
+            <if test="job != null and job != ''">
+                job= #{job,jdbcType=VARCHAR},
+            </if>
+            <if test="workAge != null">
+                workAge= #{workAge,jdbcType=INTEGER},
+            </if>
+            <if test="wedlock != null and wedlock != ''">
+                wedlock= #{wedlock,jdbcType=VARCHAR},
+            </if>
+            <if test="currentSalary != null and currentSalary != ''">
+                currentSalary= #{currentSalary,jdbcType=DECIMAL},
+            </if>
+            <if test="expectedSalary != null and expectedSalary != ''">
+                expectedSalary= #{expectedSalary,jdbcType=DECIMAL},
+            </if>
+            <if test="recommendClient != null and recommendClient != ''">
+                recommendClient= #{recommendClient,jdbcType=VARCHAR},
+            </if>
+            <if test="channel != null and channel != ''">
+                channel= #{channel,jdbcType=VARCHAR},
+            </if>
+            <if test="communicationContent != null and communicationContent != ''">
+                communicationContent= #{communicationContent,jdbcType=VARCHAR},
+            </if>
+            <if test="HR != null and HR != ''">
+                HR= #{HR,jdbcType=VARCHAR},
+            </if>
+            <if test="interviewTime != null">
+                interviewTime= #{interviewTime,jdbcType=DATE},
+            </if>
+            <if test="workTime != null">
+                workTime= #{workTime,jdbcType=DATE},
+            </if>
+            <if test="introduction != null and introduction != ''">
+                introduction= #{introduction,jdbcType=VARCHAR},
+            </if>
+            <if test="workExperience != null and workExperience != ''">
+                workExperience= #{workExperience,jdbcType=VARCHAR},
+            </if>
+            <if test="projectExperience != null and projectExperience != ''">
+                projectExperience= #{projectExperience,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id}
 
+    </update>
 
     <select id="getEmployeeByPage" resultType="org.sang.bean.Employee">
-       select * from employee as e
-       where 1=1
+        select * from employee as e
+        where 1=1
         <if test="name!=null and name!=''">
-           and e.name LIKE concat('%',#{name},'%')
+            and e.name LIKE concat('%',#{name},'%')
         </if>
         <if test="start!=null and size!=''">
             order by e.id limit #{start},#{size}

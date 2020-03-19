@@ -220,7 +220,7 @@
                            @click="exportWord(scope.row)" size="mini">导出模板
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteEmp(scope.row)">导入表格
+                           @click="deleteEmp(scope.row)">导出表格
                 </el-button>
               </template>
             </el-table-column>

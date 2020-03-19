@@ -81,9 +81,9 @@ public class EmpBasicController {
 
     @RequestMapping(value = "/emp", method = RequestMethod.PUT)
     public RespBean updateEmp(Employee employee) {
-       /* if (empService.updateEmp(employee) == 1) {
+        if (empService.updateEmp(employee) == 1) {
             return RespBean.ok("更新成功!");
-        }*/
+        }
         return RespBean.error("更新失败!");
     }
 

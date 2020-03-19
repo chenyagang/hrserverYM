@@ -28,7 +28,7 @@ public interface EmpMapper {
 
     Employee getById(String id);
 
-    int updateEmp(@Param("emp") Employee employee);
+    int updateEmp( Employee employee);
 
     int deleteEmpById(@Param("ids") String[] ids);
 
