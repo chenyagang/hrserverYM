@@ -11,6 +11,7 @@ import org.sang.service.TalentOperServiceImpl;
 import org.sang.service.TalentPoolService;
 import org.sang.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -309,20 +310,20 @@ public class TalentBasicController {
      * @return org.sang.common.ResponseData
      */
     @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
-    public ResponseData importEmp(@RequestParam("file")MultipartFile file, HttpServletRequest request) {
+    public RespBean importEmp(@RequestParam("file")MultipartFile file, HttpServletRequest request) {
         if(null == file || file.getOriginalFilename().lastIndexOf(".") == -1){
             Map<String, Object> map = new HashMap<>();
-            return new ResponseData(commonUtis.FAIL_1,"文件是空或者文件类型错误");
+            return RespBean.error("文件是空或者文件类型错误");
         }
         String suffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
         if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName) || PoiParseWord.PDF.equals(suffixName)) {
         }else {
             Map<String, Object> map = new HashMap<>();
-            return  new ResponseData(commonUtis.FAIL_1,"文件类型错误,目前只支持: .doc .docx .pdf 格式文件");
+            return RespBean.error("文件类型错误,目前只支持: .doc .docx .pdf 格式文件");
         }
-        ResponseData fileResponseData = uploadFile(file,request);//上传文件
-        if( fileResponseData.getResultCode()==1){//上传文件失败 返回
-            return fileResponseData;
+        RespBean fileRespBean = uploadFile(file,request);//上传文件
+        if( fileRespBean.getStatus() !=200){//上传文件失败 返回
+            return fileRespBean;
         }
 
         Employee employee = new Employee();
@@ -331,25 +332,38 @@ public class TalentBasicController {
         }else {
             employee = PoiParseWord.readPDF(file,employee);
         }
-        employee.setFileURL(fileResponseData.getMessage());
+        employee.setFileURL(fileRespBean.getMsg());
         employee.setHR(HrUtils.getCurrentHr().getName());
-        Employee employeeNameAndPhone;
-        employeeNameAndPhone = empService.getEmpByNameAndPhone(employee.getName(),employee.getPhone());
-        if(null != employeeNameAndPhone){
-            commonUtis.deleteFile(fileResponseData.getMessage());
-            return new ResponseData(commonUtis.FAIL_1,"重复上传！姓名,手机号码 已存在!");
+        Employee employeePhone = null;
+        String name = employee.getName();
+        String phone =  employee.getPhone();
+        if(StringUtils.isEmpty(name) || StringUtils.isEmpty(phone)){
+            CommonUtis.deleteFile(fileRespBean.getMsg());
+             return RespBean.error("姓名或手机号码必填，请检查是否填写或者检查格式问题");
         }
-        int i = empService.addEmp(employee);
+        employeePhone = empService.getEmpByPhone(phone);
+        if(null==employeePhone){
+            return RespBean.error("根据电话号码查找数据库失败，请查看日志");
+        }
+        if(null != employeePhone){
+            CommonUtis.deleteFile(fileRespBean.getMsg());
+            return RespBean.error("重复上传！手机号码 已存在!");
+        }
+        if(StringUtils.isEmpty(employee.getWedlock())){
+            employee.setWedlock(CommonUtis.UNMARRIED);
+        }
+        if(StringUtils.isEmpty(employee.getGender())){
+            employee.setGender(CommonUtis.MAN);
+        }
         if(empService.addEmp(employee)==0){
-            commonUtis.deleteFile(fileResponseData.getMessage());
-            return new ResponseData(commonUtis.FAIL_1,"插入数据失败");
+            CommonUtis.deleteFile(fileRespBean.getMsg());
+            return RespBean.error("添加候选人失败！");
         }
-
-        return new ResponseData(commonUtis.SUCCESS_0,"上传成功!");
+        return RespBean.ok("上传成功!").setStatus(CommonUtis.SUCCESS_200);
     }
 
     @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
-    public ResponseData uploadFile(@RequestParam("file")MultipartFile file, HttpServletRequest request) {
+    public RespBean uploadFile(@RequestParam("file")MultipartFile file, HttpServletRequest request) {
         String uuid = UUID.randomUUID().toString().trim();
         String fileN=file.getOriginalFilename();
         int index=fileN.indexOf(".");
@@ -372,10 +386,26 @@ public class TalentBasicController {
             in.close();
             os.close();
         } catch (Exception e) {
-            return new ResponseData(commonUtis.FAIL_1,"上传失败");
+            return RespBean.error("上传失败");
         }
-        return new ResponseData(commonUtis.SUCCESS_0,filePathName);
+        return RespBean.ok(filePathName).setStatus(CommonUtis.SUCCESS_200);
     }
 
+    @RequestMapping(value="/addInterview",method=RequestMethod.POST)
+    public RespBean addInterview(List<String> listId) {
+
+        if(!listId.isEmpty() || listId != null || listId.size() > 0){
+            int size = listId.size();
+            for (String id : listId) {
+                int i = Integer.parseInt(id.trim());
+                if(empService.updateEmpShowResumeById(i)!=0){
+                   if(i==listId.size()){
+                       return RespBean.error("加入面试成功!");
+                   }
+                }
+            }
+        }
+        return RespBean.error("加入面试失败!");
+    }
 
 }

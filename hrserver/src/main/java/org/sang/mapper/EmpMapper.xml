@@ -121,7 +121,15 @@
     </delete>
 
     <select id="getEmpByNameAndPhone" resultType="org.sang.bean.Employee">
-        select * from employee WHERE username=#{name} and password=#{phone};
+        select * from employee WHERE name= #{name} and phone= #{phone};
     </select>
+
+    <select id="getEmpByPhone" resultType="org.sang.bean.Employee">
+        select * from employee WHERE phone= #{phone};
+    </select>
+
+    <update id="updateEmpShowInterviewById" parameterType="int">
+        update employee job= #{job,jdbcType=VARCHAR},where id = #{id}
+    </update>
 
 </mapper>

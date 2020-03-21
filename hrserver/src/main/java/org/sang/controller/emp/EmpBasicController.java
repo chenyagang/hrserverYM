@@ -63,23 +63,23 @@ public class EmpBasicController {
         return String.format("%08d", empService.getMaxWorkID() + 1);
     }
 
-    @RequestMapping(value = "/emp", method = RequestMethod.POST)
-    public RespBean addEmp(Employee employee) {
-     /*   if (empService.addEmp(employee) == 1) {
-            List<Position> allPos = positionService.getAllPos();
-            for (Position allPo : allPos) {
-                if (allPo.getId() == employee.getPosId()) {
-                    employee.setPosName(allPo.getName());
-                }
-            }
-            executorService.execute(new EmailRunnable(employee,
-                    javaMailSender, templateEngine));
-            return RespBean.ok("添加成功!");
-        }*/
-        return RespBean.error("添加失败!");
-    }
+//    @RequestMapping(value = "/emp", method = RequestMethod.POST)
+//    public RespBean addEmp(Employee employee) {
+//     /*   if (empService.addEmp(employee) == 1) {
+//            List<Position> allPos = positionService.getAllPos();
+//            for (Position allPo : allPos) {
+//                if (allPo.getId() == employee.getPosId()) {
+//                    employee.setPosName(allPo.getName());
+//                }
+//            }
+//            executorService.execute(new EmailRunnable(employee,
+//                    javaMailSender, templateEngine));
+//            return RespBean.ok("添加成功!");
+//        }*/
+//        return RespBean.error("添加失败!");
+//    }
 
-    @RequestMapping(value = "/emp", method = RequestMethod.PUT)
+    @RequestMapping(value = "/updateEmp", method = RequestMethod.PUT)
     public RespBean updateEmp(Employee employee) {
         if (empService.updateEmp(employee) == 1) {
             return RespBean.ok("更新成功!");

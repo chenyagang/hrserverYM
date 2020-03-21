@@ -36,6 +36,11 @@ public interface EmpMapper {
 
     List<Employee> getEmployeeByPageShort(@Param("start") int start, @Param("size") Integer size);
 
-    Employee getEmpByNameAndPhone(String name,String phone);
+    Employee getEmpByNameAndPhone(@Param("name") String name,@Param("phone") String phone);
+
+    Employee getEmpByPhone(@Param("phone") String phone);
+
+    int updateEmpShowInterviewById(@Param("id") int id);
+
 
 }

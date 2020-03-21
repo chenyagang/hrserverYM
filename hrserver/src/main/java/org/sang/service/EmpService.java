@@ -87,7 +87,12 @@ public class EmpService {
     }
 
     public int addEmp(Employee emp) {
-        return empMapper.addEmp(emp);
+        try {
+            int i = empMapper.addEmp(emp);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public int updateEmp(Employee emp) {
@@ -111,5 +116,24 @@ public class EmpService {
         return empMapper.getEmpByNameAndPhone(name,phone);
     }
 
+    public Employee getEmpByPhone(String phone) {
+        try {
+            return  empMapper.getEmpByPhone(phone);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+             return null;
+    }
+
+    public int updateEmpShowResumeById(int id) {
+        try {
+            int i=empMapper.updateEmpShowInterviewById(id);
+            return i;
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+        return 0;
+    }
 
 }

@@ -35,6 +35,24 @@ public class Employee {
     private String post;
     private String workingPlace;
     private String fileURL;
+    private String jobDescription;
+    private String showInterview;
+
+    public String getShowInterview() {
+        return showInterview;
+    }
+
+    public void setShowInterview(String showInterview) {
+        this.showInterview = showInterview;
+    }
+
+    public String getJobDescription() {
+        return jobDescription;
+    }
+
+    public void setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
+    }
 
     public String getEducation() {
         return education;

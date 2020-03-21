@@ -2,15 +2,20 @@ package org.sang.common;
 
 import java.io.File;
 
-public class commonUtis {
+public class CommonUtis {
     public static final String FAIL = "1";
 
     public static final String SUCCESS = "0";
 
-    public static final int FAIL_1 = 1;
+    public static final int FAIL_500 = 500;
 
-    public static final int SUCCESS_0 = 0;
+    public static final int SUCCESS_200 = 200;
 
+    public static final String MAN = "男";
+
+    public static final String WOMAN = "女";
+
+    public static final String UNMARRIED = "未婚";
 
     public static boolean deleteFile(String filePath){
         boolean delete_flag = false;

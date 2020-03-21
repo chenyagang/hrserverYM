@@ -11,6 +11,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.*;
 import org.sang.bean.Employee;
+import org.sang.common.CommonUtis;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,8 +43,10 @@ public class PoiParseWord {
     private final static String name_space = "姓 名";
     private final static String post = "职位";
     private final static String post_space = "职 位";
-    private final static String gangwei = "岗位";
-    private final static String gangwei_space = "岗 位";
+    private final static String phone_space = "电 话";
+    private final static String phone = "电话";
+    private final static String gangweimiaoshu = "岗位描述";
+    private final static String gangweiyaoqiu = "岗位要求";
     private final static String school = "学校";
     private final static String school_space = "学 校";
     private final static String education = "学历";
@@ -53,6 +56,7 @@ public class PoiParseWord {
     private final static String graduationtime = "毕业时间";
     private final static String workingplace = "工作地点";
     private final static String communicationcontent = "沟通内容";
+    private final static String wedlock = "婚姻状况";
 
     private final static String keywordList[] = {"姓名","姓 名","职位","职 位","岗位","岗 位","学校",
             "学 校","学历","学 历","毕业时间","性别","工作地点","沟通内容"};
@@ -227,6 +231,17 @@ public class PoiParseWord {
                 employee.setEducation(getKeyword(a,str,3));
             }
 
+            a =  str.indexOf(phone_space);
+            if(a !=-1){
+                a+=4;
+                employee.setPhone(getKeyword(a,str,4));
+            }
+            a =  str.indexOf(phone);
+            if(a != -1){
+                a+=3;
+                employee.setPhone(getKeyword(a,str,3));
+            }
+
             a =  str.indexOf(post_space);
             if(a !=-1){
                 a+=4;
@@ -238,15 +253,15 @@ public class PoiParseWord {
                 employee.setPost(getKeyword(a,str,3));
             }
 
-            a =  str.indexOf(gangwei_space);
+            a =  str.indexOf(gangweimiaoshu);
             if(a !=-1){
                 a+=4;
-                employee.setPost(getKeyword(a,str,4));
+                employee.setJobDescription(getKeyword(a,str,4));
             }
-            a =  str.indexOf(gangwei);
+            a =  str.indexOf(gangweiyaoqiu);
             if(a != -1){
                 a+=3;
-                employee.setPost(getKeyword(a,str,3));
+                employee.setJobDescription(getKeyword(a,str,3));
             }
 
             a =  str.indexOf(school_space);
@@ -283,7 +298,11 @@ public class PoiParseWord {
                 a+=5;
                 employee.setWorkingPlace(getKeyword(a,str,5));
             }
-
+            a =  str.indexOf(wedlock);
+            if(a !=-1){
+                a+=5;
+                employee.setWedlock(getKeyword(a,str,5));
+            }
             a =  str.indexOf(communicationcontent);
             if(a !=-1){
                 a+=5;
@@ -337,7 +356,7 @@ public class PoiParseWord {
             }
 
         }
-        return "";
+        return str;
     }
 
     /**
