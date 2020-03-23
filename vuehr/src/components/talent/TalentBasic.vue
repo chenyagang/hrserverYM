@@ -92,6 +92,7 @@
             v-loading="tableLoading"
             border
             stripe
+<!--            @row-contextmenu="rightClick"-->
             @selection-change="handleSelectionChange"
             size="mini"
             style="width: 100%;border:1px solid gray;">

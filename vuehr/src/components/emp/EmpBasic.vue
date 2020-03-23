@@ -30,9 +30,9 @@
             :on-success="fileUploadSuccess"
             :on-error="fileUploadError" :disabled="fileUploadBtnText=='正在导入'"
             :before-upload="beforeFileUpload" style="display: inline">
-           <!-- <el-button size="mini" type="success" :loading="fileUploadBtnText=='正在导入'"><i class="fa fa-lg fa-level-up"
-                                                                                          style="margin-right: 5px"></i>{{fileUploadBtnText}}
-            </el-button>-->
+            <!-- <el-button size="mini" type="success" :loading="fileUploadBtnText=='正在导入'"><i class="fa fa-lg fa-level-up"
+                                                                                           style="margin-right: 5px"></i>{{fileUploadBtnText}}
+             </el-button>-->
           </el-upload>
           <el-upload
             :show-file-list="false"
@@ -107,6 +107,7 @@
             v-loading="tableLoading"
             border
             stripe
+            @row-click="rightClick"
             @selection-change="handleSelectionChange"
             size="mini"
             style="width: 100%">
@@ -121,7 +122,6 @@
               align="center"
               fixed
               label="姓名"
-
               width="70">
             </el-table-column>
             <el-table-column
@@ -232,9 +232,6 @@
             </el-table-column>
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
-           <!-- <el-button type="danger" size="mini" v-if="emps.length>0" :disabled="multipleSelection.length==0"
-                       @click="deleteManyEmps">批量删除
-            </el-button>-->
             <el-pagination
               background
               :page-size="10"
@@ -348,9 +345,10 @@
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="工作年限:"  prop="workAge">
-                <el-input-number prefix-icon="el-icon-edit" v-model="emp.workAge"  style="width: 130px" size="mini"  placeholder="岗位">
-                </el-input-number>
+                <el-form-item label="工作年限:" prop="workAge">
+                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.workAge" style="width: 130px" size="mini"
+                                   placeholder="岗位">
+                  </el-input-number>
                 </el-form-item>
               </div>
             </el-col>
@@ -360,7 +358,7 @@
                   <el-radio-group v-model="emp.wedlock">
                     <el-radio label="已婚">已婚</el-radio>
                     <el-radio style="margin-left: 15px" label="未婚">未婚</el-radio>
-<!--                    <el-radio style="margin-left: 15px" label="离异">离异</el-radio>-->
+                    <!--                    <el-radio style="margin-left: 15px" label="离异">离异</el-radio>-->
                   </el-radio-group>
                 </el-form-item>
               </div>
@@ -378,16 +376,18 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="期望薪资:" prop="expectedSalary">
-                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.expectedSalary"  size="mini"  :precision="2"
-                                   style="width: 130px"    placeholder="期望薪资:K"></el-input-number> 单位:千
+                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.expectedSalary" size="mini" :precision="2"
+                                   style="width: 130px" placeholder="期望薪资:K"></el-input-number>
+                  单位:千
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
                 <el-form-item label="当前薪资:" prop="currentSalary">
-                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.currentSalary"  size="mini"  :precision="2"
-                                   style="width: 140px"    placeholder="期望薪资:K"></el-input-number> 单位:千
+                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.currentSalary" size="mini" :precision="2"
+                                   style="width: 140px" placeholder="期望薪资:K"></el-input-number>
+                  单位:千
                 </el-form-item>
               </div>
             </el-col>
@@ -478,7 +478,6 @@
               </div>
             </el-col>
           </el-row>
-
           <el-row>
             <el-col :span="24">
               <div>
@@ -503,6 +502,47 @@
         </el-dialog>
       </div>
     </el-form>
+    <el-form :model="talent" :rules="talentRules" ref="addTalentForm" style="margin: 0px;padding: 0px;">
+      <div style="text-align: left">
+        <el-dialog
+          :title="talentDialogTitle"
+          style="padding: 0px;"
+          :close-on-click-modal="false"
+          :visible.sync="talentDialogVisible"
+          width="40%">
+          <el-row>
+            <el-col :span="12">
+              <div>
+                <el-form-item label="推荐客户:" prop="recommendClient">
+                  <el-input prefix-icon="el-icon-edit" v-model="talent.recommendClient" size="mini" style="width: 150px"
+                            placeholder="请输入推荐客户"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <div>
+                <el-form-item label="推荐日期:" prop="recommendTime">
+                  <el-date-picker
+                    v-model="talent.recommendTime"
+                    size="mini"
+                    value-format="yyyy-MM-dd"
+                    style="width: 150px"
+                    type="date"
+                    placeholder="推荐日期">
+                  </el-date-picker>
+                </el-form-item>
+              </div>
+            </el-col>
+
+          </el-row>
+
+          <span slot="footer" class="dialog-footer">
+    <el-button size="mini" @click="talentCancelEidt">取 消</el-button>
+    <el-button size="mini" type="primary" @click="addTalent('addTalentForm')">确 定</el-button>
+  </span>
+        </el-dialog>
+      </div>
+    </el-form>
   </div>
 </template>
 <script>
@@ -517,6 +557,8 @@
         faangledoubleup: 'fa-angle-double-up',
         faangledoubledown: 'fa-angle-double-down',
         dialogTitle: '',
+        talentDialogTitle: '',
+        talentDialogVisible:false,
         multipleSelection: [],
         depTextColor: '#c0c4cc',
         nations: [],
@@ -563,6 +605,16 @@
           workExperience: '',
           projectExperience: ''
         },
+        talent: {
+          id: 0,
+          name: "",
+          hrId: 0,
+          recommendClient: "",
+          recommendTime: "",
+          job: "",
+          workAge: 0,
+          progress: "",
+        },
         rules: {
           name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
           gender:
@@ -605,6 +657,9 @@
             [{required: true, message: '必填:沟通内容', trigger: 'blur'}],
           school:
             [{required: true, message: '必填:毕业院校', trigger: 'blur'}],
+        },
+        talentRules: {
+          name: [{required: true, message: '必填:姓名', trigger: 'blur'}]
         }
       }
         ;
@@ -640,18 +695,18 @@
         this.fileUploadBtnText = '正在导入';
       },
       exportEmps() {
-        var ids=""
+        var ids = ""
         for (var i = 0; i < this.multipleSelection.length; i++) {
           ids += this.multipleSelection[i].id + ",";
         }
-        ids=ids.substring(0, ids.lastIndexOf(','));
-        window.open("/employee/basic/exportEmp?id="+ids, "_parent");
+        ids = ids.substring(0, ids.lastIndexOf(','));
+        window.open("/employee/basic/exportEmp?id=" + ids, "_parent");
       },
-      exportExecl(row){
-        window.open("/employee/basic/exportExecl?id="+row.id, "_parent");
+      exportExecl(row) {
+        window.open("/employee/basic/exportExecl?id=" + row.id, "_parent");
       },
       exportWord(row) {
-        window.open("/employee/basic/exportWord?id="+row.id, "_parent");
+        window.open("/employee/basic/exportWord?id=" + row.id, "_parent");
       },
       cancelSearch() {
         this.advanceSearchViewVisible = false;
@@ -769,9 +824,34 @@
           }
         });
       },
+      addTalent(formName) {
+        var _this = this;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+              //添加
+              this.tableLoading = true;
+              this.postRequest("/employee/basic/updateInterview", this.talent).then(resp => {
+                _this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  var data = resp.data;
+                  _
+                  _this.talentDialogVisible = false;
+                  _this.emptyEmpData();
+                  _this.loadEmps();
+                }
+              })
+          } else {
+            return false;
+          }
+        });
+      },
       cancelEidt() {
         this.dialogVisible = false;
         this.emptyEmpData();
+      },
+      talentCancelEidt() {
+        this.talentDialogVisible = false;
+        this.emptyTalentData();
       },
       showDepTree() {
         this.showOrHidePop = !this.showOrHidePop;
@@ -815,8 +895,15 @@
         this.emp.workTime = this.formatDate(row.workTime);
         this.dialogVisible = true;
       },
-
-
+      rightClick(row) {
+        this.talentDialogTitle="添加到面试信息";
+        this.talentDialogVisible=true;
+        debugger
+        this.talent.name=row.name;
+        this.talent.job=row.job;
+        this.talent.workAge=row.workAge;
+        this.talent.progress=row.progress;
+      },
       showAddEmpView() {
         this.dialogTitle = "上传简历";
         // this.dialogVisible = true;
@@ -857,6 +944,17 @@
           beginContract: '',
           endContract: '',
           workAge: ''
+        }
+      },
+      emptyTalentData() {
+        this.talent = {
+          name:"",
+          hrId:0,
+          recommendClient:"",
+          recommendTime:"",
+          job:"",
+          workAge:0,
+          progress:""
         }
       }
     }
