@@ -15,7 +15,7 @@ import java.util.List;
  * Created by sang on 2018/1/2.
  */
 @RestController
-    @RequestMapping("/system/hr")
+@RequestMapping("/system/hr")
 public class SystemHrController {
     @Autowired
     HrService hrService;

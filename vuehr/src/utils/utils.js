@@ -18,6 +18,7 @@ export const initMenu = (router, store)=> {
   getRequest("/config/sysmenu").then(resp=> {
     if (resp && resp.status == 200) {
       var fmtRoutes = formatRoutes(resp.data);
+      debugger
       router.addRoutes(fmtRoutes);
       store.commit('initMenu', fmtRoutes);
       store.dispatch('connect');
@@ -55,6 +56,9 @@ export const formatRoutes = (routes)=> {
           require(['../components/system/' + component + '.vue'], resolve)
         }else if (component.startsWith("Talent")) {
           require(['../components/talent/' + component + '.vue'], resolve)
+        }else if (component.startsWith("Demand")) {
+          debugger
+          require(['../components/demand/' + component + '.vue'], resolve)
         }
       },
       name: name,

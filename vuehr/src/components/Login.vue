@@ -15,6 +15,10 @@
     <el-form-item style="width: 100%">
       <el-button type="primary" style="width: 100%" @click="submitClick">登录</el-button>
     </el-form-item>
+    <el-form-item >
+      <el-button style="width: 100%" @click="registeClick">注册</el-button>
+    </el-form-item>
+
   </el-form>
 </template>
 <script>
@@ -38,6 +42,23 @@
         var _this = this;
         this.loading = true;
         this.postRequest('/login', {
+          username: this.loginForm.username,
+          password: this.loginForm.password
+        }).then(resp=> {
+          _this.loading = false;
+          if (resp && resp.status == 200) {
+            var data = resp.data;
+            _this.$store.commit('login', data.obj);
+            var path = _this.$route.query.redirect;
+            _this.$router
+              .replace({path: path == '/' || path == undefined ? '/home' : path});
+          }
+        });
+      },
+      registeClick: function () {
+        var _this = this;
+        this.loading = true;
+        this.postRequest('/system/hr/hr/reg', {
           username: this.loginForm.username,
           password: this.loginForm.password
         }).then(resp=> {

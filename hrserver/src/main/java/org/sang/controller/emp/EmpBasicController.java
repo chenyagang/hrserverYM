@@ -20,6 +20,7 @@ import org.thymeleaf.TemplateEngine;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,8 +110,22 @@ public class EmpBasicController {
     }
 
     @RequestMapping(value = "/exportEmp", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> exportEmp() {
-        return PoiUtils.exportEmp2Excel(empService.getAllEmployees());
+    public ResponseEntity<byte[]> exportEmp(String id) {
+
+        return PoiUtils.exportEmp2Excel(empService.getByIds(id));
+    }
+
+    @RequestMapping(value = "/exportExecl", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> exportExecl(String id) {
+        Employee emp=null;
+        try {
+            emp = empService.getById(id);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        List list =new ArrayList();
+        list.add(emp);
+        return PoiUtils.exportEmp2Excel(list);
     }
 
     @RequestMapping(value = "/exportWord", method = RequestMethod.GET)

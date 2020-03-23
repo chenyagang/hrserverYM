@@ -12,6 +12,11 @@ import org.sang.service.TalentOperServiceImpl;
 import org.sang.service.TalentPoolService;
 import org.sang.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,6 +71,8 @@ public class TalentBasicController {
     public ResponseData getTalentPage(TalentPool talentPool) {
         Map<String, Object> map = new HashMap<>();
         talentPool.setPageNo((talentPool.getPageNo() - 1) * talentPool.getPageSize());
+        //获取当前登录信息将信息塞入hrId
+        talentPool.setHrId(HrUtils.getCurrentHr().getId().intValue());
         List<TalentPool> talentPoolList = talentPoolService.queryPage(talentPool);
         int count = talentPoolService.queryPageCount(talentPool);
         map.put("talents", talentPoolList);
@@ -83,37 +90,15 @@ public class TalentBasicController {
     @RequestMapping(value = "/updateTalent", method = RequestMethod.POST)
     public ResponseData updateTalent(TalentPool talentPool) {
 
-        TalentPool tp = talentPoolService.queryById(talentPool.getId() + "");
-        if(tp.getHrId() != HrUtils.getCurrentHr().getId().intValue()){
-            //一周之内不能编辑别人的
-            long nowMillis = System.currentTimeMillis();
-            long addMillis = Long.valueOf(tp.getAddDate());
-            if(nowMillis - addMillis <= 7*24*3600*1000){
-                return ResultCodeEnum.CANNOT_EDIT_IN_WEEK.getResponse();
-            }else{
-                talentPool.setHrId(HrUtils.getCurrentHr().getId().intValue());
+//        TalentPool tp = talentPoolService.queryById(talentPool.getId() + "");
+            try {
+                talentPoolService.edit(talentPool);
+            }catch ( Exception ex){
+                ex.printStackTrace();
             }
-        }
 
-        //记录改变状态的时间  以便统计
-        if(talentPool.getStatus() != null && tp.getStatus() != talentPool.getStatus()){
-            talentPool.setOperTime(System.currentTimeMillis() + "");
-            TalentOper to = new TalentOper();
-            to.setHrId(tp.getHrId());
-            to.setOperTime(System.currentTimeMillis());
-            to.setTalentId(talentPool.getId());
-            to.setStatus(talentPool.getStatus());
-            talentOperService.add(to);
-        }
-
-        if(talentPool.getInterviewDate() != null){
-            talentPool.setInterviewDate(DateTimeUtil.dateToStamp(talentPool.getInterviewDate()) + "");
-        }
-        talentPool.setAddDate(null);
-        talentPoolService.edit(talentPool);
         return ResultCodeEnum.SUCCESS.getResponse();
     }
-
     /*
      * @author ll
      * @Description 导出数据
@@ -122,30 +107,10 @@ public class TalentBasicController {
      * @return void
      */
     @RequestMapping(value = "/exportTalent", method = RequestMethod.GET)
-    public void exportTalent(TalentPool talentPool , HttpServletResponse response) {
-        List<TalentPool> talentPools = talentPoolService.queryAll(talentPool);
+    public ResponseEntity<byte[]> exportTalent(String id , HttpServletResponse response) {
 
-        if(talentPools != null){
-            for(TalentPool tp : talentPools){
-                tp.setStatusText(statusTextArr[tp.getStatus()]);
-                if(tp.getAddDate() != null){
-                    tp.setAddDate(DateTimeUtil.timeMillinToDateStr(Long.parseLong(tp.getAddDate()) ,DateTimeUtil.FORMATTIME_DATE_3));
-                }
-                if(tp.getInterviewDate() != null){
-                    tp.setInterviewDate(DateTimeUtil.timeMillinToDateStr(Long.parseLong(tp.getInterviewDate()) ,DateTimeUtil.FORMATTIME_DATE_3));
-                }
-            }
-        }
-
-        byte[] bytes = PoiUtils.exportTalent2Excel("sheet", ExportField.ExportTitle.TALENT_TITLE, ExportField.ExportColumn.TALENT_COLUMN, talentPools, false);
-        String fileName = "数据";
-        try {
-            fileName = new String((fileName + ".xls").getBytes("gb2312"),
-                    "ISO8859-1");// 设置文件编码
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        download(response, bytes, fileName);// 下载文档
+//        ResponseEntity<byte[]> responseEntity = PoiUtils.exportInterviewExcel(talentPoolService.getExportById(id));
+        return null;
     }
 
     public void download(HttpServletResponse response, byte[] byt,
@@ -170,7 +135,6 @@ public class TalentBasicController {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 
@@ -190,7 +154,6 @@ public class TalentBasicController {
             for(TalentPool tp : talentPools){
                 //根据手机查询  是否已经 存在
                 TalentPool queryTp = new TalentPool();
-                queryTp.setPhone(tp.getPhone());
                 List<TalentPool> list = talentPoolService.queryAll(queryTp);
                 if(list != null && list.size() > 0){
                     tp.setId(list.get(0).getId());
@@ -217,22 +180,18 @@ public class TalentBasicController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseData add(TalentPool talentPool) {
         Long nowMillis = System.currentTimeMillis();
-        talentPool.setAddDate(nowMillis + "");
-        talentPool.setOperTime(nowMillis + "");
-        if(talentPool.getInterviewDate() != null){
-            talentPool.setInterviewDate(DateTimeUtil.dateToStamp(talentPool.getInterviewDate()) + "");
-        }
         talentPool.setHrId(HrUtils.getCurrentHr().getId().intValue());
-        talentPoolService.add(talentPool);
+        try{
+            talentPoolService.add(talentPool);
 
-
-        talentPool.setOperTime(System.currentTimeMillis() + "");
-        TalentOper to = new TalentOper();
-        to.setHrId(talentPool.getHrId());
-        to.setOperTime(System.currentTimeMillis());
-        to.setTalentId(talentPool.getId());
-        to.setStatus(talentPool.getStatus());
-        talentOperService.add(to);
+            TalentOper to = new TalentOper();
+            to.setHrId(talentPool.getHrId());
+            to.setOperTime(System.currentTimeMillis());
+            to.setTalentId(talentPool.getId());
+            talentOperService.add(to);
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 
         return ResultCodeEnum.SUCCESS.getResponse();
     }
@@ -245,38 +204,15 @@ public class TalentBasicController {
      * @return org.sang.common.ResponseData
      */
     @RequestMapping(value = "/exportCount", method = RequestMethod.GET)
-    public void exportCount(String countStart , String countEnd , HttpServletResponse response) {
-        //long countStartTime = DateTimeUtil.dateToStamp(countStart , DateTimeUtil.FORMATTIME_DATE_1);
-        //long countEndTime = DateTimeUtil.dateToStamp(countEnd , DateTimeUtil.FORMATTIME_DATE_1);
-        //Long hrId = HrUtils.getCurrentHr().getId();
-        Map<String , Object> map = new HashMap<>();
-        map.put("countStartTime",countStart);
-        map.put("countEndTime",countEnd);
-        //map.put("hrId",hrId);
-        List<ExportCount> exportCountList = talentPoolService.getExportCountList(map);
-        //byte[] bytes = PoiUtils.exportTalent2Excel("sheet", ExportField.ExportTitle.TALENT_COUNT_TITLE, ExportField.ExportColumn.TALENT_COUNT_TITLE, exportCountList, false);
-        HSSFWorkbook wb = new HSSFWorkbook();
-
-        String[][] data1 = PoiUtils.convertByObj(ExportField.ExportColumn.TALENT_COUNT_COLUMN, exportCountList);
-        PoiUtils.getWorkBook(wb, "HR周报情况", 0, ExportField.ExportTitle.TALENT_COUNT_TITLE, data1, true);
-
-        List<TalentPool> offerList = talentPoolService.getOfferList(map);
-        String[][] data2 = PoiUtils.convertByObj(ExportField.ExportColumn.TALENT_OFFER_COLUMN, offerList);
-        PoiUtils.getWorkBook(wb, "已offer人员情况", 1, ExportField.ExportTitle.TALENT_OFFER_TITLE, data2, true);
-        byte[] bytes = PoiUtils.getBytes(wb);
-
-        String countStartTime = DateTimeUtil.timeMillinToDateStr(Long.parseLong(countStart) , DateTimeUtil.FORMATTIME_DATE_4);
-        String countEndTime = DateTimeUtil.timeMillinToDateStr(Long.parseLong(countEnd) , DateTimeUtil.FORMATTIME_DATE_4);
-
-        String fileName = countStartTime + "-" + countEndTime;
-
+    public ResponseEntity<byte[]> exportCount(String id , HttpServletResponse response) {
+        ResponseEntity<byte[]> responseEntity=null;
         try {
-            fileName = new String((fileName + ".xls").getBytes("gb2312"),
-                    "ISO8859-1");// 设置文件编码
-        }catch (Exception e){
-            e.printStackTrace();
+
+            responseEntity = PoiUtils.exportInterviewExcel(talentPoolService.getExportById(HrUtils.getCurrentHr().getId(),id));
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
-        download(response, bytes, fileName);// 下载文档
+       return responseEntity;// 下载文档
     }
 
 

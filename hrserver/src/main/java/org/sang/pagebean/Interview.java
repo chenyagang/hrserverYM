@@ -1,12 +1,12 @@
-package org.sang.bean;
+package org.sang.pagebean;
 
-public class TalentPool {
+public class Interview {
 
     private Integer id;
 
     private String name;
 
-    private Integer hrId;
+    private String userName;
 
     private String recommendClient;
 
@@ -14,28 +14,16 @@ public class TalentPool {
 
     private String job;
 
-    private String workAge;
+    private Integer workAge;
 
     private String progress;
 
-    private Integer pageNo;
-
-    private Integer pageSize;
-
-    public Integer getPageNo() {
-        return pageNo;
+    public Integer getWorkAge() {
+        return workAge;
     }
 
-    public void setPageNo(Integer pageNo) {
-        this.pageNo = pageNo;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+    public void setWorkAge(Integer workAge) {
+        this.workAge = workAge;
     }
 
     public Integer getId() {
@@ -54,12 +42,12 @@ public class TalentPool {
         this.name = name;
     }
 
-    public Integer getHrId() {
-        return hrId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setHrId(Integer hrId) {
-        this.hrId = hrId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getRecommendClient() {
@@ -86,13 +74,6 @@ public class TalentPool {
         this.job = job;
     }
 
-    public String getWorkAge() {
-        return workAge;
-    }
-
-    public void setWorkAge(String workAge) {
-        this.workAge = workAge;
-    }
 
     public String getProgress() {
         return progress;
@@ -101,7 +82,4 @@ public class TalentPool {
     public void setProgress(String progress) {
         this.progress = progress;
     }
-
-
-
 }

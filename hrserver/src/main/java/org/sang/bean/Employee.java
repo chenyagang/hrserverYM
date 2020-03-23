@@ -21,7 +21,7 @@ public class Employee {
     private String recommendClient;
     private String channel;
     private String communicationContent;
-    private String HR;
+    private String hr;
     private Date interviewTime;
     private Date workTime;
     private String introduction;
@@ -71,7 +71,6 @@ public class Employee {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -197,11 +196,11 @@ public class Employee {
         this.communicationContent = communicationContent;
     }
 
-    public String getHR() {
-        return HR;
+    public String getHr() {
+        return hr;
     }
 
-    public void setHR(String HR) {
-        this.HR = HR;
+    public void setHr(String hr) {
+        this.hr = hr;
     }
 }

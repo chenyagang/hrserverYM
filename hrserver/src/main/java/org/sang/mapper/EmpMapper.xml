@@ -67,8 +67,8 @@
             <if test="communicationContent != null and communicationContent != ''">
                 communicationContent= #{communicationContent,jdbcType=VARCHAR},
             </if>
-            <if test="HR != null and HR != ''">
-                HR= #{HR,jdbcType=VARCHAR},
+            <if test="hr != null and hr != ''">
+                hr= #{hr,jdbcType=VARCHAR},
             </if>
             <if test="interviewTime != null">
                 interviewTime= #{interviewTime,jdbcType=DATE},
@@ -110,7 +110,14 @@
     </select>
 
     <select id="getById" resultType="org.sang.bean.Employee">
-        SELECT * FROM employee WHERE id =#{id}
+        SELECT * FROM employee WHERE id = #{id}
+    </select>
+
+    <select id="getByIds"  resultType="org.sang.bean.Employee">
+        SELECT * FROM employee WHERE id in
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
     </select>
 
     <delete id="deleteEmpById">

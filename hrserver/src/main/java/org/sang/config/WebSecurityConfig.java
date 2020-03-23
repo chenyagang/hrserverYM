@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/index.html", "/static/**", "/login_p","/index");
+        web.ignoring().antMatchers("/index.html", "/static/**", "/login_p","/index","/system/hr/hr/reg");
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {

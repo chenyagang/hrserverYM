@@ -28,6 +28,8 @@ public interface EmpMapper {
 
     Employee getById(String id);
 
+    List<Employee> getByIds(@Param("ids")String[] id);
+
     int updateEmp( Employee employee);
 
     int deleteEmpById(@Param("ids") String[] ids);

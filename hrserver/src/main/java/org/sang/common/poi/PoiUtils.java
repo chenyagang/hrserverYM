@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.sang.bean.*;
+import org.sang.pagebean.Interview;
 import org.sang.utils.DateTimeUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,7 @@ public class PoiUtils {
             //4.4设置文档备注
             si.setComments("备注信息暂无");
             //创建Excel表单
-            HSSFSheet sheet = workbook.createSheet("XXX集团员工信息表");
+            HSSFSheet sheet = workbook.createSheet("候选人信息表");
             //创建日期显示格式
             HSSFCellStyle dateCellStyle = workbook.createCellStyle();
             dateCellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
@@ -100,119 +101,203 @@ public class PoiUtils {
             cell1.setCellValue("姓名");
             cell1.setCellStyle(headerStyle);
             HSSFCell cell2 = headerRow.createCell(2);
-            cell2.setCellValue("工号");
+            cell2.setCellValue("电话");
             cell2.setCellStyle(headerStyle);
             HSSFCell cell3 = headerRow.createCell(3);
-            cell3.setCellValue("性别");
+            cell3.setCellValue("学校");
             cell3.setCellStyle(headerStyle);
             HSSFCell cell4 = headerRow.createCell(4);
-            cell4.setCellValue("出生日期");
+            cell4.setCellValue("最高学历");
             cell4.setCellStyle(headerStyle);
             HSSFCell cell5 = headerRow.createCell(5);
-            cell5.setCellValue("身份证号码");
+            cell5.setCellValue("毕业时间");
             cell5.setCellStyle(headerStyle);
             HSSFCell cell6 = headerRow.createCell(6);
-            cell6.setCellValue("婚姻状况");
+            cell6.setCellValue("性别");
             cell6.setCellStyle(headerStyle);
             HSSFCell cell7 = headerRow.createCell(7);
-            cell7.setCellValue("民族");
+            cell7.setCellValue("岗位");
             cell7.setCellStyle(headerStyle);
             HSSFCell cell8 = headerRow.createCell(8);
-            cell8.setCellValue("籍贯");
+            cell8.setCellValue("工龄");
             cell8.setCellStyle(headerStyle);
             HSSFCell cell9 = headerRow.createCell(9);
-            cell9.setCellValue("政治面貌");
+            cell9.setCellValue("婚姻状况");
             cell9.setCellStyle(headerStyle);
             HSSFCell cell10 = headerRow.createCell(10);
-            cell10.setCellValue("电话号码");
+            cell10.setCellValue("当前薪资");
             cell10.setCellStyle(headerStyle);
             HSSFCell cell11 = headerRow.createCell(11);
-            cell11.setCellValue("联系地址");
+            cell11.setCellValue("期望薪资");
             cell11.setCellStyle(headerStyle);
             HSSFCell cell12 = headerRow.createCell(12);
-            cell12.setCellValue("所属部门");
+            cell12.setCellValue("推荐客户");
             cell12.setCellStyle(headerStyle);
             HSSFCell cell13 = headerRow.createCell(13);
-            cell13.setCellValue("职称");
+            cell13.setCellValue("渠道");
             cell13.setCellStyle(headerStyle);
             HSSFCell cell14 = headerRow.createCell(14);
-            cell14.setCellValue("职位");
+            cell14.setCellValue("沟通内容");
             cell14.setCellStyle(headerStyle);
             HSSFCell cell15 = headerRow.createCell(15);
-            cell15.setCellValue("聘用形式");
+            cell15.setCellValue("HR");
             cell15.setCellStyle(headerStyle);
             HSSFCell cell16 = headerRow.createCell(16);
-            cell16.setCellValue("最高学历");
+            cell16.setCellValue("面试时间");
             cell16.setCellStyle(headerStyle);
             HSSFCell cell17 = headerRow.createCell(17);
-            cell17.setCellValue("专业");
+            cell17.setCellValue("到岗时间");
             cell17.setCellStyle(headerStyle);
             HSSFCell cell18 = headerRow.createCell(18);
-            cell18.setCellValue("毕业院校");
+            cell18.setCellValue("简介");
             cell18.setCellStyle(headerStyle);
             HSSFCell cell19 = headerRow.createCell(19);
-            cell19.setCellValue("入职日期");
+            cell19.setCellValue("工作经验描述");
             cell19.setCellStyle(headerStyle);
             HSSFCell cell20 = headerRow.createCell(20);
-            cell20.setCellValue("在职状态");
+            cell20.setCellValue("项目经验");
             cell20.setCellStyle(headerStyle);
             HSSFCell cell21 = headerRow.createCell(21);
-            cell21.setCellValue("邮箱");
+            cell21.setCellValue("工作地点");
             cell21.setCellStyle(headerStyle);
-            HSSFCell cell22 = headerRow.createCell(22);
-            cell22.setCellValue("合同期限(年)");
-            cell22.setCellStyle(headerStyle);
-            HSSFCell cell23 = headerRow.createCell(23);
-            cell23.setCellValue("合同起始日期");
-            cell23.setCellStyle(headerStyle);
-            HSSFCell cell24 = headerRow.createCell(24);
-            cell24.setCellValue("合同终止日期");
-            cell24.setCellStyle(headerStyle);
             //6.装数据
-/*            for (int i = 0; i < emps.size(); i++) {
+            for (int i = 0; i < emps.size(); i++) {
                 HSSFRow row = sheet.createRow(i + 1);
                 Employee emp = emps.get(i);
-                row.createCell(0).setCellValue(emp.getId());
-                row.createCell(1).setCellValue(emp.getName());
-                row.createCell(2).setCellValue(emp.getWorkID());
-                row.createCell(3).setCellValue(emp.getGender());
-                HSSFCell birthdayCell = row.createCell(4);
-                birthdayCell.setCellValue(emp.getBirthday());
+                row.createCell(0).setCellValue(emp.getId()==null?0:emp.getId());
+                row.createCell(1).setCellValue(emp.getName()==null?"":emp.getName());
+                row.createCell(2).setCellValue(emp.getPhone()==null?"":emp.getPhone());
+                row.createCell(3).setCellValue(emp.getSchool()==null?"":emp.getSchool());
+                row.createCell(4).setCellValue(emp.getTiptopDegree()==null?"":emp.getTiptopDegree());
+                HSSFCell birthdayCell = row.createCell(5);
+                birthdayCell.setCellValue(emp.getGraduationTime()==null?"":emp.getGraduationTime());
                 birthdayCell.setCellStyle(dateCellStyle);
-                row.createCell(5).setCellValue(emp.getIdCard());
-                row.createCell(6).setCellValue(emp.getWedlock());
-                row.createCell(7).setCellValue(emp.getNation().getName());
-                row.createCell(8).setCellValue(emp.getNativePlace());
-                row.createCell(9).setCellValue(emp.getPoliticsStatus().getName());
-                row.createCell(10).setCellValue(emp.getPhone());
-                row.createCell(11).setCellValue(emp.getAddress());
-                row.createCell(12).setCellValue(emp.getDepartment().getName());
-                row.createCell(13).setCellValue(emp.getJobLevel().getName());
-                row.createCell(14).setCellValue(emp.getPosition().getName());
-                row.createCell(15).setCellValue(emp.getEngageForm());
-                row.createCell(16).setCellValue(emp.getTiptopDegree());
-                row.createCell(17).setCellValue(emp.getSpecialty());
-                row.createCell(18).setCellValue(emp.getSchool());
-                HSSFCell beginDateCell = row.createCell(19);
-                beginDateCell.setCellValue(emp.getBeginDate());
-                beginDateCell.setCellStyle(dateCellStyle);
-                row.createCell(20).setCellValue(emp.getWorkState());
-                row.createCell(21).setCellValue(emp.getEmail());
-                row.createCell(22).setCellValue(emp.getContractTerm());
-                HSSFCell beginContractCell = row.createCell(23);
-                beginContractCell.setCellValue(emp.getBeginContract());
-                beginContractCell.setCellStyle(dateCellStyle);
-                HSSFCell endContractCell = row.createCell(24);
-                endContractCell.setCellValue(emp.getEndContract());
-                endContractCell.setCellStyle(dateCellStyle);
-            }*/
+//                row.createCell(5).setCellValue(emp.getGraduationTime());
+                row.createCell(6).setCellValue(emp.getGender()==null?"":emp.getGender());
+                row.createCell(7).setCellValue(emp.getJob()==null?"":emp.getJob());
+                row.createCell(8).setCellValue(emp.getWorkAge()==null?0:emp.getWorkAge());
+                row.createCell(9).setCellValue(emp.getWedlock()==null?"":emp.getWedlock());
+                row.createCell(10).setCellValue(emp.getCurrentSalary()==null?0:emp.getCurrentSalary());
+                row.createCell(11).setCellValue(emp.getExpectedSalary()==null?0:emp.getExpectedSalary());
+                row.createCell(12).setCellValue(emp.getRecommendClient()==null?"":emp.getRecommendClient());
+                row.createCell(13).setCellValue(emp.getChannel()==null?"":emp.getChannel());
+                row.createCell(14).setCellValue(emp.getCommunicationContent()==null?"":emp.getCommunicationContent());
+                row.createCell(15).setCellValue(emp.getHr()==null?"":emp.getHr());
+
+                HSSFCell interviewTime = row.createCell(16);
+                interviewTime.setCellValue(emp.getInterviewTime());
+                interviewTime.setCellStyle(dateCellStyle);
+
+                HSSFCell workTime = row.createCell(17);
+                workTime.setCellValue(emp.getWorkTime());
+                workTime.setCellStyle(dateCellStyle);
+
+                row.createCell(18).setCellValue(emp.getIntroduction());
+                row.createCell(19).setCellValue(emp.getWorkExperience());
+                row.createCell(20).setCellValue(emp.getProjectExperience());
+                row.createCell(21).setCellValue(emp.getWorkplace());
+            }
             headers = new HttpHeaders();
             headers.setContentDispositionFormData("attachment",
-                    new String("员工表.xls".getBytes("UTF-8"), "iso-8859-1"));
+                    new String("候选人信息.xls".getBytes("UTF-8"), "iso-8859-1"));
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             baos = new ByteArrayOutputStream();
             workbook.write(baos);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.CREATED);
+    }
+
+
+    public static ResponseEntity<byte[]> exportInterviewExcel(List<Interview> interviews) {
+        HttpHeaders headers = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            //1.创建Excel文档
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            //2.创建文档摘要
+            workbook.createInformationProperties();
+            //3.获取文档信息，并配置
+            DocumentSummaryInformation dsi = workbook.getDocumentSummaryInformation();
+            //3.1文档类别
+            dsi.setCategory("面试信息");
+            //3.2设置文档管理员
+            dsi.setManager("江南一点雨");
+            //3.3设置组织机构
+            dsi.setCompany("瑞辉");
+            //4.获取摘要信息并配置
+            SummaryInformation si = workbook.getSummaryInformation();
+            //4.1设置文档主题
+            si.setSubject("面试信息表");
+            //4.2.设置文档标题
+            si.setTitle("面试信息");
+            //4.3 设置文档作者
+            si.setAuthor("江南一点雨");
+            //4.4设置文档备注
+            si.setComments("备注信息暂无");
+            //创建Excel表单
+            HSSFSheet sheet = workbook.createSheet("面试人信息表");
+            //创建日期显示格式
+            HSSFCellStyle dateCellStyle = workbook.createCellStyle();
+            dateCellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
+            //创建标题的显示样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.YELLOW.index);
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            //定义列的宽度
+            sheet.setColumnWidth(0, 5 * 256);
+            sheet.setColumnWidth(1, 12 * 256);
+            sheet.setColumnWidth(2, 10 * 256);
+            sheet.setColumnWidth(3, 5 * 256);
+            sheet.setColumnWidth(4, 12 * 256);
+            sheet.setColumnWidth(5, 20 * 256);
+            sheet.setColumnWidth(6, 10 * 256);
+            //5.设置表头
+            HSSFRow headerRow = sheet.createRow(0);
+            HSSFCell cell0 = headerRow.createCell(0);
+            cell0.setCellValue("编号");
+            cell0.setCellStyle(headerStyle);
+            HSSFCell cell1 = headerRow.createCell(1);
+            cell1.setCellValue("hr");
+            cell1.setCellStyle(headerStyle);
+            HSSFCell cell2 = headerRow.createCell(2);
+            cell2.setCellValue("推荐客户");
+            cell2.setCellStyle(headerStyle);
+            HSSFCell cell3 = headerRow.createCell(3);
+            cell3.setCellValue("推荐时间");
+            cell3.setCellStyle(headerStyle);
+            HSSFCell cell4 = headerRow.createCell(4);
+            cell4.setCellValue("岗位");
+            cell4.setCellStyle(headerStyle);
+            HSSFCell cell5 = headerRow.createCell(5);
+            cell5.setCellValue("工作年限");
+            cell5.setCellStyle(headerStyle);
+            HSSFCell cell6 = headerRow.createCell(6);
+            cell6.setCellValue("工作进展");
+            cell6.setCellStyle(headerStyle);
+            //6.装数据
+            for (int i = 0; i < interviews.size(); i++) {
+                HSSFRow row = sheet.createRow(i + 1);
+                Interview interview = interviews.get(i);
+                row.createCell(0).setCellValue(interview.getId()==null?0:interview.getId());
+                row.createCell(1).setCellValue(interview.getUserName()==null?"":interview.getUserName());
+                row.createCell(2).setCellValue(interview.getRecommendClient()==null?"":interview.getRecommendClient());
+                HSSFCell workTime = row.createCell(3);
+                workTime.setCellValue(interview.getRecommendTime());
+                workTime.setCellStyle(dateCellStyle);
+
+                row.createCell(4).setCellValue(interview.getJob()==null?"":interview.getJob());
+                row.createCell(5).setCellValue(interview.getWorkAge()==null?0:interview.getWorkAge());
+                row.createCell(6).setCellValue(interview.getProgress()==null?"":interview.getProgress());
+            }
+            headers = new HttpHeaders();
+            headers.setContentDispositionFormData("attachment",
+                    new String("候选人信息.xls".getBytes("UTF-8"), "iso-8859-1"));
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            baos = new ByteArrayOutputStream();
+            workbook.write(baos);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.CREATED);
@@ -377,97 +462,11 @@ public class PoiUtils {
                     if(value == null || "".equals(value)){
                         value = DateTimeUtil.timeMillinToDateStr(DateTimeUtil.FORMATTIME_DATE_2);
                     }
-                    talentPool.setAddDate(value);
+//                    talentPool.setAddDate(value);
 
                     cell = row.getCell(2);
                     value = cell == null ? null : cell.toString().trim();
                     talentPool.setName(value);
-
-                    cell = row.getCell(3);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setTechnology(value);
-
-                    cell = row.getCell(4);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setWorkCity(value);
-
-                    cell = row.getCell(5);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setLastCompany(value);
-
-                    cell = row.getCell(6);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setPhone(value);
-
-                    cell = row.getCell(7);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setSchool(value);
-
-                    cell = row.getCell(8);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setGraduation(value);
-
-                    cell = row.getCell(9);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setMajor(value);
-
-                    cell = row.getCell(10);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setEducation(value);
-
-                    cell = row.getCell(11);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setLastSalary(value);
-
-                    cell = row.getCell(12);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setHopeSalary(value);
-
-                    cell = row.getCell(13);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setAppointment("Y".equals(value)?2:1);
-
-                    cell = row.getCell(14);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setCommunicate(value);
-
-                    cell = row.getCell(15);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setInterviewDate(value);
-
-                    cell = row.getCell(16);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setRecommend(value);
-
-
-                    cell = row.getCell(17);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setInsideResult(value);
-
-
-                    cell = row.getCell(18);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setCustomerResult(value);
-
-
-                    //人事
-                    cell = row.getCell(19);
-                    value = cell == null ? null : cell.toString().trim();
-                    Long hrId = hrMap.get(value.trim());
-                    if(hrId != null){
-                        talentPool.setHr(hrId.intValue() + "");
-                        talentPool.setHrId(hrId.intValue());
-                    }
-
-                    cell = row.getCell(20);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setRemark(value);
-
-                    cell = row.getCell(21);
-                    value = cell == null ? null : cell.toString().trim();
-                    talentPool.setChannel(value);
-
-                    talentPool.setStatus(1);
 
                     talentList.add(talentPool);
                 }

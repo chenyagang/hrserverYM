@@ -73,6 +73,16 @@ public class EmpService {
         return null;
     }
 
+    public List<Employee> getByIds(String id){
+        try {
+            String[] split = id.split(",");
+            return empMapper.getByIds(split);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean deleteEmpById(String ids) {
         String[] split = ids.split(",");
         return empMapper.deleteEmpById(split) == split.length;
@@ -92,7 +102,6 @@ public class EmpService {
             return i;
         }catch (Exception e){
             e.printStackTrace();
-
         }
         return 0;
     }
