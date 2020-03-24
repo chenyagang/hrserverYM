@@ -92,7 +92,6 @@
             v-loading="tableLoading"
             border
             stripe
-<!--            @row-contextmenu="rightClick"-->
             @selection-change="handleSelectionChange"
             size="mini"
             style="width: 100%;border:1px solid gray;">
@@ -541,8 +540,8 @@
           param += "&technology=" + this.talent.technology;
         }
 
-       // this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
-        this.getRequest("/employee/basic/empByPageAndHrId" + param).then(resp => {
+       this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
+       //  this.getRequest("/employee/basic/empByPageAndHrId" + param).then(resp => {
           this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;

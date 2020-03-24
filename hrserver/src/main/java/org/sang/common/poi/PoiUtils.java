@@ -21,10 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sang on 2018/1/16.
@@ -185,17 +182,17 @@ public class PoiUtils {
                 row.createCell(15).setCellValue(emp.getHr()==null?"":emp.getHr());
 
                 HSSFCell interviewTime = row.createCell(16);
-                interviewTime.setCellValue(emp.getInterviewTime());
+                interviewTime.setCellValue(emp.getInterviewTime()==null?new Date(0):emp.getInterviewTime());
                 interviewTime.setCellStyle(dateCellStyle);
 
                 HSSFCell workTime = row.createCell(17);
-                workTime.setCellValue(emp.getWorkTime());
+                workTime.setCellValue(emp.getWorkTime()==null?new Date(0):emp.getWorkTime());
                 workTime.setCellStyle(dateCellStyle);
 
-                row.createCell(18).setCellValue(emp.getIntroduction());
-                row.createCell(19).setCellValue(emp.getWorkExperience());
-                row.createCell(20).setCellValue(emp.getProjectExperience());
-                row.createCell(21).setCellValue(emp.getWorkplace());
+                row.createCell(18).setCellValue(emp.getIntroduction()==null?"":emp.getIntroduction());
+                row.createCell(19).setCellValue(emp.getWorkExperience()==null?"":emp.getIntroduction());
+                row.createCell(20).setCellValue(emp.getProjectExperience()==null?"":emp.getIntroduction());
+                row.createCell(21).setCellValue(emp.getWorkplace()==null?"":emp.getIntroduction());
             }
             headers = new HttpHeaders();
             headers.setContentDispositionFormData("attachment",

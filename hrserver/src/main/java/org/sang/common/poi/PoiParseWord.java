@@ -1,5 +1,6 @@
 package org.sang.common.poi;
 
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.POIXMLDocument;
@@ -84,7 +85,7 @@ public class PoiParseWord {
         PDDocument document = null;
         try
         {
-            document=PDDocument.load(pdfFile);
+            document= PDDocument.load(pdfFile);
             // 获取页码
             int pages = document.getNumberOfPages();
             // 读文本内容
@@ -469,8 +470,6 @@ public class PoiParseWord {
     /**
      * 取出word文档表格第cellRowIdx行，第cellColIdx列的值（DOCX）
      *
-     * @param file
-     *            解析文件
      * @param cellRowIdx
      *            行
      * @param cellColIdx
@@ -539,8 +538,6 @@ public class PoiParseWord {
     /**
      * 取出word文档表格第cellRowIdx行，第cellColIdx列的值（DOC）
      *
-     * @param file
-     *            解析文件
      * @param cellRowIdx
      *            行
      * @param cellColIdx
