@@ -97,12 +97,13 @@ public class EmpService {
     }
 
     public int addEmp(Employee emp) {
+        int i =0;
         try {
-            int i = empMapper.addEmp(emp);
+             i = empMapper.addEmp(emp);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return i;
     }
 
     public int updateEmp(Employee emp) {
@@ -131,7 +132,7 @@ public class EmpService {
         }catch (Exception e){
             e.printStackTrace();
         }
-             return null;
+        return null;
     }
 
     public int updateEmpShowResumeById(int id) {

@@ -1,5 +1,7 @@
 package org.sang.common;
 
+import org.springframework.util.StringUtils;
+
 import java.io.File;
 
 public class CommonUtis {
@@ -18,7 +20,11 @@ public class CommonUtis {
     public static final String UNMARRIED = "未婚";
 
     public static boolean deleteFile(String filePath){
+
         boolean delete_flag = false;
+        if(StringUtils.isEmpty(filePath)){
+            return delete_flag;
+        }
         File file = new File(filePath);
         if (file.exists() && file.isFile() && file.delete())
             delete_flag = true;

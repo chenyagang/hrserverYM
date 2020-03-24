@@ -37,7 +37,7 @@
           <el-upload
             :show-file-list="false"
             accept="application/vnd.ms-excel,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            action="/talent/basic/importEmp"
+            action="/employee/basic/uploadFile"
             :on-success="uploadResumeSuccess"
             :on-error="uploadResumeError" :disabled="fileUploadBtnText=='正在导入'"
             :before-upload="beforeFileUpload" style="display: inline">
@@ -501,7 +501,10 @@
                 </el-form-item>
               </div>
             </el-col>
+
           </el-row>
+
+
 
           <span slot="footer" class="dialog-footer">
           <el-button size="mini" @click="cancelEidt">取 消</el-button>
@@ -710,6 +713,8 @@
       uploadResumeSuccess(response, file, fileList) {
         if (response) {
           this.$message({type: response.status, message: response.msg});
+          debugger
+          this.showEditEmpView(response.obj)
         }
         this.loadEmps();
         this.fileUploadBtnText = '上传简历';
@@ -887,11 +892,13 @@
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/employee/basic/emp", this.emp).then(resp => {
+              debugger
+              console.log( this.emp)
+              this.emp.id = "";
+              this.postRequest("/employee/basic/addEmp", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   var data = resp.data;
-                  _
                   _this.dialogVisible = false;
                   _this.emptyEmpData();
                   _this.loadEmps();

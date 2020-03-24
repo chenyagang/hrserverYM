@@ -30,15 +30,7 @@ public class Employee {
     private String introduction;
     private String workExperience;
     private String projectExperience;
-    private Date transferTime;
-
-    public Date getTransferTime() {
-        return transferTime;
-    }
-
-    public void setTransferTime(Date transferTime) {
-        this.transferTime = transferTime;
-    }
+    private Date transferTime = new Date();
 
     private String education;
     private String post;
@@ -47,6 +39,14 @@ public class Employee {
     private String jobDescription;
     private String showInterview;
     private int hr_id;
+
+    public Date getTransferTime() {
+        return transferTime;
+    }
+
+    public void setTransferTime(Date transferTime) {
+        this.transferTime = transferTime;
+    }
 
     public int getHr_id() {
         return hr_id;
