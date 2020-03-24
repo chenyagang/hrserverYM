@@ -538,19 +538,13 @@
               </div>
             </el-col>
             <el-col :span="8">
-              <div>
-                <el-form-item label="推荐日期:" prop="recommendTime">
-                  <el-date-picker
-                    v-model="talent.recommendTime"
-                    size="mini"
-                    value-format="yyyy-MM-dd"
-                    style="width: 150px"
-                    type="date"
-                    placeholder="推荐日期">
-                  </el-date-picker>
-                </el-form-item>
-              </div>
-            </el-col>
+               <div>
+               <el-form-item label="进展:" prop="progress">
+                 <el-input prefix-icon="el-icon-edit" v-model="talent.progress" size="mini" style="width: 150px"
+                   placeholder="请输入进展信息"></el-input>
+                 </el-form-item>
+               </div>
+             </el-col>
           </el-row>
 
           <span slot="footer" class="dialog-footer">
@@ -775,46 +769,6 @@
         }).catch(() => {
         });
       },
-      /*   open(emp) {
-                this.$prompt('请输入[' + emp.name + ']信息', '提示', {
-                  confirmButtonText: '确定',
-                  cancelButtonText: '取消',
-                  inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-                  inputErrorMessage: '邮箱格式不正确'
-                }).then(({ value }) => {
-                  this.$message({
-                    type: 'success',
-                    message: '你的邮箱是: ' + value
-                  });
-                }).catch(() => {
-                  this.$message({
-                    type: 'info',
-                    message: '取消输入'
-                  });
-                });
-              },
-       open(emp) {
-                this.$alert(
-                'emp.name
-                推荐客户:
-                <el-input v-model="recommendCustomers" placeholder="请输入内容"></el-input>
-                进展:
-                <el-input v-model="progress" placeholder="请输入内容"></el-input>
-                   推荐日期：
-                   <el-input
-                     placeholder="请选择日期"
-                     suffix-icon="el-icon-date"
-                     v-model="recommendedDate">
-                   </el-input>
-                   <el-input
-                     placeholder="请输入内容"
-                     prefix-icon="el-icon-search"
-                     v-model="input2">
-                   </el-input>',
-                {
-                  dangerouslyUseHTMLString: true
-                });
-                }，*/
       deleteManyEmps() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -930,7 +884,7 @@
           if (valid) {
             //添加
             this.tableLoading = true;
-            this.postRequest("/employee/basic/updateInterview", this.talent).then(resp => {
+            this.postRequest("/talent/basic/addTalentPool", this.talent).then(resp => {
               _this.tableLoading = false;
               if (resp && resp.status == 200) {
                 var data = resp.data;
