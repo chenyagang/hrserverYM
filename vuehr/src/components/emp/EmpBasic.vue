@@ -228,6 +228,10 @@
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="exportExecl(scope.row)">导出表格
                 </el-button>
+                <el-button style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="transferAuthority(scope.row)">转让
+                </el-button>
+
               </template>
             </el-table-column>
           </el-table>
@@ -792,6 +796,27 @@
           this.doDelete(row.id);
         }).catch(() => {
         });
+      },
+      //转让权限
+      transferAuthority(row) {
+        this.$confirm('此操作将会将面试者转移到当前用户下, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.tableLoading = true;
+          var _this = this;
+          this.deleteRequest("/employee/basic/transferAuthority" + ids).then(resp => {
+            _this.tableLoading = false;
+            if (resp && resp.status == 200) {
+              var data = resp.data;
+              _
+              _this.loadEmps();
+            }
+          })
+        }).catch(() => {
+        });
+
       },
       doUpdateShowInterview(ids) {
         this.tableLoading = true;

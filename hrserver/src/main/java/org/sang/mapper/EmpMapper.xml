@@ -99,17 +99,21 @@
         <if test="name!=null and name!=''">
             and e.name LIKE concat('%',#{name},'%')
         </if>
+
+           and DATE_ADD(transferTime,INTERVAL 5 SECOND)
         <if test="start!=null and size!=''">
             ORDER BY e.id DESC limit #{start},#{size}
         </if>
     </select>
 
     <select id="getCountByName" resultType="Long">
-        SELECT count(*) FROM employee e WHERE 1=1
+        SELECT count(1) FROM employee e WHERE 1=1
 
         <if test="hr_id!=null and hr_id!=''">
             and e.hr_id= #{hr_id,jdbcType=INTEGER}
         </if>
+
+            and DATE_ADD(transferTime,INTERVAL 5 SECOND)
         <if test="name!=null and name!=''">
             and e.name LIKE concat('%',#{name},'%')
         </if>
