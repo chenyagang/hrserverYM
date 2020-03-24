@@ -100,12 +100,28 @@ public class EmpBasicController {
 
     }
 
+    @RequestMapping(value="/updateInterview",method = RequestMethod.PUT)
+    public RespBean updateInterview(String ids) {
+
+        if (!StringUtils.isEmpty(ids)) {
+            String[] listId = ids.split(",");
+            for (int i = 0; i < listId.length;){
+                if (empService.updateEmpShowResumeById(Integer.parseInt(listId[i].trim())) != 0) {
+                    if (i == listId.length-1) {
+                        return RespBean.ok("更新候选人面试状态成功！");
+                    }
+                }
+            }
+        }
+        return RespBean.error("更新候选人面试状态失败！");
+    }
+
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
     public Map<String, Object> getEmployeeByPage(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "") String name,
-            @RequestParam(defaultValue = "NO") String hrFlag) {
+            @RequestParam(defaultValue = "YES") String hrFlag) {
         int hrId = 0;
         Long count =0L;
         if("YES".equals(hrFlag.trim())){

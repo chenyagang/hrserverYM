@@ -743,22 +743,6 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      updateShowInterview() {
-        this.$confirm('此操作将加入[' + this.multipleSelection.length + ']条数据到面试信息中, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          var ids = '';
-          for (var i = 0; i < this.multipleSelection.length; i++) {
-            ids += this.multipleSelection[i].id + ",";
-            //     open(this.multipleSelection[i]);
-          }
-
-          this.doUpdateShowInterview(ids);
-        }).catch(() => {
-        });
-      },
       deleteManyEmps() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -805,9 +789,11 @@
 
       },
       doUpdateShowInterview(ids) {
+      debugger
+      console.log( this.emp)
         this.tableLoading = true;
         var _this = this;
-        this.putRequest("/talent/basic/updateInterview/", {ids: ids}).then(resp => {
+        this.putRequest("/employee/basic/updateInterview", {ids: ids}).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;
@@ -915,10 +901,15 @@
             this.postRequest("/talent/basic/addTalentPool", this.talent).then(resp => {
               _this.tableLoading = false;
               if (resp && resp.status == 200) {
+
                 var data = resp.data;
                 _this.talentDialogVisible = false;
                 _this.emptyEmpData();
+                 debugger
+                 console.log( this.talent.id)
+                this.doUpdateShowInterview(this.talent.id);
                 _this.loadEmps();
+
               }
             })
           } else {
@@ -983,6 +974,8 @@
         this.talent.name = row.name;
         this.talent.job = row.job;
         this.talent.workAge = row.workAge;
+        this.talent.id = row.id;
+        console.log(this.talent.id)
       },
       showEditEmpViewMianshi(row) {
         console.log(row)
