@@ -235,10 +235,6 @@
               </template>
             </el-table-column>
           </el-table>
-          <div id="menu">
-            <div class="menu" v-for="(item,index) in menus" :key="index" @click.stop="infoClick(index)">{{item}}</div>
-          </div>
-
           <div style="display: flex;justify-content: space-between;margin: 2px">
             <el-pagination
               background
@@ -568,8 +564,6 @@
     data() {
       return {
 
-        menus: ['加入面试', '方案分析', '方案存库', '清除方案'],
-
         emps: [],
         keywords: '',
         fileUploadBtnText: '导入数据',
@@ -593,7 +587,6 @@
           name: '高中'
         }, {id: 2, name: '初中'}, {id: 1, name: '小学'}, {id: 8, name: '其他'}],
         deps: [],
-        mianshiList: [{id: 2, name: '初中'}, {id: 1, name: '加入面试'}],
         defaultProps: {
           label: 'name',
           isLeaf: 'leaf',
@@ -691,18 +684,6 @@
       this.loadEmps();
     },
     methods: {
-
-      // 自定义菜单的点击事件
-      infoClick(index) {
-        this.$alert('当前table的下标为' + this.currentRowIndex, '你点击了自定义菜单的' + this.menus[index] + '功能', {
-          confirmButtonText: '确定',
-          callback: action => {
-            var menu = document.querySelector("#menu");
-            menu.style.display = 'none';
-          }
-        });
-      },
-
       fileUploadSuccess(response, file, fileList) {
         if (response) {
           this.$message({type: response.status, message: response.msg});
@@ -935,7 +916,6 @@
               _this.tableLoading = false;
               if (resp && resp.status == 200) {
                 var data = resp.data;
-                _
                 _this.talentDialogVisible = false;
                 _this.emptyEmpData();
                 _this.loadEmps();
