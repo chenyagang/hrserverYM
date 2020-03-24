@@ -145,6 +145,7 @@ public class TalentPoolService extends BaseServiceImpl<TalentPool> {
 
 
     public List<Interview> getExportById(Long hrId,String id){
+
         List<Interview> list=talentPoolMapper.selectByIds(hrId,id.split(","));
         return list;
     }
