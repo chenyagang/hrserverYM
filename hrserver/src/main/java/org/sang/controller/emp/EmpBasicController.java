@@ -23,10 +23,7 @@ import org.thymeleaf.TemplateEngine;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -198,4 +195,13 @@ public class EmpBasicController {
         return ResultCodeEnum.SUCCESS.getResponse(map);
     }
 
+    @RequestMapping(value = "/transferAuthority", method = RequestMethod.GET)
+    public RespBean TransferAuthority(Employee employee) {
+        employee.setTransferTime(new Date());
+
+        if (empService.updateEmp(employee) == 1) {
+            return RespBean.ok("转让成功!");
+        }
+        return RespBean.error("转让失败!");
+    }
 }
