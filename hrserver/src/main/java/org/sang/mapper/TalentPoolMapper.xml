@@ -96,4 +96,21 @@
         </foreach>
     </select>
 
+
+
+
+    <select id="getTalentPoolPage" resultType="org.sang.bean.TalentPool">
+        select * from talentpool as t
+        where 1=1
+        <if test="hr_id != null and hr_id!=''">
+            and t.hr_id = #{hr_id}
+        </if>
+        <if test="name!=null and name!=''">
+            and t.name LIKE concat('%',#{name},'%')
+        </if>
+        <if test="start!=null and size!=''">
+            order by t.id DESC limit #{start},#{size}
+        </if>
+    </select>
+
 </mapper>

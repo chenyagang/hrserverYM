@@ -5,6 +5,9 @@ import org.sang.bean.Employee;
 import org.sang.bean.Position;
 import org.sang.bean.RespBean;
 import org.sang.common.EmailRunnable;
+import org.sang.common.HrUtils;
+import org.sang.common.ResponseData;
+import org.sang.common.ResultCodeEnum;
 import org.sang.common.poi.PoiUtils;
 import org.sang.service.DepartmentService;
 import org.sang.service.EmpService;
@@ -64,23 +67,23 @@ public class EmpBasicController {
         return String.format("%08d", empService.getMaxWorkID() + 1);
     }
 
-    @RequestMapping(value = "/emp", method = RequestMethod.POST)
-    public RespBean addEmp(Employee employee) {
-     /*   if (empService.addEmp(employee) == 1) {
-            List<Position> allPos = positionService.getAllPos();
-            for (Position allPo : allPos) {
-                if (allPo.getId() == employee.getPosId()) {
-                    employee.setPosName(allPo.getName());
-                }
-            }
-            executorService.execute(new EmailRunnable(employee,
-                    javaMailSender, templateEngine));
-            return RespBean.ok("添加成功!");
-        }*/
-        return RespBean.error("添加失败!");
-    }
+//    @RequestMapping(value = "/emp", method = RequestMethod.POST)
+//    public RespBean addEmp(Employee employee) {
+//     /*   if (empService.addEmp(employee) == 1) {
+//            List<Position> allPos = positionService.getAllPos();
+//            for (Position allPo : allPos) {
+//                if (allPo.getId() == employee.getPosId()) {
+//                    employee.setPosName(allPo.getName());
+//                }
+//            }
+//            executorService.execute(new EmailRunnable(employee,
+//                    javaMailSender, templateEngine));
+//            return RespBean.ok("添加成功!");
+//        }*/
+//        return RespBean.error("添加失败!");
+//    }
 
-    @RequestMapping(value = "/emp", method = RequestMethod.PUT)
+    @RequestMapping(value = "/updateEmp", method = RequestMethod.PUT)
     public RespBean updateEmp(Employee employee) {
         if (empService.updateEmp(employee) == 1) {
             return RespBean.ok("更新成功!");
@@ -94,16 +97,22 @@ public class EmpBasicController {
             return RespBean.ok("删除成功!");
         }
         return RespBean.error("删除失败!");
+
     }
 
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
     public Map<String, Object> getEmployeeByPage(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "") String name) {
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "NO") String hrFlag) {
+        int hrId = 0;
+        if("YES".equals(hrFlag.trim())){
+            hrId =new Long(HrUtils.getCurrentHr().getId()).intValue();
+        }
         Map<String, Object> map = new HashMap<>();
-        List<Employee> employeeByPage = empService.getEmployeeByPage(page, size,name);
-        Long count = empService.getCountByName(name);
+        List<Employee> employeeByPage = empService.getEmployeeByPage(page, size,name,hrId);
+        Long count = empService.getCountByName(name,hrId);
         map.put("emps", employeeByPage);
         map.put("count", count);
         return map;
@@ -169,6 +178,24 @@ public class EmpBasicController {
             return RespBean.ok("导入成功!");
         }
         return RespBean.error("导入失败!");
+    }
+
+    @RequestMapping(value = "/empByPageAndHrId", method = RequestMethod.GET)
+    public ResponseData getEmployeeByPageAndHrId(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "") String name,
+           @RequestParam(defaultValue = "NO") String hr_id) {
+        int hrId = 0;
+        if("YES".equals(hr_id)){
+            hrId =Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId()));
+        }
+        Map<String, Object> map = new HashMap<>();
+        List<Employee> employeeByPage = empService.getEmployeeByPageAndHrId(hrId,page, size,name);
+        Long count = empService.getCountByName(name,hrId);
+        map.put("talents", employeeByPage);
+        map.put("count", count);
+        return ResultCodeEnum.SUCCESS.getResponse(map);
     }
 
 }

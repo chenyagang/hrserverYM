@@ -1,5 +1,7 @@
 package org.sang.bean;
 
+import java.util.Date;
+
 public class TalentPool {
 
     private Integer id;
@@ -22,12 +24,22 @@ public class TalentPool {
 
     private Integer pageSize;
 
+    private String hrName;
+
     public Integer getPageNo() {
         return pageNo;
     }
 
     public void setPageNo(Integer pageNo) {
         this.pageNo = pageNo;
+    }
+
+    public String getHrName() {
+        return hrName;
+    }
+
+    public void setHrName(String hrName) {
+        this.hrName = hrName;
     }
 
     public Integer getPageSize() {

@@ -93,17 +93,23 @@
     <select id="getEmployeeByPage" resultType="org.sang.bean.Employee">
         select * from employee as e
         where 1=1
+        <if test="hr_id!=null and hr_id!=''">
+            and e.hr_id= #{hr_id,jdbcType=INTEGER}
+        </if>
         <if test="name!=null and name!=''">
             and e.name LIKE concat('%',#{name},'%')
         </if>
         <if test="start!=null and size!=''">
-            order by e.id limit #{start},#{size}
+            ORDER BY e.id DESC limit #{start},#{size}
         </if>
     </select>
 
     <select id="getCountByName" resultType="Long">
         SELECT count(*) FROM employee e WHERE 1=1
 
+        <if test="hr_id!=null and hr_id!=''">
+            and e.hr_id= #{hr_id,jdbcType=INTEGER}
+        </if>
         <if test="name!=null and name!=''">
             and e.name LIKE concat('%',#{name},'%')
         </if>
@@ -126,5 +132,43 @@
             #{id}
         </foreach>
     </delete>
+
+    <select id="getEmpByNameAndPhone" resultType="org.sang.bean.Employee">
+        select * from employee WHERE name= #{name} and phone= #{phone};
+    </select>
+
+    <select id="getEmpByPhone" resultType="org.sang.bean.Employee">
+        select * from employee WHERE phone= #{phone};
+    </select>
+
+    <update id="updateEmpShowInterviewById" parameterType="int">
+        update employee SET showInterview = '1' where id = #{id}
+    </update>
+
+    <select id="getEmployeeByPageAndHrId" resultType="org.sang.bean.Employee">
+        select * from employee as e
+        where showInterview = '1'
+        <if test="hr_id != null and hr_id!=''">
+            and hr_id = #{hr_id}
+        </if>
+        <if test="name!=null and name!=''">
+            and e.name LIKE concat('%',#{name},'%')
+        </if>
+        <if test="start!=null and size!=''">
+            order by e.id limit #{start},#{size}
+        </if>
+    </select>
+
+    <select id="getEmpCountByHrPhoneName" resultType="org.sang.bean.Employee">
+        SELECT count(*) FROM employee
+        <where>
+            <if test="phone != null">
+                and phone = #{phone}
+            </if>
+            <if test="name != null">
+                and name like concat ('%',#{name},'%')
+            </if>
+        </where>
+    </select>
 
 </mapper>

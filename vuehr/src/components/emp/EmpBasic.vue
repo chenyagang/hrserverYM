@@ -36,8 +36,8 @@
           </el-upload>
           <el-upload
             :show-file-list="false"
-            accept="application/vnd.ms-excel"
-            action="/employee/basic/importEmp"
+            accept="application/vnd.ms-excel,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            action="/talent/basic/importEmp"
             :on-success="uploadResumeSuccess"
             :on-error="uploadResumeError" :disabled="fileUploadBtnText=='正在导入'"
             :before-upload="beforeFileUpload" style="display: inline">
@@ -109,6 +109,8 @@
             stripe
             @row-click="rightClick"
             @selection-change="handleSelectionChange"
+            @row-click="clickTableRow"
+            @row-contextmenu="rightClick"
             size="mini"
             style="width: 100%">
 
@@ -231,6 +233,10 @@
               </template>
             </el-table-column>
           </el-table>
+           <div id="menu">
+                      <div class="menu" v-for="(item,index) in menus" :key="index" @click.stop="infoClick(index)">{{item}}</div>
+           </div>
+
           <div style="display: flex;justify-content: space-between;margin: 2px">
             <el-pagination
               background
@@ -496,9 +502,9 @@
           </el-row>
 
           <span slot="footer" class="dialog-footer">
-    <el-button size="mini" @click="cancelEidt">取 消</el-button>
-    <el-button size="mini" type="primary" @click="addEmp('addEmpForm')">确 定</el-button>
-  </span>
+          <el-button size="mini" @click="cancelEidt">取 消</el-button>
+          <el-button size="mini" type="primary" @click="addEmp('addEmpForm')">确 定</el-button>
+          </span>
         </el-dialog>
       </div>
     </el-form>
@@ -562,6 +568,9 @@
   export default {
     data() {
       return {
+
+       menus: ['加入面试', '方案分析', '方案存库', '清除方案'],
+
         emps: [],
         keywords: '',
         fileUploadBtnText: '导入数据',
@@ -585,6 +594,7 @@
           name: '高中'
         }, {id: 2, name: '初中'}, {id: 1, name: '小学'}, {id: 8, name: '其他'}],
         deps: [],
+        mianshiList: [{id: 2, name: '初中'}, {id: 1, name: '加入面试'}],
         defaultProps: {
           label: 'name',
           isLeaf: 'leaf',
@@ -682,6 +692,61 @@
       this.loadEmps();
     },
     methods: {
+
+            // 自定义菜单的点击事件
+                        infoClick(index) {
+                            this.$alert('当前table的下标为'+this.currentRowIndex ,'你点击了自定义菜单的'+this.menus[index]+'功能', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    var menu = document.querySelector("#menu");
+                                    menu.style.display = 'none';
+                                }
+                            });
+                        },
+
+              // table的左键点击当前行事件
+                          clickTableRow(row, column, event) {
+                              var menu = document.querySelector("#menu");
+                              menu.style.display = 'none';
+                              // console.log(row,column,event)
+                              this.tableData.forEach((item, index) => {
+                                  if (row.name === item.name) {
+                                      this.radio = index;
+                                  }
+                              })
+                          },
+
+            // table的右键点击当前行事件
+            rightClick(row, column, event) {
+
+            this.$alert('当前table的下标为 12333   你点击了自定义菜单的功能', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    var menu = document.querySelector("#menu");
+                                    menu.style.display = 'none';
+                                }
+                            });
+
+                var menu = document.querySelector("#menu");
+                event.preventDefault();
+                //获取我们自定义的右键菜单
+
+
+                // 根据事件对象中鼠标点击的位置，进行定位
+                menu.style.left = event.clientX + 'px';
+                menu.style.top = event.clientY + 'px';
+                // 改变自定义菜单的隐藏与显示
+                menu.style.display = 'block';
+                console.log(row,column);
+                // 获取当前右键点击table下标
+                this.emps.forEach((item,index) => {
+                    if(item.name === row.name) {
+                        this.currentRowIndex = index;
+                        return false;
+                    }
+                })
+            },
+
       fileUploadSuccess(response, file, fileList) {
         if (response) {
           this.$message({type: response.status, message: response.msg});
@@ -739,6 +804,62 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
+      updateShowInterview() {
+              this.$confirm('此操作将加入[' + this.multipleSelection.length + ']条数据到面试信息中, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                var ids = '';
+                for (var i = 0; i < this.multipleSelection.length; i++) {
+                  ids += this.multipleSelection[i].id + ",";
+             //     open(this.multipleSelection[i]);
+                }
+
+                this.doUpdateShowInterview(ids);
+              }).catch(() => {
+              });
+            },
+          /*   open(emp) {
+                    this.$prompt('请输入[' + emp.name + ']信息', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                      inputErrorMessage: '邮箱格式不正确'
+                    }).then(({ value }) => {
+                      this.$message({
+                        type: 'success',
+                        message: '你的邮箱是: ' + value
+                      });
+                    }).catch(() => {
+                      this.$message({
+                        type: 'info',
+                        message: '取消输入'
+                      });
+                    });
+                  },
+           open(emp) {
+                    this.$alert(
+                    'emp.name
+                    推荐客户:
+                    <el-input v-model="recommendCustomers" placeholder="请输入内容"></el-input>
+                    进展:
+                    <el-input v-model="progress" placeholder="请输入内容"></el-input>
+                       推荐日期：
+                       <el-input
+                         placeholder="请选择日期"
+                         suffix-icon="el-icon-date"
+                         v-model="recommendedDate">
+                       </el-input>
+                       <el-input
+                         placeholder="请输入内容"
+                         prefix-icon="el-icon-search"
+                         v-model="input2">
+                       </el-input>',
+                    {
+                      dangerouslyUseHTMLString: true
+                    });
+                    }，*/
       deleteManyEmps() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -763,6 +884,17 @@
         }).catch(() => {
         });
       },
+      doUpdateShowInterview(ids) {
+              this.tableLoading = true;
+              var _this = this;
+              this.putRequest("/talent/basic/updateInterview/", {ids:ids}).then(resp => {
+                _this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  var data = resp.data;
+                  _this.loadEmps();
+                }
+              })
+            },
       doDelete(ids) {
         this.tableLoading = true;
         var _this = this;
@@ -790,7 +922,7 @@
       loadEmps() {
         var _this = this;
         this.tableLoading = true;
-        this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords).then(resp => {
+        this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords+"&hrFlag= YES").then(resp => {
           this.tableLoading = false;
           if (resp && resp.status == 200) {
             debugger
@@ -809,7 +941,7 @@
             if (this.emp.id) {
               //更新
               this.tableLoading = true;
-              this.putRequest("/employee/basic/emp", this.emp).then(resp => {
+              this.putRequest("/employee/basic/updateEmp", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   var data = resp.data;
@@ -916,6 +1048,16 @@
         this.talent.job=row.job;
         this.talent.workAge=row.workAge;
       },
+      showEditEmpViewMianshi(row) {
+              console.log(row)
+              this.dialogTitle = "编辑员工信息";
+              this.emp = row;
+
+              this.emp.interviewTime = this.formatDate(row.interviewTime);
+              this.emp.workTime = this.formatDate(row.workTime);
+              this.dialogVisible = true;
+            },
+
       showAddEmpView() {
         this.dialogTitle = "上传简历";
         // this.dialogVisible = true;
@@ -973,6 +1115,38 @@
   };
 </script>
 <style>
+
+    #menu {
+        width: 120px;
+        height: 100px;
+        overflow: hidden; /*隐藏溢出的元素*/
+        box-shadow: 0 1px 1px #888, 1px 0 1px #ccc;
+        position: absolute;
+        display: none;
+        background: #ffffff;
+        z-index: 10;
+    }
+
+    .menu {
+        width: 125px;
+        height: 25px;
+        line-height: 25px;
+        text-indent: 10px;
+        cursor: pointer;
+    }
+
+    .menu:hover {
+        color: deeppink;
+        text-decoration: underline;
+    }
+
+
+
+
+
+
+
+
   .el-dialog__body {
     padding-top: 0px;
     padding-bottom: 0px;

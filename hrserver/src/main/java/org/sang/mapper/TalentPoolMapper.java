@@ -10,5 +10,9 @@ import java.util.Map;
 public interface TalentPoolMapper extends BaseMapper<TalentPool>{
 
     public List<TalentPool> selectOffer(Map<String , Object> map);
+
+    List<TalentPool> getTalentPoolPage(@Param("hr_id") long hr_id, @Param("start") Integer start, @Param("size") Integer size, @Param("name")String name);
+
+
     public List<Interview> selectByIds(Long hrId,@Param("ids")String[] id);
 }

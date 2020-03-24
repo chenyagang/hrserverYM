@@ -45,19 +45,19 @@ public class EmpService {
         return maxWorkID == null ? 0 : maxWorkID;
     }
 
-    public List<Employee> getEmployeeByPage(Integer page, Integer size, String name) {
+    public List<Employee> getEmployeeByPage(Integer page, Integer size, String name,int hr_id) {
         int start = (page - 1) * size;
         try {
-            return empMapper.getEmployeeByPage(start, size, name);
+            return empMapper.getEmployeeByPage(start, size, name,hr_id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    public Long getCountByName(String name) {
+    public Long getCountByName(String name,int hr_id) {
         try {
-            return empMapper.getCountByName(name);
+            return empMapper.getCountByName(name,hr_id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -89,11 +89,20 @@ public class EmpService {
     }
 
     public List<Employee> getAllEmployees() {
-        return empMapper.getEmployeeByPage(null, null, null);
+        return empMapper.getEmployeeByPage(null, null, null,0);
     }
 
     public int addEmps(List<Employee> emps) {
         return empMapper.addEmps(emps);
+    }
+
+    public int addEmp(Employee emp) {
+        try {
+            int i = empMapper.addEmp(emp);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public int updateEmp(Employee emp) {
@@ -110,5 +119,48 @@ public class EmpService {
     public List<Employee> getEmployeeByPageShort(Integer page, Integer size) {
         int start = (page - 1) * size;
         return empMapper.getEmployeeByPageShort(start, size);
+    }
+
+    public Employee getEmpByNameAndPhone(String name,String phone) {
+        return empMapper.getEmpByNameAndPhone(name,phone);
+    }
+
+    public Employee getEmpByPhone(String phone) {
+        try {
+            return  empMapper.getEmpByPhone(phone);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+             return null;
+    }
+
+    public int updateEmpShowResumeById(int id) {
+        try {
+            int i=empMapper.updateEmpShowInterviewById(id);
+            return i;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Employee> getEmployeeByPageAndHrId(long hrId,Integer page, Integer size, String name) {
+        int start = (page - 1) * size;
+        try {
+            return empMapper.getEmployeeByPageAndHrId(hrId,start, size, name);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public List<Employee> getEmpCountByHrPhoneName(String phone,String name){
+        try {
+            return empMapper.getEmpCountByHrPhoneName(phone,name);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }

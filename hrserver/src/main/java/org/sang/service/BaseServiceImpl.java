@@ -14,7 +14,13 @@ public class BaseServiceImpl<T> implements IBaseService<T>{
     private BaseMapper<T> baseMapper;
 
     public int add(T t){
-        return baseMapper.insert(t);
+        int i =0;
+        try {
+            i = baseMapper.insert(t);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return i;
     }
 
     public int edit(T t){
