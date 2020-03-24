@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.sang.mapper.InductionMapper">
+
+    <insert id="addInduction" parameterType="org.sang.bean.Induction">
+         insert into induction (
+            gender,
+            ductionDate,
+            technologyModule,
+            department,
+            inductionPlace,
+            hr,
+            category,
+            customer,
+            positiveTime,
+            graduationTime,
+            degree,
+            phone,
+            salary,
+            probationSalary,
+            cstomerQuotation,
+            grading,
+            idNumber,
+            BankCardNumber,
+            bank,
+            channel,
+            company,
+            note,
+            item) values (
+            #{gender,jdbcType=VARCHAR},
+            #{ductionDate,jdbcType=DATE},
+            #{technologyModule,jdbcType=VARCHAR},
+            #{department,jdbcType=VARCHAR},
+            #{inductionPlace,jdbcType=VARCHAR},
+            #{hrId,jdbcType=VARCHAR},
+            #{category,jdbcType=VARCHAR},
+            #{customer,jdbcType=VARCHAR},
+            #{positiveTime,jdbcType=DATE},
+            #{graduationTime,jdbcType=DATE},
+            #{degree,jdbcType=VARCHAR},
+            #{phone,jdbcType=VARCHAR},
+            #{salary,jdbcType=DECIMAL},
+            #{probationSalary,jdbcType=DECIMAL},
+            #{cstomerQuotation,jdbcType=DECIMAL},
+            #{grading,jdbcType=VARCHAR},
+            #{idNumber,jdbcType=VARCHAR},
+            #{BankCardNumber,jdbcType=VARCHAR},
+            #{bank,jdbcType=VARCHAR},
+            #{channel,jdbcType=VARCHAR},
+            #{company,jdbcType=VARCHAR},
+            #{note,jdbcType=VARCHAR},
+            #{item,jdbcType=VARCHAR}
+      )
+    </insert>
+    <update id="updateInduction" parameterType="org.sang.bean.Induction">
+        update induction
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null and gender != ''">
+                gender = #{gender,jdbcType=VARCHAR},
+            </if>
+            <if test="inductionDate != null">
+                inductionDate = #{inductionDate,jdbcType=DATE},
+            </if>
+            <if test="technologyModule != null and technologyModule != ''">
+                technologyModule =#{technologyModule,jdbcType=VARCHAR},
+            </if>
+
+            <if test="department != null">
+                department= #{department,jdbcType=VARCHAR},
+            </if>
+            <if test="inductionPlace != null and inductionPlace != ''">
+                inductionPlace= #{inductionPlace,jdbcType=VARCHAR},
+            </if>
+
+            <if test="category != null and category != ''">
+                category= #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="customer != null">
+                customer= #{customer,jdbcType=INTEGER},
+            </if>
+            <if test="positiveTime != null">
+                positiveTime= #{positiveTime,jdbcType=DATE},
+            </if>
+            <if test="graduationTime != null">
+                graduationTime= #{graduationTime,jdbcType=DATE},
+            </if>
+            <if test="degree != null and degree != ''">
+                degree= #{degree,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone= #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="salary != null and salary != ''">
+                salary= #{salary,jdbcType=DECIMAL},
+            </if>
+            <if test="probationSalary != null and probationSalary != ''">
+                probationSalary= #{probationSalary,jdbcType=DECIMAL},
+            </if>
+            <if test="cstomerQuotation != null and cstomerQuotation != ''">
+                cstomerQuotation= #{cstomerQuotation,jdbcType=DECIMAL},
+            </if>
+            <if test="grading != null">
+                grading= #{grading,jdbcType=VARCHAR},
+            </if>
+            <if test="idNumber != null">
+                idNumber= #{idNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="bankCardNumber != null and bankCardNumber != ''">
+                bankCardNumber= #{bankCardNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="bank != null and bank != ''">
+                bank= #{bank,jdbcType=VARCHAR},
+            </if>
+            <if test="channel != null and channel != ''">
+                channel= #{channel,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                company =#{company,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null and note != ''">
+                note =#{note,jdbcType=VARCHAR},
+            </if>
+            <if test="workAge != null and workAge != ''">
+                workAge =#{workAge,jdbcType=VARCHAR},
+            </if>
+            <if test="item != null and item != ''">
+                item =#{item,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id}
+
+    </update>
+
+    <select id="getInductioneByPage" resultType="org.sang.bean.Induction">
+        select * from induction as e
+        where 1=1
+        <if test="hr_id!=null and hr_id!=''">
+            and e.hr_id= #{hr_id,jdbcType=INTEGER}
+        </if>
+
+        <if test="name!=null and name!=''">
+            and e.name LIKE concat('%',#{name},'%')
+        </if>
+
+        <if test="start!=null and size!=''">
+            ORDER BY e.id DESC limit #{start},#{size}
+        </if>
+    </select>
+
+    <select id="getCountByName" resultType="Long">
+        SELECT count(1) FROM induction e WHERE 1=1
+
+        <if test="hr_id!=null and hr_id!=''">
+            and e.hr_id= #{hr_id,jdbcType=INTEGER}
+        </if>
+        <if test="name!=null and name!=''">
+            and e.name LIKE concat('%',#{name},'%')
+        </if>
+    </select>
+
+    <select id="getById" resultType="org.sang.bean.Induction">
+        SELECT * FROM induction WHERE id = #{id}
+    </select>
+
+    <select id="getByIds" resultType="org.sang.bean.Induction">
+        SELECT * FROM induction WHERE id in
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </select>
+
+
+
+    <delete id="deleteEmpById">
+        DELETE FROM employee WHERE id IN
+        <foreach collection="ids" separator="," open="(" close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getEmpByNameAndPhone" resultType="org.sang.bean.Employee">
+        select * from employee WHERE name= #{name} and phone= #{phone};
+    </select>
+
+    <select id="getEmpByPhone" resultType="org.sang.bean.Employee">
+        select * from employee WHERE phone= #{phone};
+    </select>
+
+    <update id="updateEmpShowInterviewById" parameterType="int">
+        update employee SET showInterview = '1' where id = #{id}
+    </update>
+
+    <select id="getEmployeeByPageAndHrId" resultType="org.sang.bean.Employee">
+        select * from employee as e
+        where showInterview = '1'
+        <if test="hr_id != null and hr_id!=''">
+            and hr_id = #{hr_id}
+        </if>
+        <if test="name!=null and name!=''">
+            and e.name LIKE concat('%',#{name},'%')
+        </if>
+        <if test="start!=null and size!=''">
+            order by e.id limit #{start},#{size}
+        </if>
+    </select>
+
+    <select id="getEmpCountByHrPhoneName" resultType="org.sang.bean.Employee">
+        SELECT count(*) FROM employee
+        <where>
+            <if test="phone != null">
+                and phone = #{phone}
+            </if>
+            <if test="name != null">
+                and name like concat ('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

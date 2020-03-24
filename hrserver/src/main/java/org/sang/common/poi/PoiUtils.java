@@ -206,6 +206,188 @@ public class PoiUtils {
         return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.CREATED);
     }
 
+    public static ResponseEntity<byte[]> exportInductionExcel(List<Induction> emps) {
+        HttpHeaders headers = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            //1.创建Excel文档
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            //2.创建文档摘要
+            workbook.createInformationProperties();
+            //3.获取文档信息，并配置
+            DocumentSummaryInformation dsi = workbook.getDocumentSummaryInformation();
+            //3.1文档类别
+            dsi.setCategory("入职信息");
+            //3.2设置文档管理员
+            dsi.setManager("江南一点雨");
+            //3.3设置组织机构
+            dsi.setCompany("睿辉");
+            //4.获取摘要信息并配置
+            SummaryInformation si = workbook.getSummaryInformation();
+            //4.1设置文档主题
+            si.setSubject("入职信息表");
+            //4.2.设置文档标题
+            si.setTitle("入职信息");
+            //4.3 设置文档作者
+            si.setAuthor("睿辉");
+            //4.4设置文档备注
+            si.setComments("备注信息暂无");
+            //创建Excel表单
+            HSSFSheet sheet = workbook.createSheet("入职信息表");
+            //创建日期显示格式
+            HSSFCellStyle dateCellStyle = workbook.createCellStyle();
+            dateCellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
+            //创建标题的显示样式
+            HSSFCellStyle headerStyle = workbook.createCellStyle();
+            headerStyle.setFillForegroundColor(IndexedColors.YELLOW.index);
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            //定义列的宽度
+            sheet.setColumnWidth(0, 5 * 256);
+            sheet.setColumnWidth(1, 12 * 256);
+            sheet.setColumnWidth(2, 10 * 256);
+            sheet.setColumnWidth(3, 5 * 256);
+            sheet.setColumnWidth(4, 12 * 256);
+            sheet.setColumnWidth(5, 20 * 256);
+            sheet.setColumnWidth(6, 10 * 256);
+            sheet.setColumnWidth(7, 10 * 256);
+            sheet.setColumnWidth(8, 16 * 256);
+            sheet.setColumnWidth(9, 12 * 256);
+            sheet.setColumnWidth(10, 15 * 256);
+            sheet.setColumnWidth(11, 20 * 256);
+            sheet.setColumnWidth(12, 16 * 256);
+            sheet.setColumnWidth(13, 14 * 256);
+            sheet.setColumnWidth(14, 14 * 256);
+            sheet.setColumnWidth(15, 12 * 256);
+            sheet.setColumnWidth(16, 8 * 256);
+            sheet.setColumnWidth(17, 16 * 256);
+            sheet.setColumnWidth(18, 20 * 256);
+            sheet.setColumnWidth(19, 12 * 256);
+            sheet.setColumnWidth(20, 8 * 256);
+            sheet.setColumnWidth(21, 25 * 256);
+            sheet.setColumnWidth(22, 14 * 256);
+            sheet.setColumnWidth(23, 12 * 256);
+            sheet.setColumnWidth(24, 12 * 256);
+            //5.设置表头
+            HSSFRow headerRow = sheet.createRow(0);
+            HSSFCell cell0 = headerRow.createCell(0);
+            cell0.setCellValue("序号");
+            cell0.setCellStyle(headerStyle);
+            HSSFCell cell1 = headerRow.createCell(1);
+            cell1.setCellValue("姓名");
+            cell1.setCellStyle(headerStyle);
+            HSSFCell cell2 = headerRow.createCell(2);
+            cell2.setCellValue("性别");
+            cell2.setCellStyle(headerStyle);
+            HSSFCell cell3 = headerRow.createCell(3);
+            cell3.setCellValue("入职时间");
+            cell3.setCellStyle(headerStyle);
+            HSSFCell cell4 = headerRow.createCell(4);
+            cell4.setCellValue("技术模块");
+            cell4.setCellStyle(headerStyle);
+            HSSFCell cell5 = headerRow.createCell(5);
+            cell5.setCellValue("部门");
+            cell5.setCellStyle(headerStyle);
+            HSSFCell cell6 = headerRow.createCell(6);
+            cell6.setCellValue("入职地点");
+            cell6.setCellStyle(headerStyle);
+            HSSFCell cell7 = headerRow.createCell(7);
+            cell7.setCellValue("员工类别");
+            cell7.setCellStyle(headerStyle);
+            HSSFCell cell8 = headerRow.createCell(8);
+            cell8.setCellValue("工作年限");
+            cell8.setCellStyle(headerStyle);
+            HSSFCell cell9 = headerRow.createCell(9);
+            cell9.setCellValue("客户");
+            cell9.setCellStyle(headerStyle);
+            HSSFCell cell10 = headerRow.createCell(10);
+            cell10.setCellValue("转正时间");
+            cell10.setCellStyle(headerStyle);
+            HSSFCell cell11 = headerRow.createCell(11);
+            cell11.setCellValue("毕业时间");
+            cell11.setCellStyle(headerStyle);
+            HSSFCell cell12 = headerRow.createCell(12);
+            cell12.setCellValue("学历");
+            cell12.setCellStyle(headerStyle);
+            HSSFCell cell13 = headerRow.createCell(13);
+            cell13.setCellValue("手机");
+            cell13.setCellStyle(headerStyle);
+            HSSFCell cell14 = headerRow.createCell(14);
+            cell14.setCellValue("正式薪资");
+            cell14.setCellStyle(headerStyle);
+            HSSFCell cell15 = headerRow.createCell(15);
+            cell15.setCellValue("试用期薪资");
+            cell15.setCellStyle(headerStyle);
+            HSSFCell cell16 = headerRow.createCell(16);
+            cell16.setCellValue("客户报价");
+            cell16.setCellStyle(headerStyle);
+            HSSFCell cell17 = headerRow.createCell(17);
+            cell17.setCellValue("定级");
+            cell17.setCellStyle(headerStyle);
+            HSSFCell cell18 = headerRow.createCell(18);
+            cell18.setCellValue("身份证");
+            cell18.setCellStyle(headerStyle);
+            HSSFCell cell19 = headerRow.createCell(19);
+            cell19.setCellValue("银行卡号");
+            cell19.setCellStyle(headerStyle);
+            HSSFCell cell20 = headerRow.createCell(20);
+            cell20.setCellValue("银行");
+            cell20.setCellStyle(headerStyle);
+            HSSFCell cell21 = headerRow.createCell(21);
+            cell21.setCellValue("渠道");
+            cell21.setCellStyle(headerStyle);
+            HSSFCell cell22 = headerRow.createCell(22);
+            cell22.setCellValue("公司");
+            cell22.setCellStyle(headerStyle);
+            HSSFCell cell23 = headerRow.createCell(23);
+            cell23.setCellValue("备注");
+            cell23.setCellStyle(headerStyle);
+            HSSFCell cell24 = headerRow.createCell(24);
+            cell24.setCellValue("入项");
+            cell24.setCellStyle(headerStyle);
+
+            //6.装数据
+            for (int i = 0; i < emps.size(); i++) {
+                HSSFRow row = sheet.createRow(i + 1);
+                Induction emp = emps.get(i);
+                row.createCell(0).setCellValue(emp.getId()==null?0:emp.getId());
+                row.createCell(1).setCellValue(emp.getName()==null?"":emp.getName());
+                row.createCell(2).setCellValue(emp.getGender()==null?"":emp.getGender());
+                row.createCell(3).setCellValue(emp.getInductionDate()==null?new Date(0):emp.getInductionDate());
+                row.createCell(4).setCellValue(emp.getTechnologyModule()==null?"":emp.getTechnologyModule());
+                row.createCell(5).setCellValue(emp.getDepartment()==null?"":emp.getDepartment());
+                row.createCell(6).setCellValue(emp.getInductionPlace()==null?"":emp.getInductionPlace());
+                row.createCell(7).setCellValue(emp.getCategory()==null?"":emp.getCategory());
+                row.createCell(8).setCellValue(emp.getWorkAge()==null?0:emp.getWorkAge());
+                row.createCell(9).setCellValue(emp.getCustomer()==null?"":emp.getCustomer());
+                row.createCell(10).setCellValue(emp.getPositiveTime()==null?new Date(0):emp.getPositiveTime());
+                row.createCell(11).setCellValue(emp.getGraduationTime()==null?new Date(0):emp.getGraduationTime());
+                row.createCell(12).setCellValue(emp.getDegree()==null?"":emp.getDegree());
+                row.createCell(13).setCellValue(emp.getPhone()==null?"":emp.getPhone());
+                row.createCell(14).setCellValue(emp.getSalary()==null?0:emp.getSalary());
+                row.createCell(15).setCellValue(emp.getProbationSalary()==null?0:emp.getProbationSalary());
+                row.createCell(16).setCellValue(emp.getCstomerQuotation()==null?0:emp.getCstomerQuotation());
+                row.createCell(17).setCellValue(emp.getGrading()==null?"":emp.getGrading());
+                row.createCell(18).setCellValue(emp.getIdNumber()==null?"":emp.getIdNumber());
+                row.createCell(19).setCellValue(emp.getBankCardNumber()==null?"":emp.getBankCardNumber());
+                row.createCell(20).setCellValue(emp.getBank()==null?"":emp.getBank());
+                row.createCell(21).setCellValue(emp.getChannel()==null?"":emp.getChannel());
+                row.createCell(22).setCellValue(emp.getCompany()==null?"":emp.getCompany());
+                row.createCell(23).setCellValue(emp.getNote()==null?"":emp.getNote());
+                row.createCell(24).setCellValue(emp.getItem()==null?"":emp.getItem());
+
+            }
+            headers = new HttpHeaders();
+            headers.setContentDispositionFormData("attachment",
+                    new String("入职信息表.xls".getBytes("UTF-8"), "iso-8859-1"));
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            baos = new ByteArrayOutputStream();
+            workbook.write(baos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<byte[]>(baos.toByteArray(), headers, HttpStatus.CREATED);
+    }
+
 
     public static ResponseEntity<byte[]> exportInterviewExcel(List<Interview> interviews) {
         HttpHeaders headers = null;

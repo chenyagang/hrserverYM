@@ -9,10 +9,7 @@ import org.sang.common.HrUtils;
 import org.sang.common.ResponseData;
 import org.sang.common.ResultCodeEnum;
 import org.sang.common.poi.PoiUtils;
-import org.sang.service.DepartmentService;
-import org.sang.service.EmpService;
-import org.sang.service.JobLevelService;
-import org.sang.service.PositionService;
+import org.sang.service.*;
 import org.sang.utils.WordDocx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +43,8 @@ public class EmpBasicController {
     TemplateEngine templateEngine;
     @Autowired
     JavaMailSender javaMailSender;
+    @Autowired
+    HrService hrService;
 
     @RequestMapping(value = "/basicdata", method = RequestMethod.GET)
     public Map<String, Object> getAllNations() {
@@ -195,12 +194,17 @@ public class EmpBasicController {
         return ResultCodeEnum.SUCCESS.getResponse(map);
     }
 
-    @RequestMapping(value = "/transferAuthority", method = RequestMethod.GET)
-    public RespBean TransferAuthority(Employee employee) {
+    @RequestMapping(value = "/transferAuthority", method = RequestMethod.POST)
+    public RespBean TransferAuthority(String id) {
+        Employee employee = empService.getById(id);
         employee.setTransferTime(new Date());
-
-        if (empService.updateEmp(employee) == 1) {
-            return RespBean.ok("转让成功!");
+        employee.setHr_id(HrUtils.getCurrentHr().getId().intValue());
+        try {
+            if (empService.updateEmp(employee) == 1) {
+                return RespBean.ok("转让成功!");
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
         return RespBean.error("转让失败!");
     }

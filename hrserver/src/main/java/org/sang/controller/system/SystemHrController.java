@@ -2,6 +2,7 @@ package org.sang.controller.system;
 
 import org.sang.bean.Hr;
 import org.sang.bean.RespBean;
+import org.sang.common.HrUtils;
 import org.sang.service.HrService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,11 @@ public class SystemHrController {
             return RespBean.ok("删除成功!");
         }
         return RespBean.error("删除失败!");
+    }
+
+    @RequestMapping(value = "/getCurrentUser", method = RequestMethod.GET)
+    public Hr getCurrentUser() {
+        return HrUtils.getCurrentHr();
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)

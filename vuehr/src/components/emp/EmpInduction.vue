@@ -16,11 +16,6 @@
           </el-input>
           <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchEmp">搜索
           </el-button>
-          <!-- <el-button slot="reference" type="primary" size="mini" style="margin-left: 5px"
-                      @click="showAdvanceSearchView"><i
-             class="fa fa-lg" v-bind:class="[advanceSearchViewVisible ? faangledoubleup:faangledoubledown]"
-             style="margin-right: 5px"></i>高级搜索
-           </el-button>-->
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
           <el-upload
@@ -30,21 +25,8 @@
             :on-success="fileUploadSuccess"
             :on-error="fileUploadError" :disabled="fileUploadBtnText=='正在导入'"
             :before-upload="beforeFileUpload" style="display: inline">
-            <!-- <el-button size="mini" type="success" :loading="fileUploadBtnText=='正在导入'"><i class="fa fa-lg fa-level-up"
-                                                                                           style="margin-right: 5px"></i>{{fileUploadBtnText}}
-             </el-button>-->
           </el-upload>
-          <el-upload
-            :show-file-list="false"
-            accept="application/vnd.ms-excel,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            action="/talent/basic/importEmp"
-            :on-success="uploadResumeSuccess"
-            :on-error="uploadResumeError" :disabled="fileUploadBtnText=='正在导入'"
-            :before-upload="beforeFileUpload" style="display: inline">
-            <el-button size="mini" type="primary" :loading="fileUploadBtnText=='正在导入'"><i class="fa fa-lg fa-level-up"
-                                                                                          style="margin-right: 5px"></i>{{uploadResumeBtnText}}
-            </el-button>
-          </el-upload>
+
           <el-button type="success" size="mini" @click="exportEmps"><i class="fa fa-lg fa-level-down"
                                                                        style="margin-right: 5px"></i>批量导出数据
           </el-button>
@@ -125,82 +107,110 @@
               width="70">
             </el-table-column>
             <el-table-column
-              prop="phone"
-              label="电话"
-              align="center"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="school"
-              label="学校"
-              align="center"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              prop="tiptopDegree"
-              label="学历"
-              align="center"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              width="85"
-              align="center"
-              label="毕业时间">
-              <template slot-scope="scope">{{ scope.row.graduationTime | formatDate}}</template>
-            </el-table-column>
-            <el-table-column
               prop="gender"
               label="性别"
               align="center"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              prop="inductionDate"
+              label="入职时间"
+              align="center"
+              width="100">
+              <template slot-scope="scope">{{ scope.row.inductionDate | formatDate}}</template>
+            </el-table-column>
+            <el-table-column
+              prop="technologyModule"
+              label="技术模块"
+              align="center"
               width="50">
             </el-table-column>
             <el-table-column
-              prop="workplace"
-              label="工作地点"
+              prop="category"
+              label="员工类别"
               align="center"
               width="70">
             </el-table-column>
             <el-table-column
-              prop="job"
-              label="岗位"
-              align="center"
+              prop="customer"
+              label="对应客户"
+              align="customer"
               width="50">
             </el-table-column>
             <el-table-column
-              prop="workExperience"
-              label="工作经验"
+              prop="graduationTime"
+              label="毕业时间"
               align="center"
               width="100">
+              <template slot-scope="scope">{{ scope.row.graduationTime | formatDate}}</template>
             </el-table-column>
             <el-table-column
-              prop="wedlock"
-              label="婚姻"
+              prop="positiveTime"
+              label="转正时间"
+              align="center"
+              width="50">
+              <template slot-scope="scope">{{ scope.row.positiveTime | formatDate}}</template>
+            </el-table-column>
+            <el-table-column
+              prop="degree"
+              label="学历"
+              align="center"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              prop="workAge"
+              label="工作年限"
+              align="center"
+              width="70">
+            </el-table-column>
+
+            <el-table-column
+              prop="phone"
+              label="联系方式"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
-              prop="currentSalary"
+              prop="salary"
+              label="薪资"
+              align="center"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              prop="probationSalary"
               label="当前薪资"
               align="center"
-              width="70">
+              width="50">
             </el-table-column>
             <el-table-column
-              prop="expectedSalary"
-              label="期望薪资"
+              prop="cstomerQuotation"
+              label="客户报价"
               align="center"
-              width="70">
+              width="50">
             </el-table-column>
             <el-table-column
-              prop="recommendClient"
-              label="推荐客户"
+              prop="grading"
+              label="定级"
               align="center"
-              width="70">
+              width="50">
             </el-table-column>
             <el-table-column
-              prop="communicationContent"
-              label="沟通内容"
+              prop="idNumber"
+              label="身份证号"
               align="center"
-              width="100">
+              width="50">
+            </el-table-column>
+            <el-table-column
+              prop="bankCardNumber"
+              label="银行卡号"
+              align="center"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              prop="bank"
+              label="入户银行"
+              align="center"
+              width="50">
             </el-table-column>
             <el-table-column
               prop="channel"
@@ -209,30 +219,35 @@
               width="50">
             </el-table-column>
             <el-table-column
-              prop="hr"
-              label="HR"
+              prop="company"
+              label="公司"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
+              prop="note"
+              label="备注"
+              align="center"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              prop="item"
+              label="入项"
+              align="center"
+              width="50">
+            </el-table-column>
+
+            <el-table-column
               fixed="right"
+              align="center"
               label="操作"
               width="195">
               <template slot-scope="scope">
-<!--                {{hr.id}} ..{{scope.row.hr_id}}-->
-                <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <!--                {{hr.id}} ..{{scope.row.hr_id}}-->
+                <el-button @click="showEditEmpView(scope.row)"
+                           style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
-                <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
-                           @click="exportWord(scope.row)" size="mini">导出模板
-                </el-button>
-                <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="exportExecl(scope.row)">导出表格
-                </el-button>
-                <el-button v-if="hr.id!=scope.row.hr_id" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="transferAuthority(scope.row)">转让
-                </el-button>
-
               </template>
             </el-table-column>
           </el-table>
@@ -272,22 +287,6 @@
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="学校:" prop="school">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.school" size="mini" style="width: 150px"
-                            placeholder="学校"></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="电话号码:" prop="phone">
-                  <el-input prefix-icon="el-icon-phone" v-model="emp.phone" size="mini" style="width: 150px"
-                            placeholder="电话号码..."></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="5">
-              <div>
                 <el-form-item label="性别:" prop="gender">
                   <el-radio-group v-model="emp.gender">
                     <el-radio label="男">男</el-radio>
@@ -296,19 +295,87 @@
                 </el-form-item>
               </div>
             </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="入职时间:" prop="gender">
+                  <el-date-picker
+                    v-model="emp.inductionDate"
+                    size="mini"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    style="width: 135px"
+                    type="date"
+                    placeholder="入职时间">
+                  </el-date-picker>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="5">
+              <div>
+                <el-form-item label="技术模块:" prop="technologyModule">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.technologyModule" size="mini" style="width: 150px"
+                            placeholder="请输入技术模块"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
           </el-row>
           <el-row>
             <el-col :span="6">
               <div>
-                <el-form-item label="学历:" prop="tiptopDegree">
-                  <el-select v-model="emp.tiptopDegree" style="width: 150px" size="mini" placeholder="最高学历">
+                <el-form-item label="部门:" prop="department">
+                  <el-select v-model="emp.department" style="width: 150px" size="mini" placeholder="部门">
                     <el-option
-                      v-for="item in degrees"
+                      v-for="item in department"
                       :key="item.id"
                       :label="item.name"
                       :value="item.name">
                     </el-option>
                   </el-select>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="工作地点:" prop="inductionPlace">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.inductionPlace" size="mini" style="width: 150px"
+                            placeholder="请输入工作地点"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="员工类别:" prop="category">
+                  <el-select v-model="emp.category" style="width: 150px" size="mini" placeholder="最高学历">
+                    <el-option
+                      v-for="item in category"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.name">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="客户:" prop="customer">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.customer" size="mini" style="width: 150px"
+                            placeholder="客户"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="转正时间:" prop="positiveTime">
+                  <el-date-picker
+                    v-model="emp.positiveTime"
+                    size="mini"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    style="width: 135px"
+                    type="date"
+                    placeholder="转正时间">
+                  </el-date-picker>
                 </el-form-item>
               </div>
             </el-col>
@@ -321,24 +388,30 @@
                     value-format="yyyy-MM-dd HH:mm:ss"
                     style="width: 135px"
                     type="date"
-                    placeholder="毕业时间">
+                    placeholder="到岗时间">
                   </el-date-picker>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="岗位:" prop="job">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.job" size="mini" style="width: 190px"
-                            placeholder="岗位"></el-input>
+                <el-form-item label="学历:" prop="degree">
+                  <el-select v-model="emp.degree" style="width: 150px" size="mini" placeholder="最高学历">
+                    <el-option
+                      v-for="item in degrees"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.name">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="工作地点:" prop="workplace">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.workplace" size="mini" style="width: 150px"
-                            placeholder="工作地点"></el-input>
+                <el-form-item label="电话号码:" prop="phone">
+                  <el-input prefix-icon="el-icon-phone" v-model="emp.phone" size="mini" style="width: 150px"
+                            placeholder="电话号码..."></el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -346,164 +419,137 @@
           <el-row>
             <el-col :span="6">
               <div>
+                <el-form-item label="正式薪资:" prop="salary">
+                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.salary" size="mini" :precision="2"
+                                   style="width: 130px" placeholder="正式薪资:K"></el-input-number>
+                  单位:千
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="试用期薪资:" prop="probationSalary">
+                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.probationSalary" size="mini" :precision="2"
+                                   style="width: 140px" placeholder="试用期薪资:K"></el-input-number>
+                  单位:千
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="客户报价:" prop="cstomerQuotation">
+                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.cstomerQuotation" size="mini" :precision="2"
+                                   style="width: 130px" placeholder="客户报价"></el-input-number>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="定级:" prop="grading">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.grading" size="mini" style="width: 200px"
+                            placeholder="定级..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="身份证号:" prop="idNumber">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.grading" size="mini" style="width: 200px"
+                            placeholder="身份证号..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="银行卡号:" prop="bankCardNumber">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.bankCardNumber" size="mini" style="width: 200px"
+                            placeholder="银行卡号..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="入户银行:" prop="bank">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.bank" size="mini" style="width: 200px"
+                            placeholder="入户银行..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
                 <el-form-item label="渠道:" prop="channel">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.channel" size="mini" style="width: 160px"
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.channel" size="mini" style="width: 200px"
                             placeholder="渠道..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="公司:" prop="company">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.company" size="mini" style="width: 200px"
+                            placeholder="公司..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="备注:" prop="note">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.note" size="mini" style="width: 200px"
+                            placeholder="备注..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="入项:" prop="item">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.item" size="mini" style="width: 200px"
+                            placeholder="入项..."></el-input>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
                 <el-form-item label="工作年限:" prop="workAge">
-                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.workAge" style="width: 130px" size="mini"
-                                   placeholder="岗位">
-                  </el-input-number>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="婚姻状况:" prop="wedlock">
-                  <el-radio-group v-model="emp.wedlock">
-                    <el-radio label="已婚">已婚</el-radio>
-                    <el-radio style="margin-left: 15px" label="未婚">未婚</el-radio>
-                    <!--                    <el-radio style="margin-left: 15px" label="离异">离异</el-radio>-->
-                  </el-radio-group>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="推荐客户:" prop="recommendClient">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.recommendClient" size="mini" style="width: 150px"
-                            placeholder="推荐客户..."></el-input>
+                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.workAge" size="mini" style="width: 150px"
+                                   placeholder="工作年限..."></el-input-number>
                 </el-form-item>
               </div>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="期望薪资:" prop="expectedSalary">
-                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.expectedSalary" size="mini" :precision="2"
-                                   style="width: 130px" placeholder="期望薪资:K"></el-input-number>
-                  单位:千
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="当前薪资:" prop="currentSalary">
-                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.currentSalary" size="mini" :precision="2"
-                                   style="width: 140px" placeholder="期望薪资:K"></el-input-number>
-                  单位:千
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="HR:" prop="hr">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.hr" size="mini" style="width: 200px"
-                            placeholder="HR..."></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="面试时间:" prop="interviewTime">
-                  <el-date-picker
-                    v-model="emp.interviewTime"
-                    size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
-                    style="width: 150px"
-                    type="date"
-                    placeholder="面试时间">
-                  </el-date-picker>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="到岗时间:" prop="workTime">
-                  <el-date-picker
-                    v-model="emp.workTime"
-                    size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
-                    style="width: 135px"
-                    type="date"
-                    placeholder="到岗时间">
-                  </el-date-picker>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <div>
-                <el-form-item label="沟通内容:" prop="communicationContent">
-                  <el-input
-                    v-model="emp.communicationContent"
-                    type="textarea"
-                    rows="8"
-                    col="24"
-                    style="width: 1030px"
-                    placeholder="沟通内容">
-                  </el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <div>
-                <el-form-item label="工作经验:" prop="workExperience">
-                  <el-input
-                    v-model="emp.workExperience"
-                    type="textarea"
-                    rows="8"
-                    col="24"
-                    style="width: 1030px"
-                    placeholder="工作经验">
-                  </el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <div>
-                <el-form-item label="简  介:" prop="introduction">
-                  <el-input
-                    v-model="emp.introduction"
-                    type="textarea"
-                    rows="8"
-                    col="24"
-                    style="margin-left:20px;width: 1030px"
-                    placeholder="简介">
-                  </el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <div>
-                <el-form-item label="项目经验:" prop="projectExperience">
-                  <el-input
-                    v-model="emp.projectExperience"
-                    type="textarea"
-                    rows="8"
-                    col="24"
-                    style="width: 1030px"
-                    placeholder="项目经验">
-                  </el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-
+          <!--  <el-row>
+              <el-col :span="24">
+                <div>
+                  <el-form-item label="bank:" prop="workExperience">
+                    <el-input prefix-icon="el-icon-edit" v-model="emp.bank" size="mini" style="width: 200px"
+                              placeholder="入户银行..."></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <div>
+                  <el-form-item label="渠道:" prop="channel">
+                    <el-input prefix-icon="el-icon-edit" v-model="emp.channel" size="mini" style="width: 200px"
+                              placeholder="渠道..."></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <div>
+                  <el-form-item label="公司:" prop="company">
+                    <el-input prefix-icon="el-icon-edit" v-model="emp.channel" size="mini" style="width: 200px"
+                              placeholder="公司..."></el-input>
+                  </el-form-item>
+                </div>
+              </el-col>
+            </el-row>-->
           <span slot="footer" class="dialog-footer">
           <el-button size="mini" @click="cancelEidt">取 消</el-button>
           <el-button size="mini" type="primary" @click="addEmp('addEmpForm')">确 定</el-button>
@@ -571,9 +617,7 @@
   export default {
     data() {
       return {
-
         menus: ['加入面试', '方案分析', '方案存库', '清除方案'],
-
         emps: [],
         keywords: '',
         fileUploadBtnText: '导入数据',
@@ -596,6 +640,8 @@
           id: 3,
           name: '高中'
         }, {id: 2, name: '初中'}, {id: 1, name: '小学'}, {id: 8, name: '其他'}],
+        department: [{id: "研发", name: '研发'}, {id: "人事", name: '人事'}, {id: "测试", name: '测试'}],
+        category: [{id: "正式", name: '正式'}, {id: "外协", name: '外协'}, {id: "兼职", name: '兼职'}, {id: "小微", name: '小微'}],
         deps: [],
         mianshiList: [{id: 2, name: '初中'}, {id: 1, name: '加入面试'}],
         defaultProps: {
@@ -609,29 +655,32 @@
         showOrHidePop: false,
         showOrHidePop2: false,
         emp: {
-          name: '',
-          phone: '',
-          school: '',
-          tiptopDegree: '',
-          graduationTime: '',
-          gender: 0,
-          workplace: '',
-          job: '',
-          workAge: 0,
-          wedlock: '',
-          currentSalary: '',
-          expectedSalary: '',
-          recommendClient: '',
-          channel: '',
-          communicationContent: '',
-          hr: '',
-          interviewTime: '',
-          workTime: '',
-          introduction: '',
-          workExperience: '',
-          projectExperience: ''
+          id: null,
+          hrId:0,
+          name: null,
+          gender: null,
+          inductionDate: null,
+          technologyModule: null,
+          department: null,
+          inductionPlace: null,
+          graduationTime: null,
+          positiveTime: null,
+          degree: null,
+          workAge: null,
+          phone: null,
+          salary: null,
+          probationSalary: null,
+          cstomerQuotation: null,
+          grading: null,
+          idNumber: null,
+          bankCardNumber: null,
+          bank: null,
+          channel: null,
+          company: null,
+          note: null,
+          item: null,
         },
-        hr:{},
+        hr: {},
         talent: {
           id: 0,
           name: "",
@@ -642,49 +691,7 @@
           workAge: 0,
           progress: "",
         },
-        rules: {
-          name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
-          gender:
-            [{required: true, message: '必填:性别', trigger: 'blur'}],
-          birthday:
-            [{required: true, message: '必填:出生日期', trigger: 'blur'}],
-          idCard:
-            [{
-              required: true,
-              message: '必填:身份证号码',
-              trigger: 'blur'
-            }, {
-              pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
-              message: '身份证号码格式不正确',
-              trigger: 'blur'
-            }],
-          nationId:
-            [{required: true, message: '必填:民族', trigger: 'change'}],
-          nativePlace:
-            [{required: true, message: '必填:籍贯', trigger: 'blur'}],
-          politicId:
-            [{required: true, message: '必填:政治面貌', trigger: 'blur'}],
-          tiptopDegree:
-            [{required: true, message: '必填:学历', trigger: 'blur'}],
-          email:
-            [{required: true, message: '必填:电子邮箱', trigger: 'blur'}, {
-              type: 'email',
-              message: '邮箱格式不正确',
-              trigger: 'blur'
-            }],
-          phone:
-            [{required: true, message: '必填:电话号码', trigger: 'blur'}],
-          graduationTime:
-            [{required: true, message: '必填:毕业时间', trigger: 'blur'}],
-          workplace:
-            [{required: true, message: '必填:工作地点', trigger: 'blur'}],
-          job:
-            [{required: true, message: '必填:岗位', trigger: 'blur'}],
-          communicationContent:
-            [{required: true, message: '必填:沟通内容', trigger: 'blur'}],
-          school:
-            [{required: true, message: '必填:毕业院校', trigger: 'blur'}],
-        },
+        rules: {},
         talentRules: {
           name: [{required: true, message: '必填:姓名', trigger: 'blur'}]
         }
@@ -740,7 +747,7 @@
           ids += this.multipleSelection[i].id + ",";
         }
         ids = ids.substring(0, ids.lastIndexOf(','));
-        window.open("/employee/basic/exportEmp?id=" + ids, "_parent");
+        window.open("/employee/basic/exportInduction?id=" + ids, "_parent");
       },
       exportExecl(row) {
         window.open("/employee/basic/exportExecl?id=" + row.id, "_parent");
@@ -782,46 +789,6 @@
         }).catch(() => {
         });
       },
-      /*   open(emp) {
-                this.$prompt('请输入[' + emp.name + ']信息', '提示', {
-                  confirmButtonText: '确定',
-                  cancelButtonText: '取消',
-                  inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-                  inputErrorMessage: '邮箱格式不正确'
-                }).then(({ value }) => {
-                  this.$message({
-                    type: 'success',
-                    message: '你的邮箱是: ' + value
-                  });
-                }).catch(() => {
-                  this.$message({
-                    type: 'info',
-                    message: '取消输入'
-                  });
-                });
-              },
-       open(emp) {
-                this.$alert(
-                'emp.name
-                推荐客户:
-                <el-input v-model="recommendCustomers" placeholder="请输入内容"></el-input>
-                进展:
-                <el-input v-model="progress" placeholder="请输入内容"></el-input>
-                   推荐日期：
-                   <el-input
-                     placeholder="请选择日期"
-                     suffix-icon="el-icon-date"
-                     v-model="recommendedDate">
-                   </el-input>
-                   <el-input
-                     placeholder="请输入内容"
-                     prefix-icon="el-icon-search"
-                     v-model="input2">
-                   </el-input>',
-                {
-                  dangerouslyUseHTMLString: true
-                });
-                }，*/
       deleteManyEmps() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -855,7 +822,7 @@
         }).then(() => {
           this.tableLoading = true;
           var _this = this;
-          this.emp=row;
+          this.emp = row;
           debugger
           this.postRequest("/employee/basic/transferAuthority?id=" + row.id).then(resp => {
             _this.tableLoading = false;
@@ -906,7 +873,7 @@
       loadEmps() {
         var _this = this;
         this.tableLoading = true;
-        this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= YES").then(resp => {
+        this.getRequest("/employee/basic/getInductionByPage?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= YES").then(resp => {
           this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;
@@ -923,7 +890,8 @@
             if (this.emp.id) {
               //更新
               this.tableLoading = true;
-              this.putRequest("/employee/basic/updateEmp", this.emp).then(resp => {
+              this.emp.hrId=0;
+              this.putRequest("/employee/basic/updateInduction", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   var data = resp.data;
@@ -935,7 +903,8 @@
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/employee/basic/emp", this.emp).then(resp => {
+              this.emp.hrId=0;
+              this.postRequest("/employee/basic/insertInduction", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   var data = resp.data;
@@ -998,12 +967,12 @@
         this.showOrHidePop2 = false;
         this.depTextColor = '#606266';
       },
-      initData(){
+      initData() {
         var _this = this;
         this.getRequest("/system/hr/getCurrentUser").then(resp => {
           if (resp && resp.status == 200) {
             debugger
-            this.hr=resp.data;
+            this.hr = resp.data;
           }
         })
       },
@@ -1012,8 +981,6 @@
         this.dialogTitle = "编辑员工";
         this.emp = row;
 
-        this.emp.interviewTime = this.formatDate(row.interviewTime);
-        this.emp.workTime = this.formatDate(row.workTime);
         this.dialogVisible = true;
       },
       rightClick(row) {
@@ -1028,9 +995,6 @@
         console.log(row)
         this.dialogTitle = "编辑员工信息";
         this.emp = row;
-
-        this.emp.interviewTime = this.formatDate(row.interviewTime);
-        this.emp.workTime = this.formatDate(row.workTime);
         this.dialogVisible = true;
       },
 
@@ -1046,34 +1010,30 @@
       },
       emptyEmpData() {
         this.emp = {
-          name: '',
-          gender: '',
-          birthday: '',
-          idCard: '',
-          wedlock: '',
-          nationId: '',
-          nativePlace: '',
-          politicId: '',
-          email: '',
-          phone: '',
-          address: '',
-          departmentId: '',
-          departmentName: '所属部门...',
-          jobLevelId: '',
-          posId: '',
-          engageForm: '',
-          tiptopDegree: '',
-          specialty: '',
-          school: '',
-          beginDate: '',
-          workState: '',
-          workID: '',
-          contractTerm: '',
-          conversionTime: '',
-          notWorkDate: '',
-          beginContract: '',
-          endContract: '',
-          workAge: ''
+          id: null,
+          hrId:0,
+          name: null,
+          gender: null,
+          inductionDate: null,
+          technologyModule: null,
+          department: null,
+          inductionPlace: null,
+          graduationTime: null,
+          positiveTime: null,
+          degree: null,
+          workAge: null,
+          phone: null,
+          salary: null,
+          probationSalary: null,
+          cstomerQuotation: null,
+          grading: null,
+          idNumber: null,
+          bankCardNumber: null,
+          bank: null,
+          channel: null,
+          company: null,
+          note: null,
+          item: null,
         }
       },
       emptyTalentData() {
