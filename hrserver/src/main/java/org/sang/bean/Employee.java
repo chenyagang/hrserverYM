@@ -35,15 +35,8 @@ public class Employee {
             pattern = "yyyy-MM-dd HH:mm:ss",
             timezone = "GMT+8"
     )
-    private Date transferTime;
+    private Date transferTime = new Date();
 
-    public Date getTransferTime() {
-        return transferTime;
-    }
-
-    public void setTransferTime(Date transferTime) {
-        this.transferTime = transferTime;
-    }
 
     private String education;
     private String post;
@@ -52,6 +45,14 @@ public class Employee {
     private String jobDescription;
     private String showInterview;
     private int hr_id;
+
+    public Date getTransferTime() {
+        return transferTime;
+    }
+
+    public void setTransferTime(Date transferTime) {
+        this.transferTime = transferTime;
+    }
 
     public int getHr_id() {
         return hr_id;

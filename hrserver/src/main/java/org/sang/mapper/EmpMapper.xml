@@ -5,20 +5,23 @@
 <mapper namespace="org.sang.mapper.EmpMapper">
 
     <insert id="addEmp" parameterType="org.sang.bean.Employee">
-            insert into employee (name, phone,
-      school, tiptopDegree, graduationTime, gender,
-      workplace, job, workAge,wedlock, currentSalary,expectedSalary,
-      recommendClient, channel,communicationContent,HR,interviewTime,workTime,introduction,workExperience,projectExperience
+      insert into employee (name,phone,school,tiptopDegree,
+      graduationTime, gender, workplace,job,
+      workAge,wedlock, currentSalary,expectedSalary,
+      recommendClient, channel,communicationContent,hr,
+	  interviewTime,workTime,introduction,workExperience,
+	  projectExperience,fileURL,hr_id,transferTime
       )
     values (
      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR}, #{tiptopDegree,jdbcType=VARCHAR},
      #{graduationTime,jdbcType=DATE}, #{gender,jdbcType=VARCHAR}, #{workplace,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR},
      #{workAge,jdbcType=INTEGER}, #{wedlock,jdbcType=VARCHAR}, #{currentSalary,jdbcType=DECIMAL}, #{expectedSalary,jdbcType=DECIMAL},
-     #{recommendClient,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, #{communicationContent,jdbcType=VARCHAR}, #{HR,jdbcType=VARCHAR},
+     #{recommendClient,jdbcType=VARCHAR}, #{channel,jdbcType=VARCHAR}, #{communicationContent,jdbcType=VARCHAR}, #{hr,jdbcType=VARCHAR},
      #{interviewTime,jdbcType=DATE}, #{workTime,jdbcType=DATE}, #{introduction,jdbcType=VARCHAR}, #{workExperience,jdbcType=VARCHAR},
-     #{projectExperience,jdbcType=VARCHAR}
+     #{projectExperience,jdbcType=VARCHAR},#{fileURL,jdbcType=VARCHAR},#{hr_id,jdbcType=INTEGER}, #{transferTime,jdbcType=DATE}
       )
     </insert>
+
     <update id="updateEmp" parameterType="org.sang.bean.Employee">
         update employee
         <set>
@@ -113,12 +116,23 @@
         </if>
     </select>
 
-    <select id="getCountByName" resultType="Long">
+    <select id="getCountByNameHrId" resultType="Long">
         SELECT count(1) FROM employee e WHERE 1=1
 
         <if test="hr_id!=null and hr_id!=''">
             and e.hr_id= #{hr_id,jdbcType=INTEGER}
         </if>
+
+        and DATE_ADD(e.transferTime,INTERVAL 5 SECOND)
+        <if test="name!=null and name!=''">
+            and e.name LIKE concat('%',#{name},'%')
+        </if>
+    </select>
+
+    <select id="getCountByName" resultType="Long">
+        SELECT count(1) FROM employee e WHERE 1=1
+
+            and DATE_ADD(e.transferTime,INTERVAL 5 SECOND)
         <if test="name!=null and name!=''">
             and e.name LIKE concat('%',#{name},'%')
         </if>

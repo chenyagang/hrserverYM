@@ -747,7 +747,7 @@
           ids += this.multipleSelection[i].id + ",";
         }
         ids = ids.substring(0, ids.lastIndexOf(','));
-        window.open("/employee/basic/exportInduction?id=" + ids, "_parent");
+        window.open("/employee/basic/exportEmp?id=" + ids, "_parent");
       },
       exportExecl(row) {
         window.open("/employee/basic/exportExecl?id=" + row.id, "_parent");
