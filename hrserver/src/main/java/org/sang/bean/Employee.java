@@ -1,13 +1,12 @@
 package org.sang.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 public class Employee {
-
-
-
     private Long id;
     private String name;
     private String phone;
@@ -30,7 +29,14 @@ public class Employee {
     private String introduction;
     private String workExperience;
     private String projectExperience;
+
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
     private Date transferTime = new Date();
+
 
     private String education;
     private String post;
