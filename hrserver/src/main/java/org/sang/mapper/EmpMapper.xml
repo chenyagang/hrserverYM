@@ -109,14 +109,23 @@
         </if>
     </select>
 
-    <select id="getCountByName" resultType="Long">
+    <select id="getCountByNameHrId" resultType="Long">
         SELECT count(1) FROM employee e WHERE 1=1
 
         <if test="hr_id!=null and hr_id!=''">
             and e.hr_id= #{hr_id,jdbcType=INTEGER}
         </if>
 
-            and DATE_ADD(transferTime,INTERVAL 5 SECOND)
+        and DATE_ADD(e.transferTime,INTERVAL 5 SECOND)
+        <if test="name!=null and name!=''">
+            and e.name LIKE concat('%',#{name},'%')
+        </if>
+    </select>
+
+    <select id="getCountByName" resultType="Long">
+        SELECT count(1) FROM employee e WHERE 1=1
+
+            and DATE_ADD(e.transferTime,INTERVAL 5 SECOND)
         <if test="name!=null and name!=''">
             and e.name LIKE concat('%',#{name},'%')
         </if>

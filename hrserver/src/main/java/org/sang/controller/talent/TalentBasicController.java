@@ -292,12 +292,15 @@ public class TalentBasicController {
             @RequestParam(defaultValue = "") String name,
             @RequestParam(defaultValue = "NO") String hr_id) {
         int hrId = 0;
+        Long count = 0L;
         if("YES".equals(hr_id)){
             hrId =Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId()));
+            count = empService.getCountByNameHrId(name,hrId);
+        }else {
+            count = empService.getCountByName(name);
         }
         Map<String, Object> map = new HashMap<>();
         List<TalentPool> employeeByPage = talentPoolService.getTalentPoolPage(hrId,page, size,name);
-        Long count = empService.getCountByName(name,hrId);
         map.put("talents", employeeByPage);
         map.put("count", count);
         return ResultCodeEnum.SUCCESS.getResponse(map);

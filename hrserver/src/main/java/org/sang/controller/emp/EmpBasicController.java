@@ -107,12 +107,15 @@ public class EmpBasicController {
             @RequestParam(defaultValue = "") String name,
             @RequestParam(defaultValue = "NO") String hrFlag) {
         int hrId = 0;
+        Long count =0L;
         if("YES".equals(hrFlag.trim())){
             hrId =new Long(HrUtils.getCurrentHr().getId()).intValue();
+            count =  empService.getCountByNameHrId(name,hrId);
+        }else {
+            count = empService.getCountByName(name);
         }
         Map<String, Object> map = new HashMap<>();
         List<Employee> employeeByPage = empService.getEmployeeByPage(page, size,name,hrId);
-        Long count = empService.getCountByName(name,hrId);
         map.put("emps", employeeByPage);
         map.put("count", count);
         return map;
@@ -187,12 +190,16 @@ public class EmpBasicController {
             @RequestParam(defaultValue = "") String name,
            @RequestParam(defaultValue = "NO") String hr_id) {
         int hrId = 0;
+        Long count = 0L;
         if("YES".equals(hr_id)){
             hrId =Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId()));
+            count = empService.getCountByNameHrId(name,hrId);
+        }else {
+            count = empService.getCountByName(name);
         }
         Map<String, Object> map = new HashMap<>();
         List<Employee> employeeByPage = empService.getEmployeeByPageAndHrId(hrId,page, size,name);
-        Long count = empService.getCountByName(name,hrId);
+
         map.put("talents", employeeByPage);
         map.put("count", count);
         return ResultCodeEnum.SUCCESS.getResponse(map);

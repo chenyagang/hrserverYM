@@ -55,13 +55,22 @@ public class EmpService {
         return null;
     }
 
-    public Long getCountByName(String name,int hr_id) {
+    public Long getCountByNameHrId(String name,int hr_id) {
         try {
-            return empMapper.getCountByName(name,hr_id);
+            return empMapper.getCountByNameHrId(name,hr_id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return null;
+        return 0L;
+    }
+
+    public Long getCountByName(String name) {
+        try {
+            return empMapper.getCountByName(name);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0L;
     }
 
     public Employee getById(String id){
