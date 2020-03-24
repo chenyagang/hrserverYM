@@ -12,10 +12,7 @@ import org.sang.service.TalentPoolService;
 import org.sang.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
@@ -359,7 +356,7 @@ public class TalentBasicController {
             CommonUtis.deleteFile(fileRespBean.getMsg());
             return RespBean.error("添加候选人失败！");
         }
-        return RespBean.ok("上传成功!").setStatus(CommonUtis.SUCCESS_200);
+        return RespBean.ok("上传成功!");
     }
 
     @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
@@ -388,24 +385,90 @@ public class TalentBasicController {
         } catch (Exception e) {
             return RespBean.error("上传失败");
         }
-        return RespBean.ok(filePathName).setStatus(CommonUtis.SUCCESS_200);
+        return RespBean.ok(filePathName);
     }
 
-    @RequestMapping(value="/addInterview",method=RequestMethod.POST)
-    public RespBean addInterview(List<String> listId) {
+    /*
+     * @author ll
+     * @Description 新增
+     * @date 2018/11/13 15:51
+     * @param [talentPool]
+     * @return org.sang.common.ResponseData
+     */
+    @RequestMapping(value = "/addTalentPool", method = RequestMethod.POST)
+    public RespBean addTalentPool(TalentPool talentPool) {
+//        Long nowMillis = System.currentTimeMillis();
+//        talentPool.setAddDate(nowMillis + "");
+//        talentPool.setOperTime(nowMillis + "");
+        if(StringUtils.isEmpty(talentPool.getRecommendTime())){ //talentPool.getInterviewDate()) + "",CommonUtis.YYYY_MM_DD
+            talentPool.setRecommendTime(DateTimeUtil.dateToStamp(talentPool.getRecommendTime())+"");
+        }
+        talentPool.setHrId(HrUtils.getCurrentHr().getId().intValue());
+        talentPool.setHrName(HrUtils.getCurrentHr().getName());
+        if(0!=talentPoolService.add(talentPool)){
+            return RespBean.ok("加入面试成功！");
+        }
+        return RespBean.error("加入面试失败！");
+    }
 
-        if(!listId.isEmpty() || listId != null || listId.size() > 0){
-            int size = listId.size();
-            for (String id : listId) {
-                int i = Integer.parseInt(id.trim());
-                if(empService.updateEmpShowResumeById(i)!=0){
-                   if(i==listId.size()){
-                       return RespBean.error("加入面试成功!");
-                   }
+
+    @RequestMapping(value="/updateInterview",method = RequestMethod.PUT)
+    public RespBean updateInterview(String ids) {
+
+        if (!StringUtils.isEmpty(ids)) {
+            String[] listId = ids.split(",");
+            for (int i = 0; i < listId.length;){
+                if (empService.updateEmpShowResumeById(Integer.parseInt(listId[i].trim())) != 0) {
+                    if (i == listId.length-1) {
+                        return RespBean.ok("加入面试成功!");
+                    }
                 }
             }
         }
         return RespBean.error("加入面试失败!");
+    }
+
+    /*
+     * @author ll
+     * @Description 面试分页列表
+     * @date 2018/11/13 15:50
+     * @param [talentPool]
+     * @return org.sang.common.ResponseData
+     */
+    @RequestMapping(value = "/getTalentPoolPage", method = RequestMethod.GET)
+    public ResponseData getTalentPoolPage(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "NO") String hr_id) {
+        int hrId = 0;
+        if("YES".equals(hr_id)){
+            hrId =Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId()));
+        }
+        Map<String, Object> map = new HashMap<>();
+        List<TalentPool> employeeByPage = talentPoolService.getTalentPoolPage(hrId,page, size,name);
+        Long count = empService.getCountByName(name,hrId);
+        map.put("talents", employeeByPage);
+        map.put("count", count);
+        return ResultCodeEnum.SUCCESS.getResponse(map);
+    }
+
+    /*
+     * @author ll
+     * @Description 面试分页列表
+     * @date 2018/11/13 15:50
+     * @param [talentPool]
+     * @return org.sang.common.ResponseData
+     */
+    @RequestMapping(value = "/getInterviewPage", method = RequestMethod.GET)
+    public ResponseData getInterviewPage(TalentPool talentPool) {
+        Map<String, Object> map = new HashMap<>();
+        talentPool.setPageNo((talentPool.getPageNo() - 1) * talentPool.getPageSize());
+        List<TalentPool> talentPoolList = talentPoolService.queryPage(talentPool);
+        int count = talentPoolService.queryPageCount(talentPool);
+        map.put("talents", talentPoolList);
+        map.put("count", count);
+        return ResultCodeEnum.SUCCESS.getResponse(map);
     }
 
 }

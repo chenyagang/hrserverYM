@@ -147,9 +147,20 @@ public class TalentPoolService extends BaseServiceImpl<TalentPool> {
         double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         return f1;
     }
-
-
     public List<TalentPool> getOfferList(Map<String, Object> map) {
         return talentPoolMapper.selectOffer(map);
     }
+
+    public List<TalentPool> getTalentPoolPage(long hrId,Integer page, Integer size, String name) {
+        int start = (page - 1) * size;
+        try {
+            return talentPoolMapper.getTalentPoolPage(hrId,start, size, name);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+
+
 }

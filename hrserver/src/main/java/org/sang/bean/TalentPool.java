@@ -1,10 +1,25 @@
 package org.sang.bean;
 
+import java.util.Date;
+
 public class TalentPool {
 
     private Integer id;
 
     private String name;
+
+    private String recommendClient;
+
+    private String recommendTime;
+
+    private String job;
+
+    private Integer workAge;
+
+    private String progress;
+
+
+
 
     private String technology;
 
@@ -70,6 +85,46 @@ public class TalentPool {
     private String entryDate;
 
     private String entryMark;
+
+    public String getRecommendClient() {
+        return recommendClient;
+    }
+
+    public void setRecommendClient(String recommendClient) {
+        this.recommendClient = recommendClient;
+    }
+
+    public String getRecommendTime() {
+        return recommendTime;
+    }
+
+    public void setRecommendTime(String recommendTime) {
+        this.recommendTime = recommendTime;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public Integer getWorkAge() {
+        return workAge;
+    }
+
+    public void setWorkAge(Integer workAge) {
+        this.workAge = workAge;
+    }
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
 
     public String getStatusText() {
         return statusText;

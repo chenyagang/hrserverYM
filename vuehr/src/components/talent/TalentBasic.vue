@@ -919,7 +919,8 @@
           param += "&technology=" + this.talent.technology;
         }
 
-        this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
+       // this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
+        this.getRequest("/employee/basic/empByPageAndHrId" + param).then(resp => {
           this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;

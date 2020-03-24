@@ -37,6 +37,15 @@ public class Employee {
     private String fileURL;
     private String jobDescription;
     private String showInterview;
+    private int hr_id;
+
+    public int getHr_id() {
+        return hr_id;
+    }
+
+    public void setHr_id(int hr_id) {
+        this.hr_id = hr_id;
+    }
 
     public String getShowInterview() {
         return showInterview;

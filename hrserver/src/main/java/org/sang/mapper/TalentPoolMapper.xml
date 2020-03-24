@@ -375,77 +375,27 @@
             <if test="name != null">
                 name,
             </if>
-            <if test="technology != null">
-                technology,
-            </if>
-            <if test="workCity != null">
-                work_city,
-            </if>
-            <if test="lastCompany != null">
-                last_company,
-            </if>
-            <if test="phone != null">
-                phone,
-            </if>
-            <if test="school != null">
-                school,
-            </if>
-            <if test="graduation != null">
-                graduation,
-            </if>
-            <if test="major != null">
-                major,
-            </if>
-            <if test="education != null">
-                education,
-            </if>
-            <if test="lastSalary != null">
-                last_salary,
-            </if>
-            <if test="hopeSalary != null">
-                hope_salary,
-            </if>
-            <if test="appointment != null">
-                appointment,
-            </if>
-            <if test="communicate != null">
-                communicate,
-            </if>
-            <if test="interviewDate != null">
-                interview_date,
-            </if>
-            <if test="recommend != null">
-                recommend,
-            </if>
-            <if test="insideResult != null">
-                inside_result,
-            </if>
-            <if test="customerResult != null">
-                customer_result,
-            </if>
-            <if test="hr != null">
+            <if test="hrName != null">
                 hr,
-            </if>
-            <if test="remark != null">
-                remark,
-            </if>
-            <if test="channel != null">
-                channel,
-            </if>
-            <if test="addDate != null">
-                add_date,
             </if>
             <if test="hrId != null">
                 hr_id,
             </if>
-            <if test="tags != null">
-                tags,
+            <if test="recommendClient != null">
+                recommendClient,
             </if>
-            <if test="status != null">
-                status,
+            <if test="recommendTime != null">
+                recommendTime,
             </if>
-            <if test="operTime != null">
-                operTime,
+
+            <if test="job != null">
+                job,
+            </if>
+            <if test="workAge != null">
+                workAge,
+            </if>
+            <if test="progress != null">
+                progress,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -455,77 +405,26 @@
             <if test="name != null">
                 #{name},
             </if>
-            <if test="technology != null">
-                #{technology},
-            </if>
-            <if test="workCity != null">
-                #{workCity},
-            </if>
-            <if test="lastCompany != null">
-                #{lastCompany},
-            </if>
-            <if test="phone != null">
-                #{phone},
-            </if>
-            <if test="school != null">
-                #{school},
-            </if>
-            <if test="graduation != null">
-                #{graduation},
-            </if>
-            <if test="major != null">
-                #{major},
-            </if>
-            <if test="education != null">
-                #{education},
-            </if>
-            <if test="lastSalary != null">
-                #{lastSalary},
-            </if>
-            <if test="hopeSalary != null">
-                #{hopeSalary},
-            </if>
-            <if test="appointment != null">
-                #{appointment},
-            </if>
-            <if test="communicate != null">
-                #{communicate},
-            </if>
-            <if test="interviewDate != null">
-                #{interviewDate},
-            </if>
-            <if test="recommend != null">
-                #{recommend},
-            </if>
-            <if test="insideResult != null">
-                #{insideResult},
-            </if>
-            <if test="customerResult != null">
-                #{customerResult},
-            </if>
-            <if test="hr != null">
-                #{hr},
-            </if>
-            <if test="remark != null">
-                #{remark},
-            </if>
-            <if test="channel != null">
-                #{channel},
-            </if>
-            <if test="addDate != null">
-                #{addDate},
+            <if test="hrName != null">
+                #{hr_name},
             </if>
             <if test="hrId != null">
-                #{hrId},
+                #{hr_id},
             </if>
-            <if test="tags != null">
-                #{tags},
+            <if test="recommendClient != null">
+                #{recommendClient},
             </if>
-            <if test="status != null">
-                #{status},
+            <if test="recommendTime != null">
+                #{recommendTime},
             </if>
-            <if test="operTime != null">
-                #{operTime},
+            <if test="job != null">
+                #{job},
+            </if>
+            <if test="workAge != null">
+                #{workAge},
+            </if>
+            <if test="progress != null">
+                #{progress},
             </if>
         </trim>
     </insert>
@@ -907,5 +806,20 @@
     </select>
 
 
+
+
+    <select id="getTalentPoolPage" resultType="org.sang.bean.TalentPool">
+        select * from talentpool as t
+        where 1=1
+        <if test="hr_id != null and hr_id!=''">
+            and t.hr_id = #{hr_id}
+        </if>
+        <if test="name!=null and name!=''">
+            and t.name LIKE concat('%',#{name},'%')
+        </if>
+        <if test="start!=null and size!=''">
+            order by t.id DESC limit #{start},#{size}
+        </if>
+    </select>
 
 </mapper>
