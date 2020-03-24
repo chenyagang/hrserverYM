@@ -254,6 +254,7 @@ public class EmpBasicController {
         }
         emp.setFileURL(filePath);
         emp.setHr(HrUtils.getCurrentHr().getName());
+        emp.setHr_id(Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId())));
 //        Employee employeePhone = null;
 //        String name = employee.getName();
 //        String phone =  employee.getPhone();
