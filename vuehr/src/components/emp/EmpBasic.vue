@@ -852,12 +852,27 @@
         }
       },
       searchEmp() {
-        this.loadEmps();
+        this.searchEmpsList();
       },
       currentChange(currentChange) {
         this.currentPage = currentChange;
         this.loadEmps();
       },
+      searchEmpsList() {
+              var _this = this;
+              this.tableLoading = true;
+              this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= NO").then(resp => {
+                this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  debugger
+                  var data = resp.data;
+                  debugger
+                  _this.emps = data.emps;
+                  _this.totalCount = data.count;
+      //            _this.emptyEmpData();
+                }
+              })
+            },
       loadEmps() {
         var _this = this;
         this.tableLoading = true;
