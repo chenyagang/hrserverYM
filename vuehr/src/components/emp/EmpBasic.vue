@@ -511,7 +511,7 @@
           :visible.sync="talentDialogVisible"
           width="40%">
           <el-row>
-            <el-col :span="12">
+            <el-col :span="8">
               <div>
                 <el-form-item label="推荐客户:" prop="recommendClient">
                   <el-input prefix-icon="el-icon-edit" v-model="talent.recommendClient" size="mini" style="width: 150px"
@@ -519,7 +519,7 @@
                 </el-form-item>
               </div>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="8">
               <div>
                 <el-form-item label="推荐日期:" prop="recommendTime">
                   <el-date-picker
@@ -533,7 +533,20 @@
                 </el-form-item>
               </div>
             </el-col>
-
+            <el-col :span="8">
+              <div>
+                <el-form-item label="推荐日期:" prop="recommendTime">
+                  <el-date-picker
+                    v-model="talent.recommendTime"
+                    size="mini"
+                    value-format="yyyy-MM-dd"
+                    style="width: 150px"
+                    type="date"
+                    placeholder="推荐日期">
+                  </el-date-picker>
+                </el-form-item>
+              </div>
+            </el-col>
           </el-row>
 
           <span slot="footer" class="dialog-footer">
@@ -902,7 +915,6 @@
         this.talent.name=row.name;
         this.talent.job=row.job;
         this.talent.workAge=row.workAge;
-        this.talent.progress=row.progress;
       },
       showAddEmpView() {
         this.dialogTitle = "上传简历";
