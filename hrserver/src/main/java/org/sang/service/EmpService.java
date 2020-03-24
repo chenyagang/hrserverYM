@@ -47,8 +47,9 @@ public class EmpService {
 
     public List<Employee> getEmployeeByPage(Integer page, Integer size, String name,int hr_id) {
         int start = (page - 1) * size;
+        int sizes = page * size;
         try {
-            return empMapper.getEmployeeByPage(start, size, name,hr_id);
+            return empMapper.getEmployeeByPage(start, sizes, name,hr_id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
