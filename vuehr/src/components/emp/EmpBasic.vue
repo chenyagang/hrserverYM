@@ -910,7 +910,6 @@
               if (resp && resp.status == 200) {
 
                 var data = resp.data;
-                _
                 _this.talentDialogVisible = false;
                 _this.emptyEmpData();
                  debugger
