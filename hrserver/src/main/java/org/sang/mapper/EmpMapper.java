@@ -26,7 +26,9 @@ public interface EmpMapper {
 
     List<Employee> getEmployeeByPage(@Param("start") Integer start, @Param("size") Integer size, @Param("name")String name, @Param("hr_id")int hr_id);
 
-    Long getCountByName(@Param("name") String name,@Param("hr_id")int hr_id);
+    Long getCountByNameHrId(@Param("name") String name,@Param("hr_id")int hr_id);
+
+    Long getCountByName(@Param("name") String name);
 
     Employee getById(String id);
 

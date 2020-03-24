@@ -47,21 +47,31 @@ public class EmpService {
 
     public List<Employee> getEmployeeByPage(Integer page, Integer size, String name,int hr_id) {
         int start = (page - 1) * size;
+        int sizes = page * size;
         try {
-            return empMapper.getEmployeeByPage(start, size, name,hr_id);
+            return empMapper.getEmployeeByPage(start, sizes, name,hr_id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    public Long getCountByName(String name,int hr_id) {
+    public Long getCountByNameHrId(String name,int hr_id) {
         try {
-            return empMapper.getCountByName(name,hr_id);
+            return empMapper.getCountByNameHrId(name,hr_id);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return null;
+        return 0L;
+    }
+
+    public Long getCountByName(String name) {
+        try {
+            return empMapper.getCountByName(name);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0L;
     }
 
     public Employee getById(String id){
@@ -97,12 +107,13 @@ public class EmpService {
     }
 
     public int addEmp(Employee emp) {
+        int i =0;
         try {
-            int i = empMapper.addEmp(emp);
+             i = empMapper.addEmp(emp);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return 0;
+        return i;
     }
 
     public int updateEmp(Employee emp) {
@@ -131,7 +142,7 @@ public class EmpService {
         }catch (Exception e){
             e.printStackTrace();
         }
-             return null;
+        return null;
     }
 
     public int updateEmpShowResumeById(int id) {
