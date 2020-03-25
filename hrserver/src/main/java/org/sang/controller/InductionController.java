@@ -62,7 +62,7 @@ public class InductionController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "") String name,
-            @RequestParam(defaultValue = "NO") String hrFlag) {
+            @RequestParam(defaultValue = "YES") String hrFlag) {
         int hrId = 0;
         if("YES".equals(hrFlag.trim())){
             hrId =new Long(HrUtils.getCurrentHr().getId()).intValue();

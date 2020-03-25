@@ -203,7 +203,7 @@ public class EmpBasicController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "") String name,
-           @RequestParam(defaultValue = "NO") String hr_id) {
+           @RequestParam(defaultValue = "YES") String hr_id) {
         int hrId = 0;
         Long count = 0L;
         if("YES".equals(hr_id)){
