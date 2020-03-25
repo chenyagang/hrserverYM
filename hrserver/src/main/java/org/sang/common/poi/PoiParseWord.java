@@ -62,13 +62,18 @@ public class PoiParseWord {
     private final static String name_space = "姓 名";
     private final static String post = "职位";
     private final static String post_space = "职 位";
+    private final static String yingbingzhiwei = "应聘职位";
     private final static String phone_space = "电 话";
     private final static String phone = "电话";
     private final static String gangweimiaoshu = "岗位描述";
     private final static String gangweiyaoqiu = "岗位要求";
+    private final static String gerenjianjie = "个人简介";
     private final static String school = "学校";
     private final static String school_space = "学 校";
     private final static String education = "学历";
+    private final static String dazhuan = "大专";
+    private final static String benke = "本科";
+    private final static String jybj = "教育背景";
     private final static String education_space = "学 历";
     private final static String gender = "性别";
     private final static String gender_space = "性别";
@@ -254,6 +259,13 @@ public class PoiParseWord {
             if (a != -1) {
                 a += 3;
                 employee.setName(getKeyword(a, str, 3));
+                if(StringUtils.isEmpty(employee.getName())){
+                    a = 0;
+                }
+            }
+
+            if (a != -1) {
+                employee.setName(str.substring(0,4));
             }
 
             a = str.indexOf(education_space);
@@ -268,6 +280,17 @@ public class PoiParseWord {
                 employee.setEducation(getKeyword(a, str, 3));
             }
 
+            if (a != -1) {//正则匹配手机号码
+                String s = CommonUtis.getMatchGroup(str, benke);
+                if(!StringUtils.isEmpty(s)){
+                    employee.setEducation(CommonUtis.getMatchGroup(str, benke));
+                    a=0;
+                }
+            }
+            if (a != -1) {//正则匹配手机号码
+                employee.setEducation(CommonUtis.getMatchGroup(str, dazhuan));
+            }
+
             a = str.indexOf(phone_space);
             if (a != -1) {
                 a += 4;
@@ -280,7 +303,7 @@ public class PoiParseWord {
             }
 
             if (a != -1) {//正则匹配手机号码
-                CommonUtis.getMatchStr(str, CommonUtis.REGEX_PHONE);
+                employee.setPhone(CommonUtis.getMatchStr(str, CommonUtis.REGEX_PHONE));
             }
 
             a = str.indexOf(post_space);
@@ -289,6 +312,11 @@ public class PoiParseWord {
                 employee.setPost(getKeyword(a, str, 4));
             }
             a = str.indexOf(post);
+            if (a != -1) {
+                a += 3;
+                employee.setPost(getKeyword(a, str, 3));
+            }
+            a = str.indexOf(yingbingzhiwei);
             if (a != -1) {
                 a += 3;
                 employee.setPost(getKeyword(a, str, 3));
@@ -304,7 +332,11 @@ public class PoiParseWord {
                 a += 3;
                 employee.setJobDescription(getKeyword(a, str, 3));
             }
-
+            a = str.indexOf(gerenjianjie);
+            if (a != -1) {
+                a += 3;
+                employee.setJobDescription(getKeyword(a, str, 3));
+            }
             a = str.indexOf(school_space);
             if (a != -1) {
                 a += 4;
@@ -314,6 +346,12 @@ public class PoiParseWord {
             if (a != -1) {
                 a += 3;
                 employee.setSchool(getKeyword(a, str, 3));
+            }
+
+            a = str.indexOf(jybj);
+            if (a != -1) {
+                a += 3;
+                employee.setEducation(getKeyword(a, str, 3));
             }
 
             a = str.indexOf(gender_space);

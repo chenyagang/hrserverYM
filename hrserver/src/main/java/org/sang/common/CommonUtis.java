@@ -53,6 +53,20 @@ public class CommonUtis {
 
     }
 
+    public static String getMatchGroup(String str,String regex){
+        if(StringUtils.isEmpty(str)){
+            return "";
+        }
+        //2、获取匹配器
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(str);
+        m.find();
+//        int a = m.start();
+//        int b = m.end();
+        return m.group().trim();
+
+    }
+
     public static boolean deleteFile(String filePath){
 
         boolean delete_flag = false;
