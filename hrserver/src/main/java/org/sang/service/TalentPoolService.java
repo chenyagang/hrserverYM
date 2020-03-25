@@ -160,8 +160,9 @@ public class TalentPoolService extends BaseServiceImpl<TalentPool> {
 
     public List<TalentPool> getTalentPoolPage(long hrId,Integer page, Integer size, String name) {
         int start = (page - 1) * size;
+        int sizes = page * size;
         try {
-            return talentPoolMapper.getTalentPoolPage(hrId,start, size, name);
+            return talentPoolMapper.getTalentPoolPage(hrId,start, sizes, name);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

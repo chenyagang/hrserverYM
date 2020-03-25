@@ -109,7 +109,7 @@
             and t.name LIKE concat('%',#{name},'%')
         </if>
         <if test="start!=null and size!=''">
-            order by t.id DESC limit #{start},#{size}
+            order by t.id desc limit #{start},#{size}
         </if>
     </select>
 

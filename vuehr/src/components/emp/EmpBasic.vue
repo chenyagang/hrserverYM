@@ -801,7 +801,7 @@
         this.putRequest("/employee/basic/updateInterview", {ids: ids}).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
-            var data = resp.data;
+            //var data = resp.data;
             _this.loadEmps();
           }
         })
@@ -899,7 +899,7 @@
           if (valid) {
             //添加
             this.tableLoading = true;
-            this.postRequest("/employee/basic/updateInterview", this.talent).then(resp => {
+            this.postRequest("/talent/basic/addTalentPool", this.talent).then(resp => {
               _this.tableLoading = false;
               if (resp && resp.status == 200) {
 
