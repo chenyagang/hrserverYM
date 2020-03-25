@@ -18,10 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -99,14 +97,14 @@ public class EmpBasicController {
 
     }
 
-    @RequestMapping(value="/updateInterview",method = RequestMethod.PUT)
+    @RequestMapping(value = "/updateInterview", method = RequestMethod.PUT)
     public RespBean updateInterview(String ids) {
 
         if (!StringUtils.isEmpty(ids)) {
             String[] listId = ids.split(",");
-            for (int i = 0; i < listId.length;){
+            for (int i = 0; i < listId.length; ) {
                 if (empService.updateEmpShowResumeById(Integer.parseInt(listId[i].trim())) != 0) {
-                    if (i == listId.length-1) {
+                    if (i == listId.length - 1) {
                         return RespBean.ok("更新候选人面试状态成功！");
                     }
                 }
@@ -122,15 +120,15 @@ public class EmpBasicController {
             @RequestParam(defaultValue = "") String name,
             @RequestParam(defaultValue = "YES") String hrFlag) {
         int hrId = 0;
-        Long count =0L;
-        if("YES".equals(hrFlag.trim())){
-            hrId =new Long(HrUtils.getCurrentHr().getId()).intValue();
-            count =  empService.getCountByNameHrId(name,hrId);
-        }else {
+        Long count = 0L;
+        if ("YES".equals(hrFlag.trim())) {
+            hrId = new Long(HrUtils.getCurrentHr().getId()).intValue();
+            count = empService.getCountByNameHrId(name, hrId);
+        } else {
             count = empService.getCountByName(name);
         }
         Map<String, Object> map = new HashMap<>();
-        List<Employee> employeeByPage = empService.getEmployeeByPage(page, size,name,hrId);
+        List<Employee> employeeByPage = empService.getEmployeeByPage(page, size, name, hrId);
         map.put("emps", employeeByPage);
         map.put("count", count);
         return map;
@@ -144,34 +142,34 @@ public class EmpBasicController {
 
     @RequestMapping(value = "/exportExecl", method = RequestMethod.GET)
     public ResponseEntity<byte[]> exportExecl(String id) {
-        Employee emp=null;
+        Employee emp = null;
         try {
             emp = empService.getById(id);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        List list =new ArrayList();
+        List list = new ArrayList();
         list.add(emp);
         return PoiUtils.exportEmp2Excel(list);
     }
 
     @RequestMapping(value = "/exportWord", method = RequestMethod.GET)
     public ResponseEntity<byte[]> exportWord(String id) throws IOException, InvalidFormatException {
-        Employee emp=empService.getById(id);
+        Employee emp = empService.getById(id);
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String inFile=System.getProperty("user.dir")+"/hrserver/src/main/resources/static/moban.docx";
-        Map<String, Object> data=new HashMap<>();
-        data.put("name",emp.getName());
-        data.put("sex",emp.getGender());
-        data.put("interviewTime",formatter.format(emp.getInterviewTime()));
-        data.put("workTime",formatter.format(emp.getWorkTime()));
-        data.put("phone",emp.getPhone());
-        data.put("introduction",emp.getIntroduction());
-        data.put("degree",emp.getTiptopDegree());
-        data.put("workExperience",emp.getWorkExperience());
-        data.put("projectExperience",emp.getProjectExperience());
+        String inFile = System.getProperty("user.dir") + "/hrserver/src/main/resources/static/moban.docx";
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", emp.getName());
+        data.put("sex", emp.getGender());
+        data.put("interviewTime", formatter.format(emp.getInterviewTime()));
+        data.put("workTime", formatter.format(emp.getWorkTime()));
+        data.put("phone", emp.getPhone());
+        data.put("introduction", emp.getIntroduction());
+        data.put("degree", emp.getTiptopDegree());
+        data.put("workExperience", emp.getWorkExperience());
+        data.put("projectExperience", emp.getProjectExperience());
 
-        return WordDocx.readwriteWord(inFile,data);
+        return WordDocx.readwriteWord(inFile, data);
     }
 
     @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
@@ -203,17 +201,17 @@ public class EmpBasicController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "") String name,
-           @RequestParam(defaultValue = "YES") String hr_id) {
+            @RequestParam(defaultValue = "YES") String hr_id) {
         int hrId = 0;
         Long count = 0L;
-        if("YES".equals(hr_id)){
-            hrId =Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId()));
-            count = empService.getCountByNameHrId(name,hrId);
-        }else {
+        if ("YES".equals(hr_id)) {
+            hrId = Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId()));
+            count = empService.getCountByNameHrId(name, hrId);
+        } else {
             count = empService.getCountByName(name);
         }
         Map<String, Object> map = new HashMap<>();
-        List<Employee> employeeByPage = empService.getEmployeeByPageAndHrId(hrId,page, size,name);
+        List<Employee> employeeByPage = empService.getEmployeeByPageAndHrId(hrId, page, size, name);
 
         map.put("talents", employeeByPage);
         map.put("count", count);
@@ -229,29 +227,29 @@ public class EmpBasicController {
             if (empService.updateEmp(employee) == 1) {
                 return RespBean.ok("转让成功!");
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return RespBean.error("转让失败!");
     }
 
-    @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
-    public RespBean uploadResumeFile(@RequestParam("file")MultipartFile file, HttpServletRequest request) {
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public RespBean uploadResumeFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         String uuid = UUID.randomUUID().toString().trim();
-        String fileN=file.getOriginalFilename();
-        String fileName=uuid+fileN;
+        String fileN = file.getOriginalFilename();
+        String fileName = uuid + fileN;
         String filePathName;
         try {
-            File fileMkdir=new File("F:\\photoTest");
-            if(!fileMkdir.exists()) {
+            File fileMkdir = new File("F:\\photoTest");
+            if (!fileMkdir.exists()) {
                 fileMkdir.mkdir();
             }
-            filePathName = fileMkdir.getPath()+"\\"+fileName;
+            filePathName = fileMkdir.getPath() + "\\" + fileName;
             //定义输出流 将文件保存在F盘  file.getOriginalFilename()为获得文件的名字
-             FileOutputStream os = new FileOutputStream(filePathName);
-             InputStream in = file.getInputStream();
+            FileOutputStream os = new FileOutputStream(filePathName);
+            InputStream in = file.getInputStream();
             int b = 0;
-            while((b=in.read())!=-1){ //读取文件
+            while ((b = in.read()) != -1) { //读取文件
                 os.write(b);
             }
             os.flush(); //关闭流
@@ -260,28 +258,52 @@ public class EmpBasicController {
         } catch (Exception e) {
             return RespBean.error("上传失败");
         }
-        return analysisWordPDF(file,filePathName);//分析简历关键字返回实体
+        return analysisWordPDF(file, filePathName);//分析简历关键字返回实体
     }
 
-    /*
-     * @author ll
-     * @Description 导入数据
-     * @date 2018/11/13 15:50
-     * @param [file]
-     * @return org.sang.common.ResponseData
-     */
-//    @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
-    public RespBean analysisWordPDF(@RequestParam("file")MultipartFile file,String filePath) {
-        Employee emp = new Employee();
-        String suffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
-        if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
-            emp = PoiParseWord.readWord(file,emp);
-        }else {
-            emp = PoiParseWord.readPDF(file,emp);
+    @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
+    public void downloadFile(String fileName, HttpServletResponse response) {
+        try {
+            InputStream inStream = new FileInputStream(fileName);
+            response.reset();
+            response.setContentType("bin");
+            String[] file=fileName.split("\\\\");
+            response.addHeader("Content-disposition", "attachment;fileName=" + file[file.length-1]);
+            // 循环取出流中的数据
+             byte[] buf = new byte[1024];
+            int len = 0;
+            // 创建输出对象
+            OutputStream os = response.getOutputStream();
+            while((len = inStream.read(buf)) != -1) {
+                os.write(buf, 0, len);
+            }
+            inStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+            e.printStackTrace();
         }
-        emp.setFileURL(filePath);
-        emp.setHr(HrUtils.getCurrentHr().getName());
-        emp.setHr_id(Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId())));
+
+    }
+        /*
+         * @author ll
+         * @Description 导入数据
+         * @date 2018/11/13 15:50
+         * @param [file]
+         * @return org.sang.common.ResponseData
+         */
+//    @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
+        public RespBean analysisWordPDF (@RequestParam("file") MultipartFile file, String filePath){
+            Employee emp = new Employee();
+            String suffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+            if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
+                emp = PoiParseWord.readWord(file, emp);
+            } else {
+                emp = PoiParseWord.readPDF(file, emp);
+            }
+            emp.setFileURL(filePath);
+            emp.setHr(HrUtils.getCurrentHr().getName());
+            emp.setHr_id(Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId())));
 //        Employee employeePhone = null;
 //        String name = employee.getName();
 //        String phone =  employee.getPhone();
@@ -297,41 +319,40 @@ public class EmpBasicController {
 //            CommonUtis.deleteFile(fileRespBean.getMsg());
 //            return RespBean.error("重复上传！手机号码 已存在!");
 //        }
-        if(StringUtils.isEmpty(emp.getWedlock())){
-            emp.setWedlock(CommonUtis.UNMARRIED);
-        }
-        if(StringUtils.isEmpty(emp.getGender())){
-            emp.setGender(CommonUtis.MAN);
-        }
+            if (StringUtils.isEmpty(emp.getWedlock())) {
+                emp.setWedlock(CommonUtis.UNMARRIED);
+            }
+            if (StringUtils.isEmpty(emp.getGender())) {
+                emp.setGender(CommonUtis.MAN);
+            }
 //        if(empService.addEmp(employee)==0){
 //            CommonUtis.deleteFile(fileRespBean.getMsg());
 //            return RespBean.error("添加候选人失败！");
 //        }emp
-        return RespBean.ok("上传成功!",emp);
+            return RespBean.ok("上传成功!", emp);
+        }
+
+        @RequestMapping(value = "/addEmp", method = RequestMethod.POST)
+        public RespBean addEmp (Employee employee){
+            String name = employee.getName();
+            String phone = employee.getPhone();
+            if (StringUtils.isEmpty(name) || StringUtils.isEmpty(phone)) {
+                CommonUtis.deleteFile(employee.getFileURL());
+                return RespBean.error("姓名或手机号码必填，请检查是否填写或者检查格式问题");
+            }
+            Employee employeeByPhone = null;
+            employeeByPhone = empService.getEmpByPhone(phone);
+            if (null != employeeByPhone) {
+                CommonUtis.deleteFile(employee.getFileURL());
+                return RespBean.error("重复上传！手机号码 已存在!");
+            }
+            if (empService.addEmp(employee) == 0) {
+                CommonUtis.deleteFile(employee.getFileURL());
+                return RespBean.error("添加候选人失败！");
+            }
+            return RespBean.ok("添加成功!");
+
+        }
+
+
     }
-
-    @RequestMapping(value = "/addEmp", method = RequestMethod.POST)
-    public RespBean addEmp(Employee employee) {
-        String name = employee.getName();
-        String phone =  employee.getPhone();
-        if(StringUtils.isEmpty(name) || StringUtils.isEmpty(phone)){
-            CommonUtis.deleteFile(employee.getFileURL());
-            return RespBean.error("姓名或手机号码必填，请检查是否填写或者检查格式问题");
-        }
-        Employee employeeByPhone = null;
-        employeeByPhone = empService.getEmpByPhone(phone);
-        if(null != employeeByPhone){
-            CommonUtis.deleteFile(employee.getFileURL());
-            return RespBean.error("重复上传！手机号码 已存在!");
-        }
-        if(empService.addEmp(employee)==0){
-            CommonUtis.deleteFile(employee.getFileURL());
-            return RespBean.error("添加候选人失败！");
-        }
-        return RespBean.ok("添加成功!");
-
-    }
-
-
-
-}

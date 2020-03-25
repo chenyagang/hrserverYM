@@ -48,6 +48,7 @@
           <el-button type="success" size="mini" @click="exportEmps"><i class="fa fa-lg fa-level-down"
                                                                        style="margin-right: 5px"></i>批量导出数据
           </el-button>
+
         </div>
       </el-header>
       <el-main style="padding-left: 0px;padding-top: 0px">
@@ -231,6 +232,10 @@
                 </el-button>
                 <el-button v-if="hr.id!=scope.row.hr_id" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="transferAuthority(scope.row)">转让
+                </el-button>
+                <el-button style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="downloadFile(scope.row)"><i class="fa fa-lg fa-level-down"
+                                                                style="margin-right: 5px"></i>下载简历
                 </el-button>
 
               </template>
@@ -724,7 +729,13 @@
         window.open("/employee/basic/exportEmp?id=" + ids, "_parent");
       },
       exportExecl(row) {
+
         window.open("/employee/basic/exportExecl?id=" + row.id, "_parent");
+      },
+      downloadFile(row) {
+        debugger
+        console.log(row)
+          window.open("/employee/basic/downloadFile?fileName=" + row.fileURL, "_parent");
       },
       exportWord(row) {
         window.open("/employee/basic/exportWord?id=" + row.id, "_parent");
@@ -991,6 +1002,8 @@
           }
         })
       },
+
+
       emptyEmpData() {
         this.emp = {
           name: '',

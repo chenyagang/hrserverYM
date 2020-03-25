@@ -320,6 +320,15 @@
                 </el-form-item>
               </div>
             </el-col>
+
+            <el-col :span="6">
+              <div>
+                <el-form-item label="岗位职责:" prop="jobResponsibility">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobResponsibility" size="mini" style="width: 160px"
+                            placeholder="岗位职责..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
             <!--  <el-col :span="6">
                 <div>
                   <el-form-item label="考勤情况:" prop="workOvertime">

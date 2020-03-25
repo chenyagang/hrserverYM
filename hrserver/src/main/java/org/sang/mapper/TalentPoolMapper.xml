@@ -39,7 +39,7 @@
         and t.hr_id=h.id
         <if test="name!=null and name!=''">
             and t.name LIKE concat('%',#{name},'%')
-        </if>
+    </if>
         <if test="hrId!=null and hrId!=''">
             and t.hr_id =#{hrId}
         </if>
