@@ -6,6 +6,7 @@ import org.sang.bean.Position;
 import org.sang.bean.RespBean;
 import org.sang.common.*;
 import org.sang.common.poi.PoiParseWord;
+import org.sang.common.poi.PoiParseXLS;
 import org.sang.common.poi.PoiUtils;
 import org.sang.service.*;
 import org.sang.utils.WordDocx;
@@ -276,8 +277,19 @@ public class EmpBasicController {
         String suffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
         if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
             emp = PoiParseWord.readWord(file,emp);
-        }else {
+        }else if(PoiParseWord.PDF.equals(suffixName)){
             emp = PoiParseWord.readPDF(file,emp);
+        }else if(PoiParseWord.TXT.equals(suffixName)){
+            emp = PoiParseWord.readTXT(file,emp);
+        }else if(PoiParseWord.XLS.equals(suffixName) || PoiParseWord.XLSX.equals(suffixName)){ //解析 xlsx，xls
+            try {
+                String strExcel = PoiParseXLS.readExcel(file);
+                emp = PoiParseWord.substring_index(strExcel, emp);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else {
+            return RespBean.error("文件格式不正确！");
         }
         emp.setFileURL(filePath);
         emp.setHr(HrUtils.getCurrentHr().getName());

@@ -4,11 +4,21 @@ package org.sang.common.poi;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.POIXMLDocument;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.model.PicturesTable;
 import org.apache.poi.hwpf.usermodel.*;
+import org.apache.poi.hwpf.usermodel.Picture;
+import org.apache.poi.hwpf.usermodel.Table;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.*;
 import org.sang.bean.Employee;
@@ -20,6 +30,8 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PoiParseWord {
 
@@ -34,6 +46,12 @@ public class PoiParseWord {
     public final static String DOCX = "docx";
 
     public final static String PDF = "pdf";
+
+    public final static String XLSX = "xlsx";
+
+    public final static String XLS = "xls";
+
+    public final static String TXT = "txt";
 
     /**
      * 系统临时文件路径
@@ -59,8 +77,8 @@ public class PoiParseWord {
     private final static String communicationcontent = "沟通内容";
     private final static String wedlock = "婚姻状况";
 
-    private final static String keywordList[] = {"姓名","姓 名","职位","职 位","岗位","岗 位","学校",
-            "学 校","学历","学 历","毕业时间","性别","工作地点","沟通内容"};
+    private final static String keywordList[] = {"姓名", "姓 名", "职位", "职 位", "岗位", "岗 位", "学校",
+            "学 校", "学历", "学 历", "毕业时间", "性别", "工作地点", "沟通内容"};
 
 //    private final static String post_name = "岗位名称";
 //    private final static String customer = "客户";
@@ -83,32 +101,29 @@ public class PoiParseWord {
         File pdfFile = null;
         pdfFile = getFile(Mfiles);
         PDDocument document = null;
-        try
-        {
-            document= PDDocument.load(pdfFile);
+        try {
+            document = PDDocument.load(pdfFile);
             // 获取页码
             int pages = document.getNumberOfPages();
             // 读文本内容
-            PDFTextStripper stripper=new PDFTextStripper();
+            PDFTextStripper stripper = new PDFTextStripper();
             // 设置按顺序输出
             stripper.setSortByPosition(true);
             /*stripper.setStartPage(1);
             stripper.setEndPage(pages);
             String content = stripper.getText(document);
             System.out.println(content);*/
-            for(int page = 1; page <= pages; page++) {
+            for (int page = 1; page <= pages; page++) {
                 stripper.setStartPage(page);
                 stripper.setEndPage(page);
                 String content = stripper.getText(document);
 //               String a = retriveText(content,xingming,1);
-               return employee = substring_index(content,employee);
+                return employee = substring_index(content, employee);
 
 //                parseContent(content, candidateList);
             }
             System.out.println();
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e);
         }
         return employee;
@@ -124,7 +139,7 @@ public class PoiParseWord {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        inputStreamToFile(inputStream,file);
+        inputStreamToFile(inputStream, file);
 
         return file;
     }
@@ -169,6 +184,7 @@ public class PoiParseWord {
 
     /**
      * 解析word文档（*.doc,*.docx）
+     *
      * @throws IOException
      */
     public static Employee readWord(MultipartFile Mfiles, Employee employee) {
@@ -180,7 +196,7 @@ public class PoiParseWord {
             XWPFDocument xdoc = new XWPFDocument(fis);
             XWPFWordExtractor extractor = new XWPFWordExtractor(xdoc);
             String doc1 = extractor.getText();
-            employee = substring_index(doc1,employee);
+            employee = substring_index(doc1, employee);
             System.out.println(str);
             fis.close();
         } catch (Exception e) {
@@ -189,152 +205,176 @@ public class PoiParseWord {
         return employee;
     }
 
-    public static File multipartFileToFile(MultipartFile file) throws Exception {
-
-        File toFile = null;
-        if (file.equals("") || file.getSize() <= 0) {
-            file = null;
-        } else {
-            InputStream ins = null;
-            ins = file.getInputStream();
-            toFile = new File(file.getOriginalFilename());
-            inputStreamToFile(ins, toFile);
-            ins.close();
+    /**
+     * 解析TXT 文件
+     *
+     * @throws IOException
+     */
+    public static Employee readTXT(MultipartFile Mfiles, Employee employee) {
+        File file = null;
+        file = getFile(Mfiles);
+        //读取文件
+        BufferedReader br = null;
+        StringBuffer sb = null;
+        try {
+//            FileInputStream fis =
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            sb = new StringBuffer();
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                br.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return toFile;
+
+        String txt = new String(sb); //StringBuffer ==> String
+        System.out.println("txt内容为==> " + txt);
+        employee = substring_index(txt, employee);
+        return employee;
     }
 
 
-    public static Employee substring_index(String str, Employee employee){
+    public static Employee substring_index(String str, Employee employee) {
         str = repaceWhiteSapce(str);
-        if(isIncludeKeywords(str)){
+        if (isIncludeKeywords(str)) {
             int a = -1;
-            a =  str.indexOf(name_space);
-            if(a !=-1){
-                a+=4;
-                employee.setName(getKeyword(a,str,4));
+            a = str.indexOf(name_space);
+            if (a != -1) {
+                a += 4;
+                employee.setName(getKeyword(a, str, 4));
             }
-            a =  str.indexOf(name);
-            if(a != -1){
-                a+=3;
-                employee.setName(getKeyword(a,str,3));
-            }
-
-            a =  str.indexOf(education_space);
-            if(a !=-1){
-                a+=4;
-                employee.setEducation(getKeyword(a,str,4));
+            a = str.indexOf(name);
+            if (a != -1) {
+                a += 3;
+                employee.setName(getKeyword(a, str, 3));
             }
 
-            a =  str.indexOf(education);
-            if(a != -1){
-                a+=3;
-                employee.setEducation(getKeyword(a,str,3));
+            a = str.indexOf(education_space);
+            if (a != -1) {
+                a += 4;
+                employee.setEducation(getKeyword(a, str, 4));
             }
 
-            a =  str.indexOf(phone_space);
-            if(a !=-1){
-                a+=4;
-                employee.setPhone(getKeyword(a,str,4));
-            }
-            a =  str.indexOf(phone);
-            if(a != -1){
-                a+=3;
-                employee.setPhone(getKeyword(a,str,3));
+            a = str.indexOf(education);
+            if (a != -1) {
+                a += 3;
+                employee.setEducation(getKeyword(a, str, 3));
             }
 
-            a =  str.indexOf(post_space);
-            if(a !=-1){
-                a+=4;
-                employee.setPost(getKeyword(a,str,4));
+            a = str.indexOf(phone_space);
+            if (a != -1) {
+                a += 4;
+                employee.setPhone(getKeyword(a, str, 4));
             }
-            a =  str.indexOf(post);
-            if(a != -1){
-                a+=3;
-                employee.setPost(getKeyword(a,str,3));
-            }
-
-            a =  str.indexOf(gangweimiaoshu);
-            if(a !=-1){
-                a+=4;
-                employee.setJobDescription(getKeyword(a,str,4));
-            }
-            a =  str.indexOf(gangweiyaoqiu);
-            if(a != -1){
-                a+=3;
-                employee.setJobDescription(getKeyword(a,str,3));
+            a = str.indexOf(phone);
+            if (a != -1) {
+                a += 3;
+                employee.setPhone(getKeyword(a, str, 3));
             }
 
-            a =  str.indexOf(school_space);
-            if(a !=-1){
-                a+=4;
-                employee.setSchool(getKeyword(a,str,4));
-            }
-            a =  str.indexOf(school);
-            if(a != -1){
-                a+=3;
-                employee.setSchool(getKeyword(a,str,3));
+            if (a != -1) {//正则匹配手机号码
+                CommonUtis.getMatchStr(str, CommonUtis.REGEX_PHONE);
             }
 
-            a =  str.indexOf(gender_space);
-            if(a !=-1){
-                a+=4;
-                employee.setGender(getKeyword(a,str,4));
+            a = str.indexOf(post_space);
+            if (a != -1) {
+                a += 4;
+                employee.setPost(getKeyword(a, str, 4));
+            }
+            a = str.indexOf(post);
+            if (a != -1) {
+                a += 3;
+                employee.setPost(getKeyword(a, str, 3));
             }
 
-            a =  str.indexOf(gender);
-            if(a != -1){
-                a+=3;
-                employee.setGender(getKeyword(a,str,3));
+            a = str.indexOf(gangweimiaoshu);
+            if (a != -1) {
+                a += 4;
+                employee.setJobDescription(getKeyword(a, str, 4));
+            }
+            a = str.indexOf(gangweiyaoqiu);
+            if (a != -1) {
+                a += 3;
+                employee.setJobDescription(getKeyword(a, str, 3));
             }
 
-            a =  str.indexOf(graduationtime);
-            if(a !=-1){
-                a+=5;
-                employee.setGraduationTime(getKeyword(a,str,4));
+            a = str.indexOf(school_space);
+            if (a != -1) {
+                a += 4;
+                employee.setSchool(getKeyword(a, str, 4));
+            }
+            a = str.indexOf(school);
+            if (a != -1) {
+                a += 3;
+                employee.setSchool(getKeyword(a, str, 3));
             }
 
-            a =  str.indexOf(workingplace);
-            if(a != -1){
-                a+=5;
-                employee.setWorkingPlace(getKeyword(a,str,5));
+            a = str.indexOf(gender_space);
+            if (a != -1) {
+                a += 4;
+                employee.setGender(getKeyword(a, str, 4));
             }
-            a =  str.indexOf(wedlock);
-            if(a !=-1){
-                a+=5;
-                employee.setWedlock(getKeyword(a,str,5));
+
+            a = str.indexOf(gender);
+            if (a != -1) {
+                a += 3;
+                employee.setGender(getKeyword(a, str, 3));
             }
-            a =  str.indexOf(communicationcontent);
-            if(a !=-1){
-                a+=5;
-                employee.setCommunicationContent(getKeyword(a,str,5));
+
+            a = str.indexOf(graduationtime);
+            if (a != -1) {
+                a += 5;
+                employee.setGraduationTime(getKeyword(a, str, 4));
+            }
+
+            a = str.indexOf(workingplace);
+            if (a != -1) {
+                a += 5;
+                employee.setWorkingPlace(getKeyword(a, str, 5));
+            }
+            a = str.indexOf(wedlock);
+            if (a != -1) {
+                a += 5;
+                employee.setWedlock(getKeyword(a, str, 5));
+            }
+            a = str.indexOf(communicationcontent);
+            if (a != -1) {
+                a += 5;
+                employee.setCommunicationContent(getKeyword(a, str, 5));
             }
         }
         return employee;
 
     }
 
-    public static boolean isIncludeKeywords(String str){
-        for (int i=0; i<keywordList.length; i++) {
-            if(str.contains(keywordList[i])){
+    public static boolean isIncludeKeywords(String str) {
+        for (int i = 0; i < keywordList.length; i++) {
+            if (str.contains(keywordList[i])) {
                 return true;
             }
         }
         return false;
     }
 
-    public static String getKeyword(int a,String str,int index){
-        String temp="";
-        if(a !=-1 && !StringUtils.isEmpty(str)){
-            temp = str.substring(a-index,a);//预期截取关键字+：
+    public static String getKeyword(int a, String str, int index) {
+        String temp = "";
+        if (a != -1 && !StringUtils.isEmpty(str)) {
+            temp = str.substring(a - index, a);//预期截取关键字+：
             str = str.substring(a);//截取需要值
-            if(temp.indexOf(":") != -1 || temp.indexOf("：") != -1) {
+            if (temp.indexOf(":") != -1 || temp.indexOf("：") != -1) {
                 return getProcessingField(str);
             }
             for (int i = 0; i < str.length(); i++) {
                 char[] stringArr = str.toCharArray();
                 if (stringArr[i] == '\0' || Character.isSpace(stringArr[i]) || stringArr[i] == ':' || stringArr[i] == '：' || stringArr[i] == '\n') {
-                    str = str.substring(i+1);
+                    str = str.substring(i + 1);
                     return getProcessingField(str);
                 }
             }
@@ -344,16 +384,16 @@ public class PoiParseWord {
         return "";
     }
 
-    public static String getProcessingField(String str){
+    public static String getProcessingField(String str) {
         str = trimLeft(str);
         char[] stringArr = str.toCharArray();
-        for (int i = 0; i < str.length(); i++){
-            if(stringArr[i] =='\0' || Character.isSpace(stringArr[i])){
+        for (int i = 0; i < str.length(); i++) {
+            if (stringArr[i] == '\0' || Character.isSpace(stringArr[i])) {
 
-                str = str.substring(0,i+1);
+                str = str.substring(0, i + 1);
 
-                System.out.println(str.replaceAll("\\s*",""));
-                return str.replaceAll("\\s*","");
+                System.out.println(str.replaceAll("\\s*", ""));
+                return str.replaceAll("\\s*", "");
             }
 
         }
@@ -362,6 +402,7 @@ public class PoiParseWord {
 
     /**
      * 去右空格
+     *
      * @param str
      * @return
      */
@@ -375,6 +416,7 @@ public class PoiParseWord {
 
     /**
      * 去左空格
+     *
      * @param str
      * @return
      */
@@ -388,32 +430,30 @@ public class PoiParseWord {
 
     /**
      * 将字符串中连续的多个空格替换成一个空格
+     *
      * @param original
      * @return
      */
-    public static String repaceWhiteSapce(String original){
-                 StringBuilder sb = new StringBuilder();
-                 boolean isFirstSpace = false;//标记是否是第一个空格
-                 original = original.trim();//如果考虑开头和结尾有空格的情形
-                 char c;
-                 for(int i = 0; i < original.length(); i++){
-                         c = original.charAt(i);
-                         if(c == ' ' || c == '\t')//遇到空格字符时,先判断是不是第一个空格字符
-                             {
-                                 if(!isFirstSpace)
-                                         {
-                                             sb.append(c);
-                                             isFirstSpace = true;
-                                         }
-                             }
-                         else{//遇到非空格字符时
-                                 sb.append(c);
-                                 isFirstSpace = false;
-                             }
-                     }
-                 return sb.toString();
-             }
-
+    public static String repaceWhiteSapce(String original) {
+        StringBuilder sb = new StringBuilder();
+        boolean isFirstSpace = false;//标记是否是第一个空格
+        original = original.trim();//如果考虑开头和结尾有空格的情形
+        char c;
+        for (int i = 0; i < original.length(); i++) {
+            c = original.charAt(i);
+            if (c == ' ' || c == '\t')//遇到空格字符时,先判断是不是第一个空格字符
+            {
+                if (!isFirstSpace) {
+                    sb.append(c);
+                    isFirstSpace = true;
+                }
+            } else {//遇到非空格字符时
+                sb.append(c);
+                isFirstSpace = false;
+            }
+        }
+        return sb.toString();
+    }
 
 
 //    public static List<Candidate> importTalentPool(MultipartFile file) {
@@ -445,10 +485,10 @@ public class PoiParseWord {
 //    }
 
 
-
     /**
      * 未用到下面代码，暂时保留
-      * @param file
+     *
+     * @param file
      */
     public PoiParseWord(File file) {
         String suffixName = file.getPath().split("\\.")[1];
@@ -470,10 +510,8 @@ public class PoiParseWord {
     /**
      * 取出word文档表格第cellRowIdx行，第cellColIdx列的值（DOCX）
      *
-     * @param cellRowIdx
-     *            行
-     * @param cellColIdx
-     *            列
+     * @param cellRowIdx 行
+     * @param cellColIdx 列
      */
     @SuppressWarnings("unused")
     public String getSpecifyDataForDocx(int cellRowIdx, int cellColIdx) {
@@ -538,12 +576,10 @@ public class PoiParseWord {
     /**
      * 取出word文档表格第cellRowIdx行，第cellColIdx列的值（DOC）
      *
-     * @param cellRowIdx
-     *            行
-     * @param cellColIdx
-     *            列
+     * @param cellRowIdx 行
+     * @param cellColIdx 列
      */
-    @SuppressWarnings({ "resource", "unused" })
+    @SuppressWarnings({"resource", "unused"})
     public String getSpecifyDataForDoc(int cellRowIdx, int cellColIdx) {
         try {
             Range range = hwpfDocument.getRange();

@@ -36,8 +36,8 @@
           </el-upload>
           <el-upload
             :show-file-list="false"
-            accept="application/vnd.ms-excel,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            action="/talent/basic/importEmp"
+            accept="application/vnd.ms-excel,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+            action="/employee/basic/uploadFile"
             :on-success="uploadResumeSuccess"
             :on-error="uploadResumeError" :disabled="fileUploadBtnText=='正在导入'"
             :before-upload="beforeFileUpload" style="display: inline">
