@@ -543,19 +543,13 @@
               </div>
             </el-col>
             <el-col :span="8">
-              <div>
-                <el-form-item label="推荐日期:" prop="recommendTime">
-                  <el-date-picker
-                    v-model="talent.recommendTime"
-                    size="mini"
-                    value-format="yyyy-MM-dd"
-                    style="width: 150px"
-                    type="date"
-                    placeholder="推荐日期">
-                  </el-date-picker>
-                </el-form-item>
-              </div>
-            </el-col>
+                         <div>
+                           <el-form-item label="进展:" prop="progress">
+                             <el-input prefix-icon="el-icon-edit" v-model="talent.progress" size="mini" style="width: 150px"
+                                       placeholder="请输入面试进展"></el-input>
+                           </el-form-item>
+                         </div>
+                       </el-col>
           </el-row>
 
           <span slot="footer" class="dialog-footer">
