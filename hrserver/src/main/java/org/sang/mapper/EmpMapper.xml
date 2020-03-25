@@ -166,7 +166,7 @@
     </select>
 
     <update id="updateEmpShowInterviewById" parameterType="int">
-        update employee SET showInterview = '1' where id = #{id}
+        update employee SET showInterview = '0' where id = #{id}
     </update>
 
     <select id="getEmployeeByPageAndHrId" resultType="org.sang.bean.Employee">

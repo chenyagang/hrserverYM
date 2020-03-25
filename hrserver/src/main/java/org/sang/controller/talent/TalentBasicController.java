@@ -262,21 +262,7 @@ public class TalentBasicController {
     }
 
 
-    @RequestMapping(value="/updateInterview",method = RequestMethod.PUT)
-    public RespBean updateInterview(String ids) {
 
-        if (!StringUtils.isEmpty(ids)) {
-            String[] listId = ids.split(",");
-            for (int i = 0; i < listId.length;){
-                if (empService.updateEmpShowResumeById(Integer.parseInt(listId[i].trim())) != 0) {
-                    if (i == listId.length-1) {
-                        return RespBean.ok("加入面试成功!");
-                    }
-                }
-            }
-        }
-        return RespBean.error("加入面试失败!");
-    }
 
     /*
      * @author ll

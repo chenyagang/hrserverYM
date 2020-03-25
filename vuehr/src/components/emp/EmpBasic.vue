@@ -543,19 +543,13 @@
               </div>
             </el-col>
             <el-col :span="8">
-              <div>
-                <el-form-item label="推荐日期:" prop="recommendTime">
-                  <el-date-picker
-                    v-model="talent.recommendTime"
-                    size="mini"
-                    value-format="yyyy-MM-dd"
-                    style="width: 150px"
-                    type="date"
-                    placeholder="推荐日期">
-                  </el-date-picker>
-                </el-form-item>
-              </div>
-            </el-col>
+                         <div>
+                           <el-form-item label="进展:" prop="progress">
+                             <el-input prefix-icon="el-icon-edit" v-model="talent.progress" size="mini" style="width: 150px"
+                                       placeholder="请输入面试进展"></el-input>
+                           </el-form-item>
+                         </div>
+                       </el-col>
           </el-row>
 
           <span slot="footer" class="dialog-footer">
@@ -571,8 +565,6 @@
   export default {
     data() {
       return {
-
-        menus: ['加入面试', '方案分析', '方案存库', '清除方案'],
 
         emps: [],
         keywords: '',
@@ -597,7 +589,6 @@
           name: '高中'
         }, {id: 2, name: '初中'}, {id: 1, name: '小学'}, {id: 8, name: '其他'}],
         deps: [],
-        mianshiList: [{id: 2, name: '初中'}, {id: 1, name: '加入面试'}],
         defaultProps: {
           label: 'name',
           isLeaf: 'leaf',
@@ -697,18 +688,6 @@
       this.loadEmps();
     },
     methods: {
-
-      // 自定义菜单的点击事件
-      infoClick(index) {
-        this.$alert('当前table的下标为' + this.currentRowIndex, '你点击了自定义菜单的' + this.menus[index] + '功能', {
-          confirmButtonText: '确定',
-          callback: action => {
-            var menu = document.querySelector("#menu");
-            menu.style.display = 'none';
-          }
-        });
-      },
-
       fileUploadSuccess(response, file, fileList) {
         if (response) {
           this.$message({type: response.status, message: response.msg});
@@ -719,6 +698,8 @@
       uploadResumeSuccess(response, file, fileList) {
         if (response) {
           this.$message({type: response.status, message: response.msg});
+          debugger
+          this.showEditEmpView(response.obj)
         }
         this.loadEmps();
         this.fileUploadBtnText = '上传简历';
@@ -766,62 +747,6 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      updateShowInterview() {
-        this.$confirm('此操作将加入[' + this.multipleSelection.length + ']条数据到面试信息中, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          var ids = '';
-          for (var i = 0; i < this.multipleSelection.length; i++) {
-            ids += this.multipleSelection[i].id + ",";
-            //     open(this.multipleSelection[i]);
-          }
-
-          this.doUpdateShowInterview(ids);
-        }).catch(() => {
-        });
-      },
-      /*   open(emp) {
-                this.$prompt('请输入[' + emp.name + ']信息', '提示', {
-                  confirmButtonText: '确定',
-                  cancelButtonText: '取消',
-                  inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-                  inputErrorMessage: '邮箱格式不正确'
-                }).then(({ value }) => {
-                  this.$message({
-                    type: 'success',
-                    message: '你的邮箱是: ' + value
-                  });
-                }).catch(() => {
-                  this.$message({
-                    type: 'info',
-                    message: '取消输入'
-                  });
-                });
-              },
-       open(emp) {
-                this.$alert(
-                'emp.name
-                推荐客户:
-                <el-input v-model="recommendCustomers" placeholder="请输入内容"></el-input>
-                进展:
-                <el-input v-model="progress" placeholder="请输入内容"></el-input>
-                   推荐日期：
-                   <el-input
-                     placeholder="请选择日期"
-                     suffix-icon="el-icon-date"
-                     v-model="recommendedDate">
-                   </el-input>
-                   <el-input
-                     placeholder="请输入内容"
-                     prefix-icon="el-icon-search"
-                     v-model="input2">
-                   </el-input>',
-                {
-                  dangerouslyUseHTMLString: true
-                });
-                }，*/
       deleteManyEmps() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -869,9 +794,11 @@
 
       },
       doUpdateShowInterview(ids) {
+      debugger
+      console.log( this.emp)
         this.tableLoading = true;
         var _this = this;
-        this.putRequest("/talent/basic/updateInterview/", {ids: ids}).then(resp => {
+        this.putRequest("/employee/basic/updateInterview", {ids: ids}).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;
@@ -897,12 +824,27 @@
         }
       },
       searchEmp() {
-        this.loadEmps();
+        this.searchEmpsList();
       },
       currentChange(currentChange) {
         this.currentPage = currentChange;
         this.loadEmps();
       },
+      searchEmpsList() {
+              var _this = this;
+              this.tableLoading = true;
+              this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= NO").then(resp => {
+                this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  debugger
+                  var data = resp.data;
+                  debugger
+                  _this.emps = data.emps;
+                  _this.totalCount = data.count;
+      //            _this.emptyEmpData();
+                }
+              })
+            },
       loadEmps() {
         var _this = this;
         this.tableLoading = true;
@@ -960,11 +902,15 @@
             this.postRequest("/employee/basic/updateInterview", this.talent).then(resp => {
               _this.tableLoading = false;
               if (resp && resp.status == 200) {
+
                 var data = resp.data;
-                _
                 _this.talentDialogVisible = false;
                 _this.emptyEmpData();
+                 debugger
+                 console.log( this.talent.id)
+                this.doUpdateShowInterview(this.talent.id);
                 _this.loadEmps();
+
               }
             })
           } else {
@@ -1023,6 +969,8 @@
         this.talent.name = row.name;
         this.talent.job = row.job;
         this.talent.workAge = row.workAge;
+        this.talent.id = row.id;
+        console.log(this.talent.id)
       },
       showEditEmpViewMianshi(row) {
         console.log(row)
