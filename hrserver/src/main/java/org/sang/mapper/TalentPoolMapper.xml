@@ -9,6 +9,7 @@
     <select id="selectPage" parameterType="TalentPool" resultType="org.sang.pagebean.Interview">
         select t.*,h.username from talentpool as t,hr as h
         where 1=1
+        and t.hr_id=h.id
         <if test="name!=null and name!=''">
             and t.name LIKE concat('%',#{name},'%')
         </if>
@@ -19,7 +20,7 @@
             and t.job =#{job}
         </if>
         <if test="hrId!=null and hrId!=''">
-            and h.id =#{hrId}
+            and t.hr_id =#{hrId}
         </if>
         <if test="workAge!=null and workAge!=''">
             and t.workAge =#{workAge}
@@ -27,15 +28,20 @@
         <if test="progress!=null and progress!=''">
             and t.progress LIKE concat('%',#{progress},'%')
         </if>
+
         <if test="pageNo!=null and pageSize!=''">
             order by t.id limit #{pageNo},#{pageSize}
         </if>
     </select>
     <select id="selectPageCount" parameterType="TalentPool" resultType="int">
-        select count(1) from talentpool as t
+        select count(1) from talentpool as t,hr as h
         where 1=1
+        and t.hr_id=h.id
         <if test="name!=null and name!=''">
             and t.name LIKE concat('%',#{name},'%')
+        </if>
+        <if test="hrId!=null and hrId!=''">
+            and t.hr_id =#{hrId}
         </if>
         <if test="recommendClient!=null and recommendClient!=''">
             and t.recommendClient LIKE concat('%',#{recommendClient},'%')
@@ -87,8 +93,9 @@
     <select id="selectByIds"  resultType="org.sang.pagebean.Interview">
         select t.*,h.username from talentpool as t,hr as h
          WHERE 1=1
+         and t.hr_id=h.id
         <if test="hrId!=null and hrId!=''">
-            and h.id =#{hrId}
+            and  t.hr_id =#{hrId}
         </if>
            and t.id IN
         <foreach collection="ids" separator="," open="(" close=")" item="id">
