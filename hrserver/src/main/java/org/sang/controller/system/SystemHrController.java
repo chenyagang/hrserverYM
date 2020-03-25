@@ -64,11 +64,16 @@ public class SystemHrController {
 
     @RequestMapping(value = "/hr/reg", method = RequestMethod.POST)
     public RespBean hrReg(String username, String password) {
-        int i = hrService.hrReg(username, password);
-        if (i == 1) {
-            return RespBean.ok("注册成功!");
-        } else if (i == -1) {
-            return RespBean.error("用户名重复，注册失败!");
+        try {
+            int i = hrService.hrReg(username, password);
+
+            if (i == 1) {
+                return RespBean.ok("注册成功!");
+            } else if (i == -1) {
+                return RespBean.error("用户名重复，注册失败!");
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
         return RespBean.error("注册失败!");
     }

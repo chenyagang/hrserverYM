@@ -4,14 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.sang.mapper.InductionMapper">
 
-    <insert id="addInduction" parameterType="org.sang.bean.Induction">
+    <insert id="insert" parameterType="org.sang.bean.Induction">
          insert into induction (
+            name,
             gender,
-            ductionDate,
+            workAge,
+            inductionDate,
             technologyModule,
             department,
             inductionPlace,
-            hr,
+            hr_id,
             category,
             customer,
             positiveTime,
@@ -23,14 +25,16 @@
             cstomerQuotation,
             grading,
             idNumber,
-            BankCardNumber,
+            bankCardNumber,
             bank,
             channel,
             company,
             note,
             item) values (
+            #{name,jdbcType=VARCHAR},
             #{gender,jdbcType=VARCHAR},
-            #{ductionDate,jdbcType=DATE},
+            #{workAge,jdbcType=INTEGER},
+            #{inductionDate,jdbcType=DATE},
             #{technologyModule,jdbcType=VARCHAR},
             #{department,jdbcType=VARCHAR},
             #{inductionPlace,jdbcType=VARCHAR},
@@ -46,7 +50,7 @@
             #{cstomerQuotation,jdbcType=DECIMAL},
             #{grading,jdbcType=VARCHAR},
             #{idNumber,jdbcType=VARCHAR},
-            #{BankCardNumber,jdbcType=VARCHAR},
+            #{bankCardNumber,jdbcType=VARCHAR},
             #{bank,jdbcType=VARCHAR},
             #{channel,jdbcType=VARCHAR},
             #{company,jdbcType=VARCHAR},

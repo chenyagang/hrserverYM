@@ -6,15 +6,15 @@ public class Induction {
     private Long id;
     private String name;
     private String gender;
-    private Date inductionDate;
+    private String inductionDate;
     private String technologyModule;
     private String department;
     private String inductionPlace;
     private Integer hrId;
     private String category;
     private String customer;
-    private Date graduationTime;
-    private Date positiveTime;
+    private String graduationTime;
+    private String positiveTime;
 
     private String degree;
     private Integer workAge;
@@ -30,6 +30,15 @@ public class Induction {
     private String company;
     private String note;
     private String item;
+    private String  talentpoolId;
+
+    public String getTalentpoolId() {
+        return talentpoolId;
+    }
+
+    public void setTalentpoolId(String talentpoolId) {
+        this.talentpoolId = talentpoolId;
+    }
 
     public String getName() {
         return name;
@@ -63,13 +72,7 @@ public class Induction {
         this.gender = gender;
     }
 
-    public Date getInductionDate() {
-        return inductionDate;
-    }
 
-    public void setInductionDate(Date inductionDate) {
-        this.inductionDate = inductionDate;
-    }
 
     public String getTechnologyModule() {
         return technologyModule;
@@ -119,20 +122,29 @@ public class Induction {
         this.customer = customer;
     }
 
-    public Date getPositiveTime() {
-        return positiveTime;
+
+    public String getInductionDate() {
+        return inductionDate;
     }
 
-    public void setPositiveTime(Date positiveTime) {
-        this.positiveTime = positiveTime;
+    public void setInductionDate(String inductionDate) {
+        this.inductionDate = inductionDate;
     }
 
-    public Date getGraduationTime() {
+    public String getGraduationTime() {
         return graduationTime;
     }
 
-    public void setGraduationTime(Date graduationTime) {
+    public void setGraduationTime(String graduationTime) {
         this.graduationTime = graduationTime;
+    }
+
+    public String getPositiveTime() {
+        return positiveTime;
+    }
+
+    public void setPositiveTime(String positiveTime) {
+        this.positiveTime = positiveTime;
     }
 
     public String getDegree() {

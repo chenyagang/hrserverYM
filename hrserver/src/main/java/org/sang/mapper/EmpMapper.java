@@ -1,10 +1,7 @@
 package org.sang.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import org.sang.bean.Employee;
-import org.sang.bean.Nation;
-import org.sang.bean.PoliticsStatus;
-import org.sang.bean.TalentPool;
+import org.sang.bean.*;
 
 import java.util.Date;
 import java.util.List;
@@ -13,7 +10,7 @@ import java.util.Map;
 /**
  * Created by sang on 2018/1/12.
  */
-public interface EmpMapper {
+public interface EmpMapper  extends BaseMapper<Employee>{
     List<Nation> getAllNations();
 
     List<Employee> getAllEmployee();

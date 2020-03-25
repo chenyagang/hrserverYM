@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.sang.mapper.TalentPoolMapper">
 
-    <select id="selectById" parameterType="string" resultType="org.sang.pagebean.Interview">
+    <select id="selectById" parameterType="string" resultType="org.sang.bean.TalentPool">
         select * from talentpool where id = #{id}
     </select>
     <select id="selectPage" parameterType="TalentPool" resultType="org.sang.pagebean.Interview">
@@ -79,9 +79,9 @@
 
     <insert id="insert" keyProperty="id" parameterType="TalentPool" useGeneratedKeys="true">
         insert into talentpool
-        (`recommendClient`,`recommendTime`,`job`,`workAge`,`progress`,`name`,`hr_id`)
+        (`recommendClient`,`recommendTime`,`job`,`workAge`,`progress`,`name`,`hr_id`,employeeId)
         values
-        (#{recommendClient},#{recommendTime},#{job},#{workAge},#{progress},#{name},#{hrId})
+        (#{recommendClient},#{recommendTime},#{job},#{workAge},#{progress},#{name},#{hrId},#{employeeId})
     </insert>
 
     <select id="selectByIds"  resultType="org.sang.pagebean.Interview">
@@ -95,8 +95,6 @@
             #{id}
         </foreach>
     </select>
-
-
 
 
     <select id="getTalentPoolPage" resultType="org.sang.bean.TalentPool">

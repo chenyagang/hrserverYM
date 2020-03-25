@@ -116,6 +116,7 @@
               label="入职时间"
               align="center"
               width="100">
+
               <template slot-scope="scope">{{ scope.row.inductionDate | formatDate}}</template>
             </el-table-column>
             <el-table-column
@@ -177,7 +178,7 @@
             </el-table-column>
             <el-table-column
               prop="probationSalary"
-              label="当前薪资"
+              label="试用期薪资"
               align="center"
               width="50">
             </el-table-column>
@@ -242,7 +243,6 @@
               label="操作"
               width="195">
               <template slot-scope="scope">
-                <!--                {{hr.id}} ..{{scope.row.hr_id}}-->
                 <el-button @click="showEditEmpView(scope.row)"
                            style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
@@ -296,11 +296,12 @@
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="入职时间:" prop="gender">
+
+                <el-form-item label="入职时间:" prop="inductionDate">
                   <el-date-picker
                     v-model="emp.inductionDate"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 135px"
                     type="date"
                     placeholder="入职时间">
@@ -343,7 +344,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="员工类别:" prop="category">
-                  <el-select v-model="emp.category" style="width: 150px" size="mini" placeholder="最高学历">
+                  <el-select v-model="emp.category" style="width: 150px" size="mini" placeholder="员工类别">
                     <el-option
                       v-for="item in category"
                       :key="item.id"
@@ -370,7 +371,7 @@
                   <el-date-picker
                     v-model="emp.positiveTime"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 135px"
                     type="date"
                     placeholder="转正时间">
@@ -384,7 +385,7 @@
                   <el-date-picker
                     v-model="emp.graduationTime"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 135px"
                     type="date"
                     placeholder="到岗时间">
@@ -476,14 +477,6 @@
                 </el-form-item>
               </div>
             </el-col>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="渠道:" prop="channel">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.channel" size="mini" style="width: 200px"
-                            placeholder="渠道..."></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
           </el-row>
           <el-row>
             <el-col :span="6">
@@ -519,39 +512,10 @@
               </div>
             </el-col>
           </el-row>
-          <!--  <el-row>
-              <el-col :span="24">
-                <div>
-                  <el-form-item label="bank:" prop="workExperience">
-                    <el-input prefix-icon="el-icon-edit" v-model="emp.bank" size="mini" style="width: 200px"
-                              placeholder="入户银行..."></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="24">
-                <div>
-                  <el-form-item label="渠道:" prop="channel">
-                    <el-input prefix-icon="el-icon-edit" v-model="emp.channel" size="mini" style="width: 200px"
-                              placeholder="渠道..."></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="24">
-                <div>
-                  <el-form-item label="公司:" prop="company">
-                    <el-input prefix-icon="el-icon-edit" v-model="emp.channel" size="mini" style="width: 200px"
-                              placeholder="公司..."></el-input>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>-->
+
           <span slot="footer" class="dialog-footer">
           <el-button size="mini" @click="cancelEidt">取 消</el-button>
-          <el-button size="mini" type="primary" @click="addEmp('addEmpForm')">确 定</el-button>
+          <el-button size="mini" type="primary" @click="addInduction('addEmpForm')">确 定</el-button>
           </span>
         </el-dialog>
       </div>
@@ -893,6 +857,7 @@
               this.putRequest("/employee/basic/updateInduction", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
+                  debugger
                   var data = resp.data;
                   _this.dialogVisible = false;
                   _this.emptyEmpData();
@@ -914,6 +879,25 @@
                 }
               })
             }
+          } else {
+            return false;
+          }
+        });
+      },
+      addInduction(formName) {
+        var _this = this;
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+              this.postRequest("/employee/basic/addInduction", this.induction).then(resp => {
+                _this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  debugger
+                  var data = resp.data;
+                  _this.dialogVisible = false;
+                  _this.emptyEmpData();
+                  _this.loadEmps();
+                }
+              })
           } else {
             return false;
           }
@@ -978,6 +962,7 @@
       showEditEmpView(row) {
         console.log(row)
         this.dialogTitle = "编辑员工";
+        debugger
         this.emp = row;
 
         this.dialogVisible = true;

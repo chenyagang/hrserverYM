@@ -10,6 +10,8 @@ public class TalentPool {
 
     private Integer hrId;
 
+    private Integer employeeId;
+
     private String recommendClient;
 
     private String recommendTime;
@@ -25,6 +27,14 @@ public class TalentPool {
     private Integer pageSize;
 
     private String hrName;
+
+    public Integer getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
+    }
 
     public Integer getPageNo() {
         return pageNo;

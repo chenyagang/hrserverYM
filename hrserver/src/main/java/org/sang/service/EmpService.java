@@ -1,6 +1,7 @@
 package org.sang.service;
 
 import org.sang.bean.Employee;
+import org.sang.bean.Induction;
 import org.sang.bean.Nation;
 import org.sang.bean.PoliticsStatus;
 import org.sang.mapper.EmpMapper;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class EmpService {
+public class EmpService extends BaseServiceImpl<Employee>{
     @Autowired
     EmpMapper empMapper;
     SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");

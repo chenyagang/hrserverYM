@@ -318,7 +318,7 @@
                   <el-date-picker
                     v-model="emp.graduationTime"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 135px"
                     type="date"
                     placeholder="毕业时间">
@@ -414,7 +414,7 @@
                   <el-date-picker
                     v-model="emp.interviewTime"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 150px"
                     type="date"
                     placeholder="面试时间">
@@ -430,7 +430,7 @@
                   <el-date-picker
                     v-model="emp.workTime"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 135px"
                     type="date"
                     placeholder="到岗时间">
@@ -518,7 +518,7 @@
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="talentDialogVisible"
-          width="40%">
+          width="50%">
           <el-row>
             <el-col :span="8">
               <div>
@@ -906,7 +906,6 @@
                 var data = resp.data;
                 _this.talentDialogVisible = false;
                 _this.emptyEmpData();
-                 debugger
                  console.log( this.talent.id)
                 this.doUpdateShowInterview(this.talent.id);
                 _this.loadEmps();
@@ -969,7 +968,7 @@
         this.talent.name = row.name;
         this.talent.job = row.job;
         this.talent.workAge = row.workAge;
-        this.talent.id = row.id;
+        this.talent.employeeId = row.id;
         console.log(this.talent.id)
       },
       showEditEmpViewMianshi(row) {
