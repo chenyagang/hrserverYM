@@ -25,9 +25,11 @@
           </div>
           <div style="margin-top: 20px">
             <div><span class="user-info">用户名:{{item.name}}</span></div>
+            <div><span class="user-info">用户英文名:{{item.username}}</span></div>
             <div><span class="user-info">手机号码:{{item.phone}}</span></div>
             <div><span class="user-info">电话号码:{{item.telephone}}</span></div>
             <div><span class="user-info">地址:{{item.address}}</span></div>
+
             <div class="user-info" style="display: flex;align-items: center;margin-bottom: 3px">
               用户状态:
               <el-switch

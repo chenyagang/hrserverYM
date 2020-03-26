@@ -13,6 +13,7 @@ public interface TalentPoolMapper extends BaseMapper<TalentPool>{
 
     List<TalentPool> getTalentPoolPage(@Param("hr_id") long hr_id, @Param("start") Integer start, @Param("size") Integer size, @Param("name")String name);
 
+    public TalentPool selectById(String id);
 
     public List<Interview> selectByIds(Long hrId,@Param("ids")String[] id);
 }

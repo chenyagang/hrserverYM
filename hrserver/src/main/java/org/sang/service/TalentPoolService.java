@@ -149,6 +149,14 @@ public class TalentPoolService extends BaseServiceImpl<TalentPool> {
         List<Interview> list=talentPoolMapper.selectByIds(hrId,id.split(","));
         return list;
     }
+
+    public TalentPool getById(String id){
+
+        TalentPool talentPool=talentPoolMapper.selectById(id);
+        return talentPool;
+    }
+
+
     public double doubleFormat(double d) {
         BigDecimal bg = new BigDecimal(d);
         double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();

@@ -92,6 +92,7 @@
             v-loading="tableLoading"
             border
             stripe
+            @row-dblclick="rightClick"
             @selection-change="handleSelectionChange"
             size="mini"
             style="width: 100%;border:1px solid gray;">
@@ -201,7 +202,7 @@
                     value-format="yyyy-MM-dd"
                     style="width: 150px"
                     type="date"
-                    placeholder="面试时间">
+                    placeholder="推荐日期">
                   </el-date-picker>
                 </el-form-item>
               </div>
@@ -239,6 +240,188 @@
             <el-button size="mini" @click="cancelEdit">取 消</el-button>
             <el-button size="mini" type="primary" @click="updateTalent('talentForm')">确 定</el-button>
           </span>
+        </el-dialog>
+      </div>
+    </el-form>
+    <el-form :model="induction" :rules="inductionRules" ref="inductionForm" style="margin: 0px;padding: 0px;">
+      <div style="text-align: left">
+        <el-dialog
+          :title="inductionDialogTitle"
+          style="padding: 0px;"
+          :close-on-click-modal="false"
+          :visible.sync="inductionDialogVisible"
+          width="70%">
+          <el-row>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="入职时间:" prop="inductionDate">
+                  <el-date-picker
+                    v-model="induction.inductionDate"
+                    size="mini"
+                    value-format="yyyy-MM-dd"
+                    style="width: 135px"
+                    type="date"
+                    placeholder="入职时间">
+                  </el-date-picker>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="技术模块:" prop="technologyModule">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.technologyModule" size="mini" style="width: 150px"
+                            placeholder="请输入技术模块"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="员工类型:" prop="progress">
+                  <el-select v-model="induction.category" style="width: 150px" size="mini" placeholder="最高学历">
+                    <el-option
+                      v-for="item in category"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.name">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="转正时间:" prop="positiveTime">
+                  <el-date-picker
+                    v-model="induction.positiveTime"
+                    size="mini"
+                    value-format="yyyy-MM-dd"
+                    style="width: 135px"
+                    type="date"
+                    placeholder="转正时间">
+                  </el-date-picker>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="正式薪资:" prop="salary">
+                  <el-input-number prefix-icon="el-icon-edit" v-model="induction.salary" size="mini" :precision="2"
+                                   style="width: 130px" placeholder="正式薪资:K"></el-input-number>
+                  单位:千
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="试用期薪资:" prop="probationSalary">
+                  <el-input-number prefix-icon="el-icon-edit" v-model="induction.probationSalary" size="mini" :precision="2"
+                                   style="width: 130px" placeholder="试用期薪资:K"></el-input-number>
+                  单位:千
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="客户报价:" prop="cstomerQuotation">
+                  <el-input-number prefix-icon="el-icon-edit" v-model="induction.cstomerQuotation" size="mini" :precision="2"
+                                   style="width: 130px" placeholder="客户报价"></el-input-number>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="定级:" prop="grading">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.grading" size="mini" style="width: 200px"
+                            placeholder="定级..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="身份证号:" prop="idNumber">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.idNumber" size="mini" style="width: 200px"
+                            placeholder="身份证号..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="银行卡号:" prop="bankCardNumber">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.bankCardNumber" size="mini" style="width: 150px"
+                            placeholder="银行卡号..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="入户银行:" prop="bank">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.bank" size="mini" style="width: 150px"
+                            placeholder="入户银行..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="公司:" prop="company">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.company" size="mini" style="width: 150px"
+                            placeholder="公司..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="备注:" prop="note">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.note" size="mini" style="width: 150px"
+                            placeholder="备注..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="入项:" prop="item">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.item" size="mini" style="width: 150px"
+                            placeholder="入项..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="入职地点:" prop="item">
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.inductionPlace" size="mini" style="width: 150px"
+                            placeholder="入职地点..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="部门:" prop="department">
+                  <el-select v-model="induction.department" style="width: 150px" size="mini" placeholder="部门">
+                    <el-option
+                      v-for="item in department"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.name">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+
+
+          <span slot="footer" class="dialog-footer">
+    <el-button size="mini" @click="talentCancelEidt">取 消</el-button>
+    <el-button size="mini" type="primary" @click="addInduction('inductionRules')">确 定</el-button>
+  </span>
         </el-dialog>
       </div>
     </el-form>
@@ -438,6 +621,8 @@
         faangledoubledown: 'fa-angle-double-down',
         dialogTitle: '',
         statusDialogTitle: '',
+        inductionDialogTitle: '添加到入职信息',
+        inductionDialogVisible: false,
         depTextColor: '#c0c4cc',
         multipleSelection: [],
         hrList: [],
@@ -469,6 +654,8 @@
             name: 'offer成功'
           }, {id: 12, name: 'offer失败'},
           {id: 13, name: '入职成功'}, {id: 14, name: '入职失败'}, {id: 15, name: '已完成'}, {id: 16, name: '未完成'}],
+        department: [{id: "研发", name: '研发'}, {id: "人事", name: '人事'}, {id: "测试", name: '测试'}],
+        category: [{id: "正式", name: '正式'}, {id: "外协", name: '外协'}, {id: "兼职", name: '兼职'}, {id: "小微", name: '小微'}],
         dialogVisible: false,
         tableLoading: false,
         advanceSearchViewVisible: false,
@@ -478,17 +665,47 @@
         talent: {
           id: null,
           hrId: null,
+          employeeId:null,
           name: null,
           recommendClient: null,
           recommendTime: null,
           job: null,
           workAge: null,
+
           progress: null
+        },
+        induction: {
+          talentpoolId:0,
+          hrId:0,
+          name: null,
+          gender: null,
+          inductionDate: null,
+          technologyModule: null,
+          department: null,
+          inductionPlace: null,
+          graduationTime: null,
+          positiveTime: null,
+          degree: null,
+          workAge: 0,
+          phone: null,
+          salary: null,
+          probationSalary: null,
+          cstomerQuotation: null,
+          grading: null,
+          idNumber: null,
+          bankCardNumber: null,
+          bank: null,
+          channel: null,
+          company: null,
+          note: null,
+          item: null,
         },
         rules: {
           name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
           phone: [{required: true, message: '必填:电话', trigger: 'blur'}]
-        }, pickerOptions: {
+        },
+        inductionRules:{},
+        pickerOptions: {
           disabledDate(time) {
             return time.getTime() > Date.now();
           },
@@ -581,6 +798,29 @@
           this.loadTalent();
         }
       },
+      rightClick(row) {
+        debugger
+        this.inductionDialogTitle = "添加到面试信息";
+        this.inductionDialogVisible = true;
+        debugger
+        this.induction.talentpoolId = row.id;
+
+      },
+      addInduction(formName) {
+        var _this = this;
+
+            this.postRequest("/employee/basic/addInduction", this.induction).then(resp => {
+              _this.tableLoading = false;
+              if (resp && resp.status == 200) {
+                debugger
+                var data = resp.data;
+                _this.dialogVisible = false;
+                _this.emptyEmpData();
+                _this.loadEmps();
+              }
+            })
+
+      },
       emptyTalentData() {
         this.talent = {
           id: null,
@@ -640,6 +880,7 @@
                 obj[o] = this.talent[o];
               }
             }
+
             if (this.talent.id) {
               //更新
               this.postRequest("/talent/basic/updateTalent", obj).then(resp => {
@@ -746,6 +987,34 @@
       }, dialogClose(done) {
         this.emptyTalentData();
         done();
+      }
+    },
+    emptyEmpData() {
+      this.induction= {
+          talentpoolId:0,
+          hrId:0,
+          name: null,
+          gender: null,
+          inductionDate: null,
+          technologyModule: null,
+          department: null,
+          inductionPlace: null,
+          graduationTime: null,
+          positiveTime: null,
+          degree: null,
+          workAge: 0,
+          phone: null,
+          salary: null,
+          probationSalary: null,
+          cstomerQuotation: null,
+          grading: null,
+          idNumber: null,
+          bankCardNumber: null,
+          bank: null,
+          channel: null,
+          company: null,
+          note: null,
+          item: null,
       }
     }
   }

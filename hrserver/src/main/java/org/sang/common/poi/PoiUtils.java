@@ -352,15 +352,15 @@ public class PoiUtils {
                 row.createCell(0).setCellValue(emp.getId()==null?0:emp.getId());
                 row.createCell(1).setCellValue(emp.getName()==null?"":emp.getName());
                 row.createCell(2).setCellValue(emp.getGender()==null?"":emp.getGender());
-                row.createCell(3).setCellValue(emp.getInductionDate()==null?new Date(0):emp.getInductionDate());
+                row.createCell(3).setCellValue(emp.getInductionDate()==null?"":emp.getInductionDate());
                 row.createCell(4).setCellValue(emp.getTechnologyModule()==null?"":emp.getTechnologyModule());
                 row.createCell(5).setCellValue(emp.getDepartment()==null?"":emp.getDepartment());
                 row.createCell(6).setCellValue(emp.getInductionPlace()==null?"":emp.getInductionPlace());
                 row.createCell(7).setCellValue(emp.getCategory()==null?"":emp.getCategory());
                 row.createCell(8).setCellValue(emp.getWorkAge()==null?0:emp.getWorkAge());
                 row.createCell(9).setCellValue(emp.getCustomer()==null?"":emp.getCustomer());
-                row.createCell(10).setCellValue(emp.getPositiveTime()==null?new Date(0):emp.getPositiveTime());
-                row.createCell(11).setCellValue(emp.getGraduationTime()==null?new Date(0):emp.getGraduationTime());
+                row.createCell(10).setCellValue(emp.getPositiveTime()==null?"":emp.getPositiveTime());
+                row.createCell(11).setCellValue(emp.getGraduationTime()==null?"":emp.getGraduationTime());
                 row.createCell(12).setCellValue(emp.getDegree()==null?"":emp.getDegree());
                 row.createCell(13).setCellValue(emp.getPhone()==null?"":emp.getPhone());
                 row.createCell(14).setCellValue(emp.getSalary()==null?0:emp.getSalary());

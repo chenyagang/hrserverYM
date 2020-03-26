@@ -4,6 +4,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.sang.bean.Employee;
 import org.sang.bean.Induction;
 import org.sang.bean.RespBean;
+import org.sang.bean.TalentPool;
 import org.sang.common.HrUtils;
 import org.sang.common.ResponseData;
 import org.sang.common.ResultCodeEnum;
@@ -30,6 +31,12 @@ import java.util.concurrent.ExecutorService;
 public class InductionController {
     @Autowired
     InductionService inductionService;
+
+    @Autowired
+    TalentPoolService talentPoolService;
+
+    @Autowired
+    EmpService empService;
 
     @RequestMapping(value = "/updateInduction", method = RequestMethod.PUT)
     public RespBean updateEmp(Induction induction) {
@@ -74,6 +81,31 @@ public class InductionController {
         map.put("count", count);
         return map;
     }
+
+    @RequestMapping(value = "/addInduction", method = RequestMethod.POST)
+    public RespBean addInduction(Induction induction) {
+
+        try {
+            TalentPool talentPool= talentPoolService.queryById(induction.getTalentpoolId());
+            Employee employee =empService.queryById(String.valueOf(talentPool.getEmployeeId()));
+            induction.setName(employee.getName());
+            induction.setGender(employee.getGender());
+            induction.setCustomer(talentPool.getRecommendClient());
+            induction.setGraduationTime(employee.getGraduationTime());
+            induction.setDegree(employee.getTiptopDegree());
+            induction.setWorkAge(employee.getWorkAge().intValue());
+            induction.setPhone(employee.getPhone());
+            induction.setChannel(employee.getChannel());
+            induction.setHrId(HrUtils.getCurrentHr().getId().intValue());
+            inductionService.add(induction);
+            return RespBean.ok("加入入职成功!");
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return RespBean.error("加入入职失败!");
+
+    }
+
     @RequestMapping(value = "/exportInduction", method = RequestMethod.GET)
     public ResponseEntity<byte[]> exportInduction(String id) {
         return PoiUtils.exportInductionExcel(inductionService.getByIds(id));

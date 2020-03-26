@@ -48,6 +48,7 @@
           <el-button type="success" size="mini" @click="exportEmps"><i class="fa fa-lg fa-level-down"
                                                                        style="margin-right: 5px"></i>批量导出数据
           </el-button>
+
         </div>
       </el-header>
       <el-main style="padding-left: 0px;padding-top: 0px">
@@ -232,6 +233,10 @@
                 <el-button v-if="hr.id!=scope.row.hr_id" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="transferAuthority(scope.row)">转让
                 </el-button>
+                <el-button style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="downloadFile(scope.row)"><i class="fa fa-lg fa-level-down"
+                                                                style="margin-right: 5px"></i>下载简历
+                </el-button>
 
               </template>
             </el-table-column>
@@ -318,7 +323,7 @@
                   <el-date-picker
                     v-model="emp.graduationTime"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 135px"
                     type="date"
                     placeholder="毕业时间">
@@ -414,7 +419,7 @@
                   <el-date-picker
                     v-model="emp.interviewTime"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 150px"
                     type="date"
                     placeholder="面试时间">
@@ -430,7 +435,7 @@
                   <el-date-picker
                     v-model="emp.workTime"
                     size="mini"
-                    value-format="yyyy-MM-dd HH:mm:ss"
+                    value-format="yyyy-MM-dd"
                     style="width: 135px"
                     type="date"
                     placeholder="到岗时间">
@@ -518,7 +523,7 @@
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="talentDialogVisible"
-          width="40%">
+          width="50%">
           <el-row>
             <el-col :span="8">
               <div>
@@ -724,7 +729,13 @@
         window.open("/employee/basic/exportEmp?id=" + ids, "_parent");
       },
       exportExecl(row) {
+
         window.open("/employee/basic/exportExecl?id=" + row.id, "_parent");
+      },
+      downloadFile(row) {
+        debugger
+        console.log(row)
+          window.open("/employee/basic/downloadFile?fileName=" + row.fileURL, "_parent");
       },
       exportWord(row) {
         window.open("/employee/basic/exportWord?id=" + row.id, "_parent");
@@ -906,7 +917,6 @@
                 var data = resp.data;
                 _this.talentDialogVisible = false;
                 _this.emptyEmpData();
-                 debugger
                  console.log( this.talent.id)
                 this.doUpdateShowInterview(this.talent.id);
                 _this.loadEmps();
@@ -969,7 +979,7 @@
         this.talent.name = row.name;
         this.talent.job = row.job;
         this.talent.workAge = row.workAge;
-        this.talent.id = row.id;
+        this.talent.employeeId = row.id;
         console.log(this.talent.id)
       },
       showEditEmpViewMianshi(row) {
@@ -992,6 +1002,8 @@
           }
         })
       },
+
+
       emptyEmpData() {
         this.emp = {
           name: '',

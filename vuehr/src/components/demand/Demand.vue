@@ -280,8 +280,8 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="岗位紧急程度:" prop="jobEmergency">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobEmergency" size="mini" style="width: 150px"
-                            placeholder="岗位紧急程度"></el-input>
+                  <el-input-number prefix-icon="el-icon-edit" v-model="emp.jobEmergency"  size="mini"
+                                   style="width: 160px"    placeholder="岗位紧急程度"></el-input-number>
                 </el-form-item>
               </div>
             </el-col>
@@ -317,6 +317,15 @@
                 <el-form-item label="关键点:" prop="keyPoint">
                   <el-input prefix-icon="el-icon-edit" v-model="emp.keyPoint" size="mini" style="width: 160px"
                             placeholder="关键点..."></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+
+            <el-col :span="6">
+              <div>
+                <el-form-item label="岗位职责:" prop="jobResponsibility">
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobResponsibility" size="mini" style="width: 160px"
+                            placeholder="岗位职责..."></el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -507,6 +516,7 @@
         this.beginDateScope = '';
         this.loadEmps();
       },
+
       showAdvanceSearchView() {
         this.advanceSearchViewVisible = !this.advanceSearchViewVisible;
         this.keywords = '';
@@ -585,9 +595,6 @@
         var _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            debugger
-            console.log(this.emp.id)
-            console.log(this.emp)
             if (this.emp.id) {
               //更新
               this.tableLoading = true;

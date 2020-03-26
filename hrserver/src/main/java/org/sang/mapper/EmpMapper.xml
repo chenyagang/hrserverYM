@@ -21,7 +21,9 @@
      #{projectExperience,jdbcType=VARCHAR},#{fileURL,jdbcType=VARCHAR},#{hr_id,jdbcType=INTEGER}, #{transferTime,jdbcType=DATE}
       )
     </insert>
-
+    <select id="selectById" parameterType="string" resultType="org.sang.bean.Employee">
+        select * from employee where id = #{id}
+    </select>
     <update id="updateEmp" parameterType="org.sang.bean.Employee">
         update employee
         <set>
@@ -101,8 +103,7 @@
     </update>
 
     <select id="getEmployeeByPage" resultType="org.sang.bean.Employee">
-        select * from employee as e
-        where 1=1
+        select * from employee as e where 1=1
         <if test="hr_id!=null and hr_id!=''">
             and e.hr_id= #{hr_id,jdbcType=INTEGER}
         </if>
@@ -123,7 +124,7 @@
             and e.hr_id= #{hr_id,jdbcType=INTEGER}
         </if>
 
-        and DATE_ADD(e.transferTime,INTERVAL 5 SECOND)
+        or  NOW() &gt;  date_ADD(transferTime,INTERVAL 15 DAY )
         <if test="name!=null and name!=''">
             and e.name LIKE concat('%',#{name},'%')
         </if>
@@ -131,8 +132,6 @@
 
     <select id="getCountByName" resultType="Long">
         SELECT count(1) FROM employee e WHERE 1=1
-
-            and DATE_ADD(e.transferTime,INTERVAL 5 SECOND)
         <if test="name!=null and name!=''">
             and e.name LIKE concat('%',#{name},'%')
         </if>

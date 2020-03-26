@@ -1,9 +1,6 @@
 package org.sang.service;
 
-import org.sang.bean.Employee;
-import org.sang.bean.Induction;
-import org.sang.bean.Nation;
-import org.sang.bean.PoliticsStatus;
+import org.sang.bean.*;
 import org.sang.mapper.EmpMapper;
 import org.sang.mapper.InductionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class InductionService {
+public class InductionService extends BaseServiceImpl<Induction> {
     @Autowired
     InductionMapper inductionMapper;
     SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
