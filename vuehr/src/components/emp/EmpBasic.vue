@@ -812,8 +812,9 @@
         this.putRequest("/employee/basic/updateInterview", {ids: ids}).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
+          _this.loadEmps();
             //var data = resp.data;
-            _this.loadEmps();
+
           }
         })
       },
@@ -844,7 +845,7 @@
       searchEmpsList() {
               var _this = this;
               this.tableLoading = true;
-              this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= YES").then(resp => {
+              this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= NO").then(resp => {
                 this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   debugger
@@ -976,6 +977,7 @@
         this.talentDialogTitle = "添加到面试信息";
         this.talentDialogVisible = true;
         debugger
+        this.talent.id = row.id;
         this.talent.name = row.name;
         this.talent.job = row.job;
         this.talent.workAge = row.workAge;

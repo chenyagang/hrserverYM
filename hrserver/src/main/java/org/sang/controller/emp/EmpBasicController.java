@@ -107,12 +107,12 @@ public class EmpBasicController {
             for (int i = 0; i < listId.length; ) {
                 if (empService.updateEmpShowResumeById(Integer.parseInt(listId[i].trim())) != 0) {
                     if (i == listId.length - 1) {
-                        return RespBean.ok("更新候选人面试状态成功！");
+                        return RespBean.ok("设置不能编辑成功！");
                     }
                 }
             }
         }
-        return RespBean.error("更新候选人面试状态失败！");
+        return RespBean.error("设置不能编辑失败！");
     }
 
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
