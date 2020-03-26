@@ -30,7 +30,7 @@
         </if>
 
         <if test="pageNo!=null and pageSize!=''">
-            order by t.id desc limit #{pageNo},#{pageSize}
+            order by t.id limit #{pageNo},#{pageSize}
         </if>
     </select>
     <select id="selectPageCount" parameterType="TalentPool" resultType="int">

@@ -83,11 +83,10 @@
               </el-row>
             </div>
           </transition>
-
           <el-table
             :data="emps"
             v-loading="tableLoading"
-            border
+            @row-dblclick="showEditEmpView"
             stripe
             @selection-change="handleSelectionChange"
             size="mini"
@@ -96,11 +95,84 @@
             <el-table-column
               type="selection"
               align="center"
+              :show-overflow-tooltip="overflow"
               width="30">
+            </el-table-column>
+            <el-table-column
+              width="30"
+              type="expand">
+              <template slot-scope="scope">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="姓名">
+                    <span>{{ scope.row.name }}</span>
+                  </el-form-item>
+                  <el-form-item label="性别">
+                    <span>{{ scope.row.gender }}</span>
+                  </el-form-item>
+                  <el-form-item label="入职时间">
+                    <span>{{ scope.row.inductionDate }}</span>
+                  </el-form-item>
+                  <el-form-item label="技术模块">
+                    <span>{{ scope.row.technologyModule }}</span>
+                  </el-form-item>
+                  <el-form-item label="员工类型">
+                    <span>{{ scope.row.category }}</span>
+                  </el-form-item>
+                  <el-form-item label="对应客户">
+                    <span>{{ scope.row.customer }}</span>
+                  </el-form-item>
+                  <el-form-item label="毕业时间">
+                    <span>{{ scope.row.graduationTime }}</span>
+                  </el-form-item>
+                  <el-form-item label="转正时间">
+                    <span>{{ scope.row.positiveTime }}</span>
+                  </el-form-item>
+                  <el-form-item label="学历">
+                    <span>{{ scope.row.degree }}</span>
+                  </el-form-item>
+                  <el-form-item label="联系方式">
+                    <span>{{ scope.row.phone }}</span>
+                  </el-form-item>
+                  <el-form-item label="当前薪资">
+                    <span>{{ scope.row.salary }}</span>
+                  </el-form-item>
+                  <el-form-item label="试用期薪资">
+                    <span>{{ scope.row.probationSalary }}</span>
+                  </el-form-item>
+                  <el-form-item label="客户报价">
+                    <span>{{ scope.row.cstomerQuotation }}</span>
+                  </el-form-item>
+                  <el-form-item label="定级">
+                    <span>{{ scope.row.grading }}</span>
+                  </el-form-item>
+                  <el-form-item label="身份证号">
+                    <span>{{ scope.row.idNumber }}</span>
+                  </el-form-item>
+                  <el-form-item label="银行卡号">
+                    <span>{{ scope.row.bankCardNumber }}</span>
+                  </el-form-item>
+                  <el-form-item label="入户银行">
+                    <span>{{ scope.row.bank }}</span>
+                  </el-form-item>
+                  <el-form-item label="渠道">
+                    <span>{{ scope.row.channel }}</span>
+                  </el-form-item>
+                  <el-form-item label="公司">
+                    <span>{{ scope.row.company }}</span>
+                  </el-form-item>
+                  <el-form-item label="备注">
+                    <span>{{ scope.row.note }}</span>
+                  </el-form-item>
+                  <el-form-item label="入项">
+                    <span>{{ scope.row.item }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
             </el-table-column>
             <el-table-column
               prop="name"
               align="center"
+              :show-overflow-tooltip="overflow"
               fixed
               label="姓名"
               width="70">
@@ -108,12 +180,14 @@
             <el-table-column
               prop="gender"
               label="性别"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="100">
             </el-table-column>
             <el-table-column
               prop="inductionDate"
               label="入职时间"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="100">
 
@@ -122,24 +196,28 @@
             <el-table-column
               prop="technologyModule"
               label="技术模块"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="category"
               label="员工类别"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="70">
             </el-table-column>
             <el-table-column
               prop="customer"
               label="对应客户"
+              :show-overflow-tooltip="overflow"
               align="customer"
               width="50">
             </el-table-column>
             <el-table-column
               prop="graduationTime"
               label="毕业时间"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="100">
               <template slot-scope="scope">{{ scope.row.graduationTime | formatDate}}</template>
@@ -147,6 +225,7 @@
             <el-table-column
               prop="positiveTime"
               label="转正时间"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
               <template slot-scope="scope">{{ scope.row.positiveTime | formatDate}}</template>
@@ -154,12 +233,14 @@
             <el-table-column
               prop="degree"
               label="学历"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="70">
             </el-table-column>
             <el-table-column
               prop="workAge"
               label="工作年限"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="70">
             </el-table-column>
@@ -167,72 +248,84 @@
             <el-table-column
               prop="phone"
               label="联系方式"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="salary"
               label="薪资"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="probationSalary"
               label="试用期薪资"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="cstomerQuotation"
               label="客户报价"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="grading"
               label="定级"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="idNumber"
               label="身份证号"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="bankCardNumber"
               label="银行卡号"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="bank"
               label="入户银行"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="channel"
               label="渠道"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="company"
               label="公司"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="note"
               label="备注"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
             <el-table-column
               prop="item"
               label="入项"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="50">
             </el-table-column>
@@ -595,6 +688,7 @@
         depTextColor: '#c0c4cc',
         nations: [],
         politics: [],
+        overflow: true,
         positions: [],
         joblevels: [],
         totalCount: -1,
@@ -619,7 +713,7 @@
         showOrHidePop2: false,
         emp: {
           id: null,
-          hrId:0,
+          hrId: 0,
           name: null,
           gender: null,
           inductionDate: null,
@@ -654,7 +748,22 @@
           workAge: 0,
           progress: "",
         },
-        rules: {},
+        rules: {
+          name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
+          gender: [{required: true, message: '必填:性别', trigger: 'blur'}],
+          inductionDate: [{required: true, message: '必填:入职日期', trigger: 'blur'}],
+          technologyModule: [{required: true, message: '必填:技术模块', trigger: 'blur'}],
+          department: [{required: true, message: '必填:部门', trigger: 'blur'}],
+          inductionPlace: [{required: true, message: '必填:入职地点', trigger: 'blur'}],
+          category: [{required: true, message: '必填:员工类型', trigger: 'blur'}],
+          customer: [{required: true, message: '必填:客户', trigger: 'blur'}],
+          positiveTime: [{required: true, message: '必填:试用期薪资', trigger: 'blur'}],
+          graduationTime: [{required: true, message: '必填:毕业时间', trigger: 'blur'}],
+          degree: [{required: true, message: '必填:学历', trigger: 'blur'}],
+          phone: [{required: true, message: '必填:联系方式', trigger: 'blur'}],
+          salary: [{required: true, message: '必填:正式薪资', trigger: 'blur'}],
+          probationSalary: [{required: true, message: '必填:试用期薪资', trigger: 'blur'}]
+        },
         talentRules: {
           name: [{required: true, message: '必填:姓名', trigger: 'blur'}]
         }
@@ -838,6 +947,7 @@
         this.tableLoading = true;
         this.getRequest("/employee/basic/getInductionByPage?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= YES").then(resp => {
           this.tableLoading = false;
+          var _this = this;
           if (resp && resp.status == 200) {
             var data = resp.data;
             _this.emps = data.emps;
@@ -853,7 +963,7 @@
             if (this.emp.id) {
               //更新
               this.tableLoading = true;
-              this.emp.hrId=0;
+              this.emp.hrId = 0;
               this.putRequest("/employee/basic/updateInduction", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
@@ -867,7 +977,7 @@
             } else {
               //添加
               this.tableLoading = true;
-              this.emp.hrId=0;
+              this.emp.hrId = 0;
               this.postRequest("/employee/basic/insertInduction", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
@@ -887,16 +997,16 @@
         var _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-              this.postRequest("/employee/basic/addInduction", this.induction).then(resp => {
-                _this.tableLoading = false;
-                if (resp && resp.status == 200) {
-                  debugger
-                  var data = resp.data;
-                  _this.dialogVisible = false;
-                  _this.emptyEmpData();
-                  _this.loadEmps();
-                }
-              })
+            this.postRequest("/employee/basic/addInduction", this.induction).then(resp => {
+              _this.tableLoading = false;
+              if (resp && resp.status == 200) {
+                debugger
+                var data = resp.data;
+                _this.dialogVisible = false;
+                _this.emptyEmpData();
+                _this.loadEmps();
+              }
+            })
           } else {
             return false;
           }
@@ -963,11 +1073,10 @@
         this.dialogTitle = "编辑员工";
         debugger
         this.emp = row;
-
         this.dialogVisible = true;
       },
       rightClick(row) {
-        this.talentDialogTitle = "添加到面试信息";
+        this.talentDialogTitle = "添加到入职信息";
         this.talentDialogVisible = true;
         debugger
         this.talent.name = row.name;
@@ -981,20 +1090,10 @@
         this.dialogVisible = true;
       },
 
-      showAddEmpView() {
-        this.dialogTitle = "上传简历";
-        // this.dialogVisible = true;
-        var _this = this;
-        this.getRequest("/employee/basic/maxWorkID").then(resp => {
-          if (resp && resp.status == 200) {
-            _this.emp.workID = resp.data;
-          }
-        })
-      },
       emptyEmpData() {
         this.emp = {
           id: null,
-          hrId:0,
+          hrId: 0,
           name: null,
           gender: null,
           inductionDate: null,
@@ -1076,5 +1175,20 @@
   .slide-fade-enter, .slide-fade-leave-to {
     transform: translateX(10px);
     opacity: 0;
+  }
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
 </style>

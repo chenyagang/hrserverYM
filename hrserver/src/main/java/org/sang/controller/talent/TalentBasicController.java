@@ -81,7 +81,6 @@ public class TalentBasicController {
         talentPool.setPageNo((talentPool.getPageNo() - 1) * talentPool.getPageSize());
         //获取当前登录信息将信息塞入hrId
         talentPool.setHrId(HrUtils.getCurrentHr().getId().intValue());
-        talentPool.setHrName(HrUtils.getCurrentHr().getName());
         List<TalentPool> talentPoolList = talentPoolService.queryPage(talentPool);
         int count = talentPoolService.queryPageCount(talentPool);
         map.put("talents", talentPoolList);

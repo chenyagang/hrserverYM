@@ -1,12 +1,12 @@
 <template>
-  <el-form :rules="rules" class="login-container" label-position="left"
+  <el-form :rules="rules" ref="loginForm" :model="loginForm" class="login-container" label-position="left"
            label-width="0px" v-loading="loading">
     <h3 class="login_title">系统登录</h3>
-    <el-form-item prop="account">
+    <el-form-item prop="username">
       <el-input type="text" v-model="loginForm.username"
                 auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
-    <el-form-item prop="checkPass">
+    <el-form-item prop="password">
       <el-input type="password" v-model="loginForm.password"
                 auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
@@ -26,8 +26,8 @@
     data(){
       return {
         rules: {
-          account: [{required: true, message: '请输入用户名', trigger: 'blur'}],
-          checkPass: [{required: true, message: '请输入密码', trigger: 'blur'}]
+          username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+          password: [{required: true, message: '请输入密码', trigger: 'blur'}]
         },
         checked: true,
         loginForm: {
@@ -57,20 +57,29 @@
       },
       registeClick: function () {
         var _this = this;
-        this.loading = true;
-        this.postRequest('/system/hr/hr/reg', {
-          username: this.loginForm.username,
-          password: this.loginForm.password
-        }).then(resp=> {
-          _this.loading = false;
-          if (resp && resp.status == 200) {
-            var data = resp.data;
-            _this.$store.commit('login', data.obj);
-            var path = _this.$route.query.redirect;
-            _this.$router
-              .replace({path: path == '/' || path == undefined ? '/home' : path});
+        debugger
+        _this.$refs["loginForm"].validate((valid) => {
+          if (valid) {
+            debugger
+            this.loading = true;
+            this.postRequest('/system/hr/hr/reg', {
+              username: this.loginForm.username,
+              password: this.loginForm.password
+            }).then(resp => {
+              _this.loading = false;
+              if (resp && resp.status == 200) {
+                var data = resp.data;
+                _this.$store.commit('login', data.obj);
+                var path = _this.$route.query.redirect;
+                _this.$router
+                  .replace({path: path == '/' || path == undefined ? '/home' : path});
+              }
+            });
+          }else{
+            debugger
+            return false
           }
-        });
+        })
       }
     }
   }
