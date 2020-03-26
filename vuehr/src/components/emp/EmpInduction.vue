@@ -604,7 +604,7 @@
           name: '高中'
         }, {id: 2, name: '初中'}, {id: 1, name: '小学'}, {id: 8, name: '其他'}],
         department: [{id: "研发", name: '研发'}, {id: "人事", name: '人事'}, {id: "测试", name: '测试'}],
-        category: [{id: "正式", name: '正式'}, {id: "外协", name: '外协'}, {id: "兼职", name: '兼职'}, {id: "小微", name: '小微'}],
+        category: [{id: "正式", name: '正式'}, {id: "外协", name: '外协'}, {id: "兼职", name: '兼职'}],
         deps: [],
         mianshiList: [{id: 2, name: '初中'}, {id: 1, name: '加入面试'}],
         defaultProps: {
@@ -872,7 +872,6 @@
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   var data = resp.data;
-                  _
                   _this.dialogVisible = false;
                   _this.emptyEmpData();
                   _this.loadEmps();

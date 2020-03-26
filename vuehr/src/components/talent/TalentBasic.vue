@@ -801,12 +801,18 @@
         this.loadTalent();
       }, nameChange() {
         this.loadTalent();
-      }, updateStatus() {
+      },
+        talentCancelEidt() {
+               this.inductionDialogVisible = false;
+                //this.loadTalent();
+         },
+       updateStatus() {
         this.postRequest("/talent/basic/updateTalent", {
           "id": this.talent.id,
           "status": this.talent.status
         }).then(resp => {
           if (resp && resp.status == 200) {
+          this.statusDialogVisible = false;
             var data = resp.data;
             if (data.resultCode == 1) {
               this.$message({type: resp.status, message: "流转成功!"});
@@ -828,7 +834,7 @@
       },
       rightClick(row) {
         debugger
-        this.inductionDialogTitle = "添加到面试信息";
+        this.inductionDialogTitle = "添加到入职信息";
         this.inductionDialogVisible = true;
         debugger
         this.induction.talentpoolId = row.id;
@@ -842,7 +848,8 @@
               if (resp && resp.status == 200) {
                 debugger
                 var data = resp.data;
-                _this.dialogVisible = false;
+                //_this.dialogVisible = false;
+                _this.inductionDialogVisible = false;
                 _this.emptyEmpData();
                 _this.loadEmps();
               }
