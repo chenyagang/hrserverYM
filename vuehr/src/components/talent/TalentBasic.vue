@@ -803,9 +803,8 @@
         if (this.talent.technology != null) {
           param += "&technology=" + this.talent.technology;
         }
-
-        this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
-          //  this.getRequest("/employee/basic/empByPageAndHrId" + param).then(resp => {
+       this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
+       //  this.getRequest("/employee/basic/empByPageAndHrId" + param).then(resp => {
           this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;
@@ -813,19 +812,54 @@
             _this.totalCount = data.data.count;
           }
         })
-      }, currentChange(currentChange) {
+      },
+      searchTalent: function () {
+              var _this = this;
+              this.tableLoading = true;
+
+              var param = "?pageNo=" + this.currentPage + "&pageSize=" + this.pageSize + "&name=" + _this.name + "&hrFlag= NO";
+              if (this.talent.hrId != null) {
+                param += "&hrId=" + this.talent.hrId;
+              }
+              if (this.talent.status != null && this.talent.status != 0) {
+                param += "&status=" + this.talent.status;
+              }
+              if (this.talent.phone != null) {
+                param += "&phone=" + this.talent.phone;
+              }
+              if (this.talent.technology != null) {
+                param += "&technology=" + this.talent.technology;
+              }
+
+             this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
+             //  this.getRequest("/employee/basic/empByPageAndHrId" + param).then(resp => {
+                this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  var data = resp.data;
+                  _this.talents = data.data.talents;
+                  _this.totalCount = data.data.count;
+                }
+              })
+            },
+       currentChange(currentChange) {
         this.currentPage = currentChange;
         this.loadTalent();
       }, searchTalent() {
         this.loadTalent();
       }, nameChange() {
         this.loadTalent();
-      }, updateStatus() {
+      },
+        talentCancelEidt() {
+               this.inductionDialogVisible = false;
+                //this.loadTalent();
+         },
+       updateStatus() {
         this.postRequest("/talent/basic/updateTalent", {
           "id": this.talent.id,
           "status": this.talent.status
         }).then(resp => {
           if (resp && resp.status == 200) {
+          this.statusDialogVisible = false;
             var data = resp.data;
             if (data.resultCode == 1) {
               this.$message({type: resp.status, message: "流转成功!"});

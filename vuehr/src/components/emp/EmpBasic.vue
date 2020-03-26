@@ -36,8 +36,8 @@
           </el-upload>
           <el-upload
             :show-file-list="false"
-            accept="application/vnd.ms-excel,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            action="/talent/basic/importEmp"
+            accept="application/vnd.ms-excel,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+            action="/employee/basic/uploadFile"
             :on-success="uploadResumeSuccess"
             :on-error="uploadResumeError" :disabled="fileUploadBtnText=='正在导入'"
             :before-upload="beforeFileUpload" style="display: inline">
@@ -335,6 +335,9 @@
                 <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)"
                            style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
+<!--                {{hr.id}} ..{{scope.row.hr_id}}-->
+                <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                           size="mini" :disabled="'0' == scope.row.showInterview">编辑
                 </el-button>
                 <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
                            @click="exportWord(scope.row)" size="mini">导出模板
@@ -378,7 +381,6 @@
           :title="dialogTitle"
           style="padding: 0px;"
           :close-on-click-modal="false"
-
           :visible.sync="dialogVisible"
           width="77%">
           <el-row>
@@ -932,8 +934,9 @@
         this.putRequest("/employee/basic/updateInterview", {ids: ids}).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
+          _this.loadEmps();
             //var data = resp.data;
-            _this.loadEmps();
+
           }
         })
       },
@@ -962,20 +965,20 @@
         this.loadEmps();
       },
       searchEmpsList() {
-        var _this = this;
-        this.tableLoading = true;
-        this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= YES").then(resp => {
-          this.tableLoading = false;
-          if (resp && resp.status == 200) {
-            debugger
-            var data = resp.data;
-            debugger
-            _this.emps = data.emps;
-            _this.totalCount = data.count;
-            //            _this.emptyEmpData();
-          }
-        })
-      },
+              var _this = this;
+              this.tableLoading = true;
+              this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= NO").then(resp => {
+                this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  debugger
+                  var data = resp.data;
+                  debugger
+                  _this.emps = data.emps;
+                  _this.totalCount = data.count;
+      //            _this.emptyEmpData();
+                }
+              })
+            },
       loadEmps() {
         var _this = this;
         this.tableLoading = true;
@@ -1014,11 +1017,11 @@
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/employee/basic/emp", this.emp).then(resp => {
+              this.emp.id ="";
+              this.postRequest("/employee/basic/addEmp", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   var data = resp.data;
-                  _
                   _this.dialogVisible = false;
                   _this.emptyEmpData();
                   _this.loadEmps();
@@ -1103,6 +1106,7 @@
         this.talentDialogTitle = "添加到面试信息";
         this.talentDialogVisible = true;
         debugger
+        this.talent.id = row.id;
         this.talent.name = row.name;
         this.talent.job = row.job;
         this.talent.workAge = row.workAge;
