@@ -27,10 +27,10 @@
           <el-button type="success" size="mini" @click="exportCount">
             <i class="fa fa-lg fa-level-down" style="margin-right: 5px"></i>导出统计
           </el-button>
-          <el-button type="primary" size="mini" icon="el-icon-plus"
+        <!--  <el-button type="primary" size="mini" icon="el-icon-plus"
                      @click="showAddTalentView">
             添加
-          </el-button>
+          </el-button>-->
         </div>
 
       </el-header>
@@ -90,7 +90,7 @@
           <el-table
             :data="talents"
             v-loading="tableLoading"
-            border
+            :show-overflow-tooltip="overflow"
             stripe
             @row-dblclick="rightClick"
             @selection-change="handleSelectionChange"
@@ -99,11 +99,39 @@
             <el-table-column
               type="selection"
               align="center"
+              :show-overflow-tooltip="overflow"
               width="30">
+            </el-table-column>
+            <el-table-column
+              width="30"
+              type="expand">
+              <template slot-scope="scope">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="姓名">
+                    <span>{{ scope.row.name }}</span>
+                  </el-form-item>
+                  <el-form-item label="推荐客户">
+                    <span>{{ scope.row.recommendClient }}</span>
+                  </el-form-item>
+                  <el-form-item label="推荐日期">
+                    <span>{{ scope.row.recommendTime }}</span>
+                  </el-form-item>
+                  <el-form-item label="岗位">
+                    <span>{{ scope.row.job }}</span>
+                  </el-form-item>
+                  <el-form-item label="年限">
+                    <span>{{ scope.row.workAge }}</span>
+                  </el-form-item>
+                  <el-form-item label="进展">
+                    <span>{{ scope.row.progress }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
             </el-table-column>
             <el-table-column
               align="center"
               prop="name"
+              :show-overflow-tooltip="overflow"
               label="姓名"
               width="90">
 
@@ -112,6 +140,7 @@
               align="center"
               prop="recommendClient"
               label="推荐客户"
+              :show-overflow-tooltip="overflow"
               width="90">
 
             </el-table-column>
@@ -119,23 +148,27 @@
             <el-table-column
               align="center"
               prop="recommendTime"
+              :show-overflow-tooltip="overflow"
               label="推荐日期">
               <template slot-scope="scope">{{ scope.row.recommendTime | formatDate}}</template>
             </el-table-column>
             <el-table-column
               align="center"
               prop="job"
+              :show-overflow-tooltip="overflow"
               label="岗位">
             </el-table-column>
             <el-table-column
               align="center"
               prop="workAge"
+              :show-overflow-tooltip="overflow"
               label="年限">
             </el-table-column>
 
             <el-table-column
               align="center"
               prop="progress"
+              :show-overflow-tooltip="overflow"
               label="进展">
             </el-table-column>
 
@@ -243,7 +276,7 @@
         </el-dialog>
       </div>
     </el-form>
-    <el-form :model="induction" :rules="inductionRules" ref="inductionForm" style="margin: 0px;padding: 0px;">
+    <el-form :model="induction" :rules="inductionRules" ref="induction" style="margin: 0px;padding: 0px;">
       <div style="text-align: left">
         <el-dialog
           :title="inductionDialogTitle"
@@ -256,6 +289,7 @@
               <div>
                 <el-form-item label="入职时间:" prop="inductionDate">
                   <el-date-picker
+                    @change="inductionOnChange"
                     v-model="induction.inductionDate"
                     size="mini"
                     value-format="yyyy-MM-dd"
@@ -269,15 +303,16 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="技术模块:" prop="technologyModule">
-                  <el-input prefix-icon="el-icon-edit" v-model="induction.technologyModule" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.technologyModule" size="mini"
+                            style="width: 150px"
                             placeholder="请输入技术模块"></el-input>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="员工类型:" prop="progress">
-                  <el-select v-model="induction.category" style="width: 150px" size="mini" placeholder="最高学历">
+                <el-form-item label="员工类型:" prop="category">
+                  <el-select v-model="induction.category" style="width: 150px" size="mini" placeholder="员工类型">
                     <el-option
                       v-for="item in category"
                       :key="item.id"
@@ -317,7 +352,8 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="试用期薪资:" prop="probationSalary">
-                  <el-input-number prefix-icon="el-icon-edit" v-model="induction.probationSalary" size="mini" :precision="2"
+                  <el-input-number prefix-icon="el-icon-edit" v-model="induction.probationSalary" size="mini"
+                                   :precision="2"
                                    style="width: 130px" placeholder="试用期薪资:K"></el-input-number>
                   单位:千
                 </el-form-item>
@@ -326,7 +362,8 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="客户报价:" prop="cstomerQuotation">
-                  <el-input-number prefix-icon="el-icon-edit" v-model="induction.cstomerQuotation" size="mini" :precision="2"
+                  <el-input-number prefix-icon="el-icon-edit" v-model="induction.cstomerQuotation" size="mini"
+                                   :precision="2"
                                    style="width: 130px" placeholder="客户报价"></el-input-number>
                 </el-form-item>
               </div>
@@ -334,7 +371,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="定级:" prop="grading">
-                  <el-input prefix-icon="el-icon-edit" v-model="induction.grading" size="mini" style="width: 200px"
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.grading" size="mini" style="width: 150px"
                             placeholder="定级..."></el-input>
                 </el-form-item>
               </div>
@@ -345,7 +382,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="身份证号:" prop="idNumber">
-                  <el-input prefix-icon="el-icon-edit" v-model="induction.idNumber" size="mini" style="width: 200px"
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.idNumber" size="mini" style="width: 150px"
                             placeholder="身份证号..."></el-input>
                 </el-form-item>
               </div>
@@ -353,7 +390,8 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="银行卡号:" prop="bankCardNumber">
-                  <el-input prefix-icon="el-icon-edit" v-model="induction.bankCardNumber" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.bankCardNumber" size="mini"
+                            style="width: 150px"
                             placeholder="银行卡号..."></el-input>
                 </el-form-item>
               </div>
@@ -396,7 +434,8 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="入职地点:" prop="item">
-                  <el-input prefix-icon="el-icon-edit" v-model="induction.inductionPlace" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="induction.inductionPlace" size="mini"
+                            style="width: 150px"
                             placeholder="入职地点..."></el-input>
                 </el-form-item>
               </div>
@@ -416,12 +455,9 @@
               </div>
             </el-col>
           </el-row>
-
-
           <span slot="footer" class="dialog-footer">
-    <el-button size="mini" @click="talentCancelEidt">取 消</el-button>
-    <el-button size="mini" type="primary" @click="addInduction('inductionRules')">确 定</el-button>
-  </span>
+              <el-button size="mini" type="primary" @click="addInduction('induction')">确 定</el-button>
+         </span>
         </el-dialog>
       </div>
     </el-form>
@@ -624,6 +660,7 @@
         inductionDialogTitle: '添加到入职信息',
         inductionDialogVisible: false,
         depTextColor: '#c0c4cc',
+        columnShow: false,
         multipleSelection: [],
         hrList: [],
         totalCount: -1,
@@ -665,7 +702,7 @@
         talent: {
           id: null,
           hrId: null,
-          employeeId:null,
+          employeeId: null,
           name: null,
           recommendClient: null,
           recommendTime: null,
@@ -675,8 +712,8 @@
           progress: null
         },
         induction: {
-          talentpoolId:0,
-          hrId:0,
+          talentpoolId: 0,
+          hrId: 0,
           name: null,
           gender: null,
           inductionDate: null,
@@ -704,7 +741,17 @@
           name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
           phone: [{required: true, message: '必填:电话', trigger: 'blur'}]
         },
-        inductionRules:{},
+        inductionRules: {
+          inductionDate: [{required: true, message: '必填:入职时间', trigger: 'blur'}],
+          technologyModule: [{required: true, message: '必填:技术模块', trigger: 'blur'}],
+          category: [{required: true, message: '必填:员工类别', trigger: 'blur'}],
+          positiveTime: [{required: true, message: '必填:转正时间', trigger: 'blur'}],
+          department: [{required: true, message: '必填:部门', trigger: 'blur'}],
+          salary: [{required: true, message: '必填:正式薪资', trigger: 'blur'}],
+          probationSalary: [{required: true, message: '必填:姓名', trigger: 'blur'}],
+          cstomerQuotation: [{required: true, message: '必填:客户报价', trigger: 'blur'}],
+
+        },
         pickerOptions: {
           disabledDate(time) {
             return time.getTime() > Date.now();
@@ -757,8 +804,8 @@
           param += "&technology=" + this.talent.technology;
         }
 
-       this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
-       //  this.getRequest("/employee/basic/empByPageAndHrId" + param).then(resp => {
+        this.getRequest("/talent/basic/getTalentPage" + param).then(resp => {
+          //  this.getRequest("/employee/basic/empByPageAndHrId" + param).then(resp => {
           this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;
@@ -800,7 +847,7 @@
       },
       rightClick(row) {
         debugger
-        this.inductionDialogTitle = "添加到面试信息";
+        this.inductionDialogTitle = "添加到入职信息";
         this.inductionDialogVisible = true;
         debugger
         this.induction.talentpoolId = row.id;
@@ -808,18 +855,22 @@
       },
       addInduction(formName) {
         var _this = this;
-
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
             this.postRequest("/employee/basic/addInduction", this.induction).then(resp => {
               _this.tableLoading = false;
               if (resp && resp.status == 200) {
                 debugger
                 var data = resp.data;
-                _this.dialogVisible = false;
+                _this.inductionDialogVisible = false;
                 _this.emptyEmpData();
                 _this.loadEmps();
               }
             })
-
+          } else {
+            return false
+          }
+        });
       },
       emptyTalentData() {
         this.talent = {
@@ -832,6 +883,10 @@
           workAge: null,
           progress: null
         }
+      },
+      inductionOnChange() {
+        debugger
+        this.induction.positiveTime = this.$moment(this.induction.inductionDate).add(3, "months").format("YYYY-MM-DD")
       },
       cancelSearch() {
         this.advanceSearchViewVisible = false;
@@ -949,13 +1004,13 @@
         this.dialogTitle = "添加";
         this.dialogVisible = true;
       }, exportCount() {
-        var ids=""
+        var ids = ""
         for (var i = 0; i < this.multipleSelection.length; i++) {
           ids += this.multipleSelection[i].id + ",";
         }
-        ids=ids.substring(0, ids.lastIndexOf(','));
-          var url = "/talent/basic/exportCount?id="+ids;
-          window.open(url, "_parent");
+        ids = ids.substring(0, ids.lastIndexOf(','));
+        var url = "/talent/basic/exportCount?id=" + ids;
+        window.open(url, "_parent");
       }, updateEntryInfo() {
         var _this = this;
         var obj = new Object();
@@ -990,31 +1045,31 @@
       }
     },
     emptyEmpData() {
-      this.induction= {
-          talentpoolId:0,
-          hrId:0,
-          name: null,
-          gender: null,
-          inductionDate: null,
-          technologyModule: null,
-          department: null,
-          inductionPlace: null,
-          graduationTime: null,
-          positiveTime: null,
-          degree: null,
-          workAge: 0,
-          phone: null,
-          salary: null,
-          probationSalary: null,
-          cstomerQuotation: null,
-          grading: null,
-          idNumber: null,
-          bankCardNumber: null,
-          bank: null,
-          channel: null,
-          company: null,
-          note: null,
-          item: null,
+      this.induction = {
+        talentpoolId: 0,
+        hrId: 0,
+        name: null,
+        gender: null,
+        inductionDate: null,
+        technologyModule: null,
+        department: null,
+        inductionPlace: null,
+        graduationTime: null,
+        positiveTime: null,
+        degree: null,
+        workAge: 0,
+        phone: null,
+        salary: null,
+        probationSalary: null,
+        cstomerQuotation: null,
+        grading: null,
+        idNumber: null,
+        bankCardNumber: null,
+        bank: null,
+        channel: null,
+        company: null,
+        note: null,
+        item: null,
       }
     }
   }
@@ -1048,5 +1103,20 @@
 
   .el-table--border td, .el-table--border th, .el-table__body-wrapper .el-table--border.is-scrolling-left ~ .el-table__fixed {
     border-right: 1px solid gray;
+  }
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
 </style>

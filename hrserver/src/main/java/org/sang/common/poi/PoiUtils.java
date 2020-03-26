@@ -182,11 +182,11 @@ public class PoiUtils {
                 row.createCell(15).setCellValue(emp.getHr()==null?"":emp.getHr());
 
                 HSSFCell interviewTime = row.createCell(16);
-                interviewTime.setCellValue(emp.getInterviewTime()==null?new Date(0):emp.getInterviewTime());
+                interviewTime.setCellValue(emp.getInterviewTime()==null?new Date():emp.getInterviewTime());
                 interviewTime.setCellStyle(dateCellStyle);
 
                 HSSFCell workTime = row.createCell(17);
-                workTime.setCellValue(emp.getWorkTime()==null?new Date(0):emp.getWorkTime());
+                workTime.setCellValue(emp.getWorkTime()==null?new Date():emp.getWorkTime());
                 workTime.setCellStyle(dateCellStyle);
 
                 row.createCell(18).setCellValue(emp.getIntroduction()==null?"":emp.getIntroduction());

@@ -82,7 +82,6 @@
           <el-table
             :data="emps"
             v-loading="tableLoading"
-            border
             stripe
             @selection-change="handleSelectionChange"
             size="mini"
@@ -93,9 +92,65 @@
               align="center"
               width="30">
             </el-table-column>
+
+            <el-table-column
+              width="30"
+              type="expand">
+              <template slot-scope="scope">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="客户">
+                    <span>{{ scope.row.customer }}</span>
+                  </el-form-item>
+                  <el-form-item label="需求部门">
+                    <span>{{ scope.row.department }}</span>
+                  </el-form-item>
+                  <el-form-item label="岗位名称">
+                    <span>{{ scope.row.jobName }}</span>
+                  </el-form-item>
+                  <el-form-item label="岗位类型">
+                    <span>{{ scope.row.jobType }}</span>
+                  </el-form-item>
+                  <el-form-item label="岗位职责">
+                    <span>{{ scope.row.jobResponsibility }}</span>
+                  </el-form-item>
+                  <el-form-item label="岗位描述">
+                    <span>{{ scope.row.jobDesc }}</span>
+                  </el-form-item>
+                  <el-form-item label="学历要求">
+                    <span>{{ scope.row.degreeRequired }}</span>
+                  </el-form-item>
+                  <el-form-item label="岗位紧急程度">
+                    <span>{{ scope.row.jobEmergency }}</span>
+                  </el-form-item>
+                  <el-form-item label="岗位要点">
+                    <span>{{ scope.row.jobPoints }}</span>
+                  </el-form-item>
+                  <el-form-item label="需求数量">
+                    <span>{{ scope.row.quantityDemanded }}</span>
+                  </el-form-item>
+                  <el-form-item label="工作地点">
+                    <span>{{ scope.row.workingPlace }}</span>
+                  </el-form-item>
+                  <el-form-item label="面试官">
+                    <span>{{ scope.row.interviewer }}</span>
+                  </el-form-item>
+                  <el-form-item label="总结关键点">
+                    <span>{{ scope.row.keyPoint }}</span>
+                  </el-form-item>
+                  <el-form-item label="考勤情况">
+                    <span>{{ scope.row.workOvertime }}</span>
+                  </el-form-item>
+                  <el-form-item label="备注">
+                    <span>{{ scope.row.note }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+
             <el-table-column
               prop="customer"
               align="center"
+              :show-overflow-tooltip="overflow"
               fixed
               label="客户"
               width="70">
@@ -103,36 +158,42 @@
             <el-table-column
               prop="department"
               align="center"
+              :show-overflow-tooltip="overflow"
               label="需求部门"
               width="100">
             </el-table-column>
             <el-table-column
               prop="jobName"
               align="center"
+              :show-overflow-tooltip="overflow"
               label="岗位名称"
               width="100">
             </el-table-column>
             <el-table-column
               prop="jobType"
               align="center"
+              :show-overflow-tooltip="overflow"
               label="岗位类型"
               width="100">
             </el-table-column>
             <el-table-column
               prop="jobResponsibility"
               width="85"
+              :show-overflow-tooltip="overflow"
               align="center"
               label="岗位职责">
             </el-table-column>
             <el-table-column
               prop="jobDesc"
               align="center"
+              :show-overflow-tooltip="overflow"
               label="岗位描述"
               width="150">
             </el-table-column>
             <el-table-column
               prop="degreeRequired"
               label="学历要求"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="70">
             </el-table-column>
@@ -140,11 +201,13 @@
               prop="jobEmergency"
               label="岗位紧急程度"
               align="center"
+              :show-overflow-tooltip="overflow"
               width="50">
             </el-table-column>
             <el-table-column
               prop="jobPoints"
               label="岗位要点"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="100">
             </el-table-column>
@@ -152,17 +215,20 @@
               prop="quantityDemanded"
               label="需求数量"
               align="center"
+              :show-overflow-tooltip="overflow"
               width="50">
             </el-table-column>
             <el-table-column
               prop="workingPlace"
               label="工作地点"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="70">
             </el-table-column>
             <el-table-column
               prop="interviewer"
               label="面试官"
+              :show-overflow-tooltip="overflow"
               align="center"
               width="70">
             </el-table-column>
@@ -170,17 +236,20 @@
               prop="keyPoint"
               align="center"
               label="总结关键点"
+              :show-overflow-tooltip="overflow"
               width="70">
             </el-table-column>
             <el-table-column
               prop="workOvertime"
               label="考勤情况"
               align="center"
+              :show-overflow-tooltip="overflow"
               width="100">
             </el-table-column>
             <el-table-column
               prop="note"
               align="center"
+              :show-overflow-tooltip="overflow"
               label="备注"
               width="100">
             </el-table-column>
@@ -421,6 +490,7 @@
         dialogTitle: '',
         multipleSelection: [],
         depTextColor: '#c0c4cc',
+        overflow:true,
         nations: [],
         politics: [],
         positions: [],
@@ -730,4 +800,20 @@
     transform: translateX(10px);
     opacity: 0;
   }
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 90%;
+  }
+
 </style>

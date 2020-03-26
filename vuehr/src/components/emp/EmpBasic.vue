@@ -106,42 +106,120 @@
           <el-table
             :data="emps"
             v-loading="tableLoading"
-            border
             stripe
-            @row-dblclick="rightClick"
+            @row-dblclick="showEditEmpView"
+            @row-click="mouseEnter"
             @selection-change="handleSelectionChange"
             size="mini"
             style="width: 100%">
-
             <el-table-column
               type="selection"
               align="center"
               width="30">
             </el-table-column>
             <el-table-column
+              width="30"
+              type="expand">
+              <template slot-scope="scope">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="姓名">
+                    <span>{{ scope.row.name }}</span>
+                  </el-form-item>
+                  <el-form-item label="电话">
+                    <span>{{ scope.row.phone }}</span>
+                  </el-form-item>
+                  <el-form-item label="学校">
+                    <span>{{ scope.row.school }}</span>
+                  </el-form-item>
+                  <el-form-item label="学历">
+                    <span>{{ scope.row.tiptopDegree }}</span>
+                  </el-form-item>
+                  <el-form-item label="毕业时间">
+                    <span>{{ scope.row.graduationTime }}</span>
+                  </el-form-item>
+                  <el-form-item label="性别">
+                    <span>{{ scope.row.gender }}</span>
+                  </el-form-item>
+                  <el-form-item label="工作地点">
+                    <span>{{ scope.row.workplace }}</span>
+                  </el-form-item>
+                  <el-form-item label="岗位">
+                    <span>{{ scope.row.job }}</span>
+                  </el-form-item>
+                  <el-form-item label="工作经验">
+                    <span>{{ scope.row.workExperience }}</span>
+                  </el-form-item>
+                  <el-form-item label="婚姻">
+                    <span>{{ scope.row.wedlock }}</span>
+                  </el-form-item>
+                  <el-form-item label="当前薪资">
+                    <span>{{ scope.row.currentSalary }}</span>
+                  </el-form-item>
+                  <el-form-item label="期望薪资">
+                    <span>{{ scope.row.expectedSalary }}</span>
+                  </el-form-item>
+                  <el-form-item label="推荐客户">
+                    <span>{{ scope.row.recommendClient }}</span>
+                  </el-form-item>
+                  <el-form-item label="沟通内容">
+                    <span>{{ scope.row.communicationContent }}</span>
+                  </el-form-item>
+                  <el-form-item label="渠道">
+                    <span>{{ scope.row.channel }}</span>
+                  </el-form-item>
+                  <el-form-item label="HR">
+                    <span>{{ scope.row.hr }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+            <el-table-column
               prop="name"
               align="center"
-              fixed
               label="姓名"
               width="70">
+              <template slot-scope="scope">
+                <span class="is-overflow">{{scope.row.name }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="phone"
+
               label="电话"
               align="center"
               width="100">
+              <template slot-scope="scope">
+                <span class="is-overflow">{{scope.row.phone }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="school"
               label="学校"
               align="center"
               width="100">
+              <template slot-scope="scope">
+                <span class="is-overflow">{{scope.row.school }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="hr"
+              label="HR"
+              align="center"
+              width="90">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.hr }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.hr }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="tiptopDegree"
               label="学历"
               align="center"
               width="50">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.tiptopDegree }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.tiptopDegree }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               width="85"
@@ -160,68 +238,102 @@
               label="工作地点"
               align="center"
               width="70">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.workplace }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.workplace }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="job"
               label="岗位"
               align="center"
               width="50">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.job }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.job }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="workExperience"
               label="工作经验"
               align="center"
               width="100">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.workExperience }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.workExperience }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="wedlock"
               label="婚姻"
               align="center"
               width="50">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.wedlock }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.wedlock }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="currentSalary"
               label="当前薪资"
               align="center"
               width="70">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.currentSalary }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.currentSalary }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="expectedSalary"
               label="期望薪资"
               align="center"
               width="70">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.expectedSalary }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.expectedSalary }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="recommendClient"
               label="推荐客户"
               align="center"
               width="70">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.recommendClient }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.recommendClient }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="communicationContent"
               label="沟通内容"
               align="center"
               width="100">
+
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.communicationContent }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.communicationContent }}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="channel"
               label="渠道"
               align="center"
               width="50">
+              <template slot-scope="scope">
+                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.channel }}</span>
+                <span v-if="scope.row.isShow==1">{{scope.row.channel }}</span>
+              </template>
             </el-table-column>
-            <el-table-column
-              prop="hr"
-              label="HR"
-              align="center"
-              width="50">
-            </el-table-column>
+
             <el-table-column
               fixed="right"
               label="操作"
-              width="195">
+              v-if="isShow"
+              align="center"
+              width="350">
               <template slot-scope="scope">
-<!--                {{hr.id}} ..{{scope.row.hr_id}}-->
-                <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)"
+                           style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
                 <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
@@ -230,14 +342,16 @@
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="exportExecl(scope.row)">导出表格
                 </el-button>
-                <el-button v-if="hr.id!=scope.row.hr_id" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                <el-button type="success" v-if="hr.id!=scope.row.hr_id" style="padding: 3px 4px 3px 4px;margin: 2px"
+                           size="mini"
                            @click="transferAuthority(scope.row)">转让
                 </el-button>
                 <el-button style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="downloadFile(scope.row)"><i class="fa fa-lg fa-level-down"
-                                                                style="margin-right: 5px"></i>下载简历
+                           @click="downloadFile(scope.row)">下载简历
                 </el-button>
-
+                <el-button type="warning" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="rightClick(scope.row)">加入面试
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -264,6 +378,7 @@
           :title="dialogTitle"
           style="padding: 0px;"
           :close-on-click-modal="false"
+
           :visible.sync="dialogVisible"
           width="77%">
           <el-row>
@@ -548,13 +663,13 @@
               </div>
             </el-col>
             <el-col :span="8">
-                         <div>
-                           <el-form-item label="进展:" prop="progress">
-                             <el-input prefix-icon="el-icon-edit" v-model="talent.progress" size="mini" style="width: 150px"
-                                       placeholder="请输入面试进展"></el-input>
-                           </el-form-item>
-                         </div>
-                       </el-col>
+              <div>
+                <el-form-item label="进展:" prop="progress">
+                  <el-input prefix-icon="el-icon-edit" v-model="talent.progress" size="mini" style="width: 150px"
+                            placeholder="请输入面试进展"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
           </el-row>
 
           <span slot="footer" class="dialog-footer">
@@ -567,6 +682,8 @@
   </div>
 </template>
 <script>
+  import Vue from 'vue'
+
   export default {
     data() {
       return {
@@ -582,6 +699,7 @@
         talentDialogTitle: '',
         talentDialogVisible: false,
         multipleSelection: [],
+        overflow: true,
         depTextColor: '#c0c4cc',
         nations: [],
         politics: [],
@@ -625,9 +743,11 @@
           workTime: '',
           introduction: '',
           workExperience: '',
-          projectExperience: ''
+          projectExperience: '',
+          isShow: 0
         },
-        hr:{},
+        isShow:false,
+        hr: {},
         talent: {
           id: 0,
           name: "",
@@ -735,7 +855,7 @@
       downloadFile(row) {
         debugger
         console.log(row)
-          window.open("/employee/basic/downloadFile?fileName=" + row.fileURL, "_parent");
+        window.open("/employee/basic/downloadFile?fileName=" + row.fileURL, "_parent");
       },
       exportWord(row) {
         window.open("/employee/basic/exportWord?id=" + row.id, "_parent");
@@ -791,7 +911,7 @@
         }).then(() => {
           this.tableLoading = true;
           var _this = this;
-          this.emp=row;
+          this.emp = row;
           debugger
           this.postRequest("/employee/basic/transferAuthority?id=" + row.id).then(resp => {
             _this.tableLoading = false;
@@ -805,8 +925,8 @@
 
       },
       doUpdateShowInterview(ids) {
-      debugger
-      console.log( this.emp)
+        debugger
+        console.log(this.emp)
         this.tableLoading = true;
         var _this = this;
         this.putRequest("/employee/basic/updateInterview", {ids: ids}).then(resp => {
@@ -842,20 +962,20 @@
         this.loadEmps();
       },
       searchEmpsList() {
-              var _this = this;
-              this.tableLoading = true;
-              this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= YES").then(resp => {
-                this.tableLoading = false;
-                if (resp && resp.status == 200) {
-                  debugger
-                  var data = resp.data;
-                  debugger
-                  _this.emps = data.emps;
-                  _this.totalCount = data.count;
-      //            _this.emptyEmpData();
-                }
-              })
-            },
+        var _this = this;
+        this.tableLoading = true;
+        this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= YES").then(resp => {
+          this.tableLoading = false;
+          if (resp && resp.status == 200) {
+            debugger
+            var data = resp.data;
+            debugger
+            _this.emps = data.emps;
+            _this.totalCount = data.count;
+            //            _this.emptyEmpData();
+          }
+        })
+      },
       loadEmps() {
         var _this = this;
         this.tableLoading = true;
@@ -863,7 +983,13 @@
           this.tableLoading = false;
           if (resp && resp.status == 200) {
             var data = resp.data;
-            _this.emps = data.emps;
+            // _this.emps = data.emps;
+            let emps = data.emps;
+            for (let data in emps) {
+              Vue.set(emps[data], "isShow", 0)
+            }
+            debugger
+            this.emps = emps
             _this.totalCount = data.count;
 //            _this.emptyEmpData();
           }
@@ -917,7 +1043,7 @@
                 var data = resp.data;
                 _this.talentDialogVisible = false;
                 _this.emptyEmpData();
-                 console.log( this.talent.id)
+                console.log(this.talent.id)
                 this.doUpdateShowInterview(this.talent.id);
                 _this.loadEmps();
 
@@ -954,14 +1080,15 @@
         this.showOrHidePop2 = false;
         this.depTextColor = '#606266';
       },
-      initData(){
+      initData() {
         var _this = this;
         this.getRequest("/system/hr/getCurrentUser").then(resp => {
           if (resp && resp.status == 200) {
             debugger
-            this.hr=resp.data;
+            this.hr = resp.data;
           }
         })
+
       },
       showEditEmpView(row) {
         console.log(row)
@@ -983,7 +1110,6 @@
         console.log(this.talent.id)
       },
       showEditEmpViewMianshi(row) {
-        console.log(row)
         this.dialogTitle = "编辑员工信息";
         this.emp = row;
 
@@ -991,7 +1117,16 @@
         this.emp.workTime = this.formatDate(row.workTime);
         this.dialogVisible = true;
       },
-
+      mouseEnter(row, column, cell, event) {
+        if(this.isShow==false){
+          this.isShow=true
+        }else{
+          this.isShow=false
+        }
+      },
+      mouseLeave(row, column, cell, event) {
+        this.isShow=false
+      },
       showAddEmpView() {
         this.dialogTitle = "上传简历";
         // this.dialogVisible = true;
@@ -1033,7 +1168,8 @@
           notWorkDate: '',
           beginContract: '',
           endContract: '',
-          workAge: ''
+          workAge: '',
+          isShow: 0
         }
       },
       emptyTalentData() {
@@ -1094,4 +1230,24 @@
     transform: translateX(10px);
     opacity: 0;
   }
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 90%;
+  }
+
+  .is-overflow {
+    white-space: nowrap !important;
+  }
+
 </style>

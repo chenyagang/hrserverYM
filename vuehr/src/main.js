@@ -14,7 +14,7 @@ import {initMenu} from './utils/utils'
 import {isNotNullORBlank} from './utils/utils'
 import './utils/filter_utils'
 import 'font-awesome/css/font-awesome.min.css'
-
+import moment from 'moment'//导入文件
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 
@@ -23,7 +23,8 @@ Vue.prototype.postRequest = postRequest;
 Vue.prototype.deleteRequest = deleteRequest;
 Vue.prototype.putRequest = putRequest;
 Vue.prototype.isNotNullORBlank = isNotNullORBlank;
-
+Vue.prototype.$moment = moment;
+moment.locale('zh-cn');
 router.beforeEach((to, from, next)=> {
     if (to.name == 'Login') {
       next();
