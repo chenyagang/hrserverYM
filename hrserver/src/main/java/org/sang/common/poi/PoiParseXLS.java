@@ -39,24 +39,25 @@ public class PoiParseXLS {
 
     public static String setFormat(String str){
         String strFM ="";
-        strFM = str.replaceAll("\\[","");
-        strFM = strFM.replace("{","");
-        strFM = strFM.replace("\"","");
-        strFM = strFM.replace(","," ");
+        strFM = str.replaceAll("\\[","").replace("{","")
+                .replace("\"","").replace(","," ");
+//        strFM = strFM.replace("{","");
+//        strFM = strFM.replace("\"","");
+//        strFM = strFM.replace(","," ");
         return strFM;
     }
 
     /**
      * 获取Excel文件（.xls和.xlsx都支持）
-     * @param  Mfiles
+     * @param  file
      * @return  解析excle后的Json数据
      * @throws
      * @throws
      * @throws
      */
-    public static String readExcel(MultipartFile Mfiles) throws Exception{
-        File file = null;
-        file = PoiParseWord.getFile(Mfiles);
+    public static String readExcel(File file) throws Exception{
+//        File file = null;
+//        file = PoiParseWord.getFile(Mfiles);
         int res = checkFile(file);
         if (res == 0) {
             System.out.println("File not found");

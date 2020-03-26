@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.thymeleaf.TemplateEngine;
 
 import javax.servlet.http.HttpServletRequest;
@@ -236,32 +237,43 @@ public class EmpBasicController {
         return RespBean.error("转让失败!");
     }
 
+//    /*
+//     * 采用file.Transto 来保存上传的文件
+//     */
+//    @RequestMapping("fileUpload2")
+//    public String  fileUpload2(@RequestParam("file") CommonsMultipartFile file) throws IOException {
+//        long  startTime=System.currentTimeMillis();
+//        System.out.println("fileName："+file.getOriginalFilename());
+//        String path="E:/"+new Date().getTime()+file.getOriginalFilename();
+//
+//        File newFile=new File(path);
+//        //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
+//        file.transferTo(newFile);
+//        long  endTime=System.currentTimeMillis();
+//        System.out.println("采用file.Transto的运行时间："+String.valueOf(endTime-startTime)+"ms");
+//        return "/success";
+//    }
+
+
+
     @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
-    public RespBean uploadResumeFile(@RequestParam("file")MultipartFile file, HttpServletRequest request) {
-        String uuid = UUID.randomUUID().toString().trim();
-        String fileN=file.getOriginalFilename();
-        String fileName=uuid+fileN;
-        String filePathName;
+    public RespBean uploadResumeFile(@RequestParam("file")MultipartFile file) {
+//        String filePathName = "F:\\photoTest";
+//        String fileName=filePathName+new Date().getTime()+file.getOriginalFilename();
+        String path="F:\\photoTest\\"+new Date().getTime()+file.getOriginalFilename();
+        File newFile=null;
         try {
             File fileMkdir=new File("F:\\photoTest");
             if(!fileMkdir.exists()) {
                 fileMkdir.mkdir();
             }
-            filePathName = fileMkdir.getPath()+"\\"+fileName;
-            //定义输出流 将文件保存在F盘  file.getOriginalFilename()为获得文件的名字
-             FileOutputStream os = new FileOutputStream(filePathName);
-             InputStream in = file.getInputStream();
-            int b = 0;
-            while((b=in.read())!=-1){ //读取文件
-                os.write(b);
-            }
-            os.flush(); //关闭流
-            in.close();
-            os.close();
+             newFile=new File(path);
+            //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
+            file.transferTo(newFile);
         } catch (Exception e) {
             return RespBean.error("上传失败");
         }
-        return analysisWordPDF(file,filePathName);//分析简历关键字返回实体
+        return analysisWordPDF(newFile,path);//分析简历关键字返回实体
     }
 
     /*
@@ -272,19 +284,19 @@ public class EmpBasicController {
      * @return org.sang.common.ResponseData
      */
 //    @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
-    public RespBean analysisWordPDF(@RequestParam("file")MultipartFile file,String filePath) {
+    public RespBean analysisWordPDF(@RequestParam("file")File file,String filePath) {
         Employee emp = new Employee();
-        String suffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1);
+        String suffixName = filePath.substring(filePath.lastIndexOf(".")+1);
         if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
-            emp = PoiParseWord.readWord(file,emp);
+            emp = PoiParseWord.readWord(file);
         }else if(PoiParseWord.PDF.equals(suffixName)){
-            emp = PoiParseWord.readPDF(file,emp);
+            emp = PoiParseWord.readPDF(file);
         }else if(PoiParseWord.TXT.equals(suffixName)){
-            emp = PoiParseWord.readTXT(file,emp);
+            emp = PoiParseWord.readTXT(file);
         }else if(PoiParseWord.XLS.equals(suffixName) || PoiParseWord.XLSX.equals(suffixName)){ //解析 xlsx，xls
             try {
                 String strExcel = PoiParseXLS.readExcel(file);
-                emp = PoiParseWord.substring_index(strExcel, emp);
+                emp = CommonUtis.substring_index(strExcel);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -343,7 +355,6 @@ public class EmpBasicController {
         return RespBean.ok("添加成功!");
 
     }
-
 
 
 }

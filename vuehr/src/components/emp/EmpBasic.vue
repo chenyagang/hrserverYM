@@ -877,11 +877,11 @@
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/employee/basic/emp", this.emp).then(resp => {
+              this.emp.id ="";
+              this.postRequest("/employee/basic/addEmp", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   var data = resp.data;
-                  _
                   _this.dialogVisible = false;
                   _this.emptyEmpData();
                   _this.loadEmps();
