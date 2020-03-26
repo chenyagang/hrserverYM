@@ -222,7 +222,7 @@
               <template slot-scope="scope">
 <!--                {{hr.id}} ..{{scope.row.hr_id}}-->
                 <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
-                           size="mini">编辑
+                           size="mini" :disabled="'0' == scope.row.showInterview">编辑
                 </el-button>
                 <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
                            @click="exportWord(scope.row)" size="mini">导出模板
