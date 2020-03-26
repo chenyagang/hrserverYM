@@ -23,4 +23,6 @@ public interface BaseMapper<T> {
     
     List<T> selectAll(T t);
 
+    int updateShowEdit(String id);
+
 }

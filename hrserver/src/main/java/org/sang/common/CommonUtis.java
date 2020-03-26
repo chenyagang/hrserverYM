@@ -42,7 +42,7 @@ public class CommonUtis {
     private static String jybj = "教育背景";
     private static String education_space = "学 历";
     private static String gender = "性别";
-    private static String gender_space = "性别";
+    private static String gender_space = "性 别";
     private static String graduationtime = "毕业时间";
     private static String workingplace = "工作地点";
     private static String weizhi = "位置";

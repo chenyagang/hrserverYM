@@ -311,4 +311,20 @@ public class TalentBasicController {
         return ResultCodeEnum.SUCCESS.getResponse(map);
     }
 
+    @RequestMapping(value = "/updateShowEdit", method = RequestMethod.PUT)
+    public RespBean updateShowEdit(String ids) {
+
+        if (!StringUtils.isEmpty(ids)) {
+            String[] listId = ids.split(",");
+            for (int i = 0; i < listId.length; ) {
+                if (talentPoolService.updateShowEdit(listId[i].trim()) != 0) {
+                    if (i == listId.length - 1) {
+                        return RespBean.ok("设置不能编辑成功！");
+                    }
+                }
+            }
+        }
+        return RespBean.error("设置不能编辑失败！");
+    }
+
 }

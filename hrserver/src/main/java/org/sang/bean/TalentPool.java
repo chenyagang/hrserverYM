@@ -28,6 +28,16 @@ public class TalentPool {
 
     private String hrName;
 
+    private String showEdit;
+
+    public String getShowEdit() {
+        return showEdit;
+    }
+
+    public void setShowEdit(String showEdit) {
+        this.showEdit = showEdit;
+    }
+
     public Integer getEmployeeId() {
         return employeeId;
     }
