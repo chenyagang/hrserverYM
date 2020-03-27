@@ -6,6 +6,7 @@ import org.sang.bean.Position;
 import org.sang.bean.RespBean;
 import org.sang.common.*;
 import org.sang.common.poi.PoiParseWord;
+import org.sang.common.poi.PoiParseXLS;
 import org.sang.common.poi.PoiUtils;
 import org.sang.service.*;
 import org.sang.utils.WordDocx;
@@ -105,12 +106,12 @@ public class EmpBasicController {
             for (int i = 0; i < listId.length; ) {
                 if (empService.updateEmpShowResumeById(Integer.parseInt(listId[i].trim())) != 0) {
                     if (i == listId.length - 1) {
-                        return RespBean.ok("更新候选人面试状态成功！");
+                        return RespBean.ok("设置不能编辑成功！");
                     }
                 }
             }
         }
-        return RespBean.error("更新候选人面试状态失败！");
+        return RespBean.error("设置不能编辑失败！");
     }
 
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
@@ -233,32 +234,24 @@ public class EmpBasicController {
         return RespBean.error("转让失败!");
     }
 
-    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public RespBean uploadResumeFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        String uuid = UUID.randomUUID().toString().trim();
-        String fileN = file.getOriginalFilename();
-        String fileName = uuid + fileN;
-        String filePathName;
+    @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
+    public RespBean uploadResumeFile(@RequestParam("file")MultipartFile file) {
+//        String filePathName = "F:\\photoTest";
+//        String fileName=filePathName+new Date().getTime()+file.getOriginalFilename();
+        String path="F:\\photoTest\\"+new Date().getTime()+file.getOriginalFilename();
+        File newFile=null;
         try {
-            File fileMkdir = new File("F:\\photoTest");
-            if (!fileMkdir.exists()) {
+            File fileMkdir=new File("F:\\photoTest");
+            if(!fileMkdir.exists()) {
                 fileMkdir.mkdir();
             }
-            filePathName = fileMkdir.getPath() + "\\" + fileName;
-            //定义输出流 将文件保存在F盘  file.getOriginalFilename()为获得文件的名字
-            FileOutputStream os = new FileOutputStream(filePathName);
-            InputStream in = file.getInputStream();
-            int b = 0;
-            while ((b = in.read()) != -1) { //读取文件
-                os.write(b);
-            }
-            os.flush(); //关闭流
-            in.close();
-            os.close();
+            newFile=new File(path);
+            //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
+            file.transferTo(newFile);
         } catch (Exception e) {
             return RespBean.error("上传失败");
         }
-        return analysisWordPDF(file, filePathName);//分析简历关键字返回实体
+        return analysisWordPDF(newFile,path);//分析简历关键字返回实体
     }
 
     @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
@@ -293,13 +286,24 @@ public class EmpBasicController {
          * @return org.sang.common.ResponseData
          */
 //    @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
-        public RespBean analysisWordPDF (@RequestParam("file") MultipartFile file, String filePath){
+        public RespBean analysisWordPDF(@RequestParam("file")File file,String filePath) {
             Employee emp = new Employee();
-            String suffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
+            String suffixName = filePath.substring(filePath.lastIndexOf(".")+1);
             if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
-                emp = PoiParseWord.readWord(file, emp);
-            } else {
-                emp = PoiParseWord.readPDF(file, emp);
+                emp = PoiParseWord.readWord(file);
+            }else if(PoiParseWord.PDF.equals(suffixName)){
+                emp = PoiParseWord.readPDF(file);
+            }else if(PoiParseWord.TXT.equals(suffixName)){
+                emp = PoiParseWord.readTXT(file);
+            }else if(PoiParseWord.XLS.equals(suffixName) || PoiParseWord.XLSX.equals(suffixName)){ //解析 xlsx，xls
+                try {
+                    String strExcel = PoiParseXLS.readExcel(file);
+                    emp = CommonUtis.substring_index(strExcel);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else {
+                return RespBean.error("文件格式不正确！");
             }
             emp.setFileURL(filePath);
             emp.setHr(HrUtils.getCurrentHr().getName());
