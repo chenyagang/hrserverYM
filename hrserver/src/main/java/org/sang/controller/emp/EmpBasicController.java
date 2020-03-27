@@ -329,8 +329,26 @@ public class EmpBasicController {
         emp.setFileURL(filePath);
         emp.setHr(HrUtils.getCurrentHr().getName());
         emp.setHr_id(Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId())));
+        if(StringUtils.isEmpty(emp.getWedlock())){
+            emp.setWedlock("未婚");
+        }
+        if(StringUtils.isEmpty(emp.getTiptopDegree())){
+            emp.setWedlock("大专");
+        }
         if (StringUtils.isEmpty(emp.getGender())) {
             emp.setGender(CommonUtis.MAN);
+        }
+
+        if (null == emp.getInterviewTime()) {
+            emp.setInterviewTime(new Date());
+        }
+
+        if (null == emp.getWorkTime()) {
+            emp.setWorkTime(new Date());
+        }
+
+        if (null == emp.getTransferTime()) {
+            emp.setTransferTime(new Date());
         }
         if (StringUtils.isEmpty(emp.getGraduationTime())) {
             emp.setGraduationTime(DateTimeUtil.getNewDateToStr(DateTimeUtil.FORMATTIME_DATE_1));

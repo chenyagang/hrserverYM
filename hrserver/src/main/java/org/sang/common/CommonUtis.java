@@ -79,10 +79,12 @@ public class CommonUtis {
         //2、获取匹配器
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(str);
-        m.find();
+        if(m.find()){
+            return str.substring(m.start(),m.end());
+        }
 //        int a = m.start();
 //        int b = m.end();
-        return str.substring(m.start(),m.end());
+        return "";
 
     }
 
