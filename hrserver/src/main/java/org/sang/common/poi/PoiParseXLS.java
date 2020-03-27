@@ -62,7 +62,7 @@ public class PoiParseXLS {
         if (res == 0) {
             System.out.println("File not found");
         }else if (res == 1) {
-            String xlsx = readXLSX(file).toString();
+           String xlsx = readXLSX(file).toString();
             return setFormat(xlsx);
 //            return readXLSX(file);
         }else if (res == 2) {
@@ -229,4 +229,7 @@ public class PoiParseXLS {
 
 
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> ff8f9d0fa3ead5c46217413265d39b466308e2de

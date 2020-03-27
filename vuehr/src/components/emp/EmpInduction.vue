@@ -87,6 +87,7 @@
             :data="emps"
             v-loading="tableLoading"
             @row-dblclick="showEditEmpView"
+            @row-click="mouseEnter"
             stripe
             @selection-change="handleSelectionChange"
             size="mini"
@@ -333,6 +334,7 @@
             <el-table-column
               fixed="right"
               align="center"
+              v-if="isShow"
               label="操作"
               width="195">
               <template slot-scope="scope">
@@ -738,6 +740,7 @@
           item: null,
         },
         hr: {},
+        isShow:false,
         talent: {
           id: 0,
           name: "",
@@ -794,6 +797,13 @@
         }
         this.loadEmps();
         this.fileUploadBtnText = '导入数据';
+      },
+      mouseEnter(row, column, cell, event) {
+        if(this.isShow==false){
+          this.isShow=true
+        }else{
+          this.isShow=false
+        }
       },
       uploadResumeSuccess(response, file, fileList) {
         if (response) {

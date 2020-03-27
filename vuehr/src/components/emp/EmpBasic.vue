@@ -307,7 +307,7 @@
               prop="communicationContent"
               label="沟通内容"
               align="center"
-              width="100">
+              width="200">
 
               <template slot-scope="scope">
                 <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.communicationContent }}</span>
@@ -318,7 +318,7 @@
               prop="channel"
               label="渠道"
               align="center"
-              width="50">
+              width="70">
               <template slot-scope="scope">
                 <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.channel }}</span>
                 <span v-if="scope.row.isShow==1">{{scope.row.channel }}</span>
@@ -332,9 +332,10 @@
               align="center"
               width="350">
               <template slot-scope="scope">
-                <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)"
+            <!--    <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)"
                            style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
+                </el-button>-->
 <!--                {{hr.id}} ..{{scope.row.hr_id}}-->
                 <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini" :disabled="'0' == scope.row.showInterview">编辑
@@ -485,7 +486,7 @@
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="婚姻状况:" prop="wedlock">
+                <el-form-item label="婚姻状况:" prop="wedlock" :model="emp" :rules="rules" ref="addEmpForm">
                   <el-radio-group v-model="emp.wedlock">
                     <el-radio label="已婚">已婚</el-radio>
                     <el-radio style="margin-left: 15px" label="未婚">未婚</el-radio>
@@ -760,6 +761,7 @@
           workAge: 0,
           progress: "",
         },
+
         rules: {
           name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
           gender:
@@ -804,7 +806,8 @@
             [{required: true, message: '必填:毕业院校', trigger: 'blur'}],
         },
         talentRules: {
-          name: [{required: true, message: '必填:姓名', trigger: 'blur'}]
+          recommendClient: [{required: true, message: '必填:介绍客户', trigger: 'blur'}],
+          recommendTime:[{required: true, message: '必填:介绍时间', trigger: 'blur'}],
         }
       }
         ;

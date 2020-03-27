@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.thymeleaf.TemplateEngine;
 
 import javax.servlet.http.HttpServletRequest;
@@ -234,6 +235,25 @@ public class EmpBasicController {
         return RespBean.error("转让失败!");
     }
 
+//    /*
+//     * 采用file.Transto 来保存上传的文件
+//     */
+//    @RequestMapping("fileUpload2")
+//    public String  fileUpload2(@RequestParam("file") CommonsMultipartFile file) throws IOException {
+//        long  startTime=System.currentTimeMillis();
+//        System.out.println("fileName："+file.getOriginalFilename());
+//        String path="E:/"+new Date().getTime()+file.getOriginalFilename();
+//
+//        File newFile=new File(path);
+//        //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
+//        file.transferTo(newFile);
+//        long  endTime=System.currentTimeMillis();
+//        System.out.println("采用file.Transto的运行时间："+String.valueOf(endTime-startTime)+"ms");
+//        return "/success";
+//    }
+
+
+
     @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
     public RespBean uploadResumeFile(@RequestParam("file")MultipartFile file) {
 //        String filePathName = "F:\\photoTest";
@@ -245,7 +265,7 @@ public class EmpBasicController {
             if(!fileMkdir.exists()) {
                 fileMkdir.mkdir();
             }
-            newFile=new File(path);
+             newFile=new File(path);
             //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
             file.transferTo(newFile);
         } catch (Exception e) {
@@ -286,28 +306,28 @@ public class EmpBasicController {
          * @return org.sang.common.ResponseData
          */
 //    @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
-        public RespBean analysisWordPDF(@RequestParam("file")File file,String filePath) {
-            Employee emp = new Employee();
-            String suffixName = filePath.substring(filePath.lastIndexOf(".")+1);
-            if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
-                emp = PoiParseWord.readWord(file);
-            }else if(PoiParseWord.PDF.equals(suffixName)){
-                emp = PoiParseWord.readPDF(file);
-            }else if(PoiParseWord.TXT.equals(suffixName)){
-                emp = PoiParseWord.readTXT(file);
-            }else if(PoiParseWord.XLS.equals(suffixName) || PoiParseWord.XLSX.equals(suffixName)){ //解析 xlsx，xls
-                try {
-                    String strExcel = PoiParseXLS.readExcel(file);
-                    emp = CommonUtis.substring_index(strExcel);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }else {
-                return RespBean.error("文件格式不正确！");
+    public RespBean analysisWordPDF(@RequestParam("file")File file,String filePath) {
+        Employee emp = new Employee();
+        String suffixName = filePath.substring(filePath.lastIndexOf(".")+1);
+        if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
+            emp = PoiParseWord.readWord(file);
+        }else if(PoiParseWord.PDF.equals(suffixName)){
+            emp = PoiParseWord.readPDF(file);
+        }else if(PoiParseWord.TXT.equals(suffixName)){
+            emp = PoiParseWord.readTXT(file);
+        }else if(PoiParseWord.XLS.equals(suffixName) || PoiParseWord.XLSX.equals(suffixName)){ //解析 xlsx，xls
+            try {
+                String strExcel = PoiParseXLS.readExcel(file);
+                emp = CommonUtis.substring_index(strExcel);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            emp.setFileURL(filePath);
-            emp.setHr(HrUtils.getCurrentHr().getName());
-            emp.setHr_id(Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId())));
+        }else {
+            return RespBean.error("文件格式不正确！");
+        }
+        emp.setFileURL(filePath);
+        emp.setHr(HrUtils.getCurrentHr().getName());
+        emp.setHr_id(Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId())));
 //        Employee employeePhone = null;
 //        String name = employee.getName();
 //        String phone =  employee.getPhone();
@@ -359,4 +379,5 @@ public class EmpBasicController {
         }
 
 
-    }
+}
+
