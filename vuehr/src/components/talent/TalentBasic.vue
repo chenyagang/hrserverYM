@@ -179,7 +179,7 @@
               width="195">
               <template slot-scope="scope">
                 <el-button @click="showEditTalentView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
-                           size="mini" :disabled="'0' == scope.row.showEdit">编辑
+                           size="mini" :disabled="'0' == scope.row.showEdit">编辑{{scope.row.showEdit}}
                 </el-button>
               </template>
             </el-table-column>
