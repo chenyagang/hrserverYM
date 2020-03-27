@@ -229,7 +229,3 @@ public class PoiParseXLS {
 
 
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> ff8f9d0fa3ead5c46217413265d39b466308e2de
