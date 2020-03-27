@@ -486,7 +486,7 @@
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="婚姻状况:" prop="wedlock" :model="emp" :rules="rules" ref="addEmpForm">
+                <el-form-item label="婚姻状况:" prop="wedlock" :model="emp">
                   <el-radio-group v-model="emp.wedlock">
                     <el-radio label="已婚">已婚</el-radio>
                     <el-radio style="margin-left: 15px" label="未婚">未婚</el-radio>
@@ -1002,8 +1002,10 @@
         })
       },
       addEmp(formName) {
+      debugger
         var _this = this;
         this.$refs[formName].validate((valid) => {
+        debugger
           if (valid) {
             if (this.emp.id) {
               //更新
@@ -1032,13 +1034,16 @@
               })
             }
           } else {
+           debugger
             return false;
           }
         });
       },
       addTalent(formName) {
+      debugger
         var _this = this;
         this.$refs[formName].validate((valid) => {
+        debugger
           if (valid) {
             //添加
             this.tableLoading = true;

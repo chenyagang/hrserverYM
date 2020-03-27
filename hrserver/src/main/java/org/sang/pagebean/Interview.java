@@ -18,6 +18,16 @@ public class Interview {
 
     private String progress;
 
+    private String showEdit;
+
+    public String getShowEdit() {
+        return showEdit;
+    }
+
+    public void setShowEdit(String showEdit) {
+        this.showEdit = showEdit;
+    }
+
     public Integer getWorkAge() {
         return workAge;
     }

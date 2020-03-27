@@ -180,8 +180,9 @@
               label="操作"
               width="195">
               <template slot-scope="scope">
+
                 <el-button @click="showEditTalentView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
-                           size="mini" :disabled="'0' == scope.row.showEdit">编辑{{scope.row.showEdit}}
+                           size="mini" :disabled="'0' == scope.row.showEdit">编辑
                 </el-button>
                 <el-button type="warning" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="rightClick(scope.row)">加入入职
@@ -970,6 +971,8 @@
       showEditTalentView(row) {
         this.dialogTitle = "编辑";
         this.talent = row;
+        debugger
+        console.log(row)
         this.dialogVisible = true;
       }, updateTalent(formName) {
         this.tableLoading = true;
