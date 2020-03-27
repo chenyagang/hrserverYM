@@ -103,11 +103,11 @@ public class InductionController {
             induction.setChannel(employee.getChannel());
             induction.setHrId(HrUtils.getCurrentHr().getId().intValue());
             inductionService.add(induction);
-            return RespBean.ok("加入入职成功!"+mes);
+            return RespBean.ok("编辑成功!"+mes);
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        return RespBean.error("加入入职失败!");
+        return RespBean.error("编辑失败!");
 
     }
 

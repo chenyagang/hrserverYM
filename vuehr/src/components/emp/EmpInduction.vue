@@ -1004,10 +1004,13 @@
         });
       },
       addInduction(formName) {
+        debugger
         var _this = this;
+        this.emp.hrId=0
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.postRequest("/employee/basic/addInduction", this.induction).then(resp => {
+            debugger
+            this.putRequest("/employee/basic/updateInduction", this.emp).then(resp => {
               _this.tableLoading = false;
               if (resp && resp.status == 200) {
                 debugger

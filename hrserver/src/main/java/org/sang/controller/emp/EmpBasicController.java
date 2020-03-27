@@ -281,6 +281,7 @@ public class EmpBasicController {
             response.reset();
             response.setContentType("bin");
             String[] file=fileName.split("\\\\");
+            response.setContentType("application/force-download");
             response.addHeader("Content-disposition", "attachment;fileName=" + file[file.length-1]);
             // 循环取出流中的数据
              byte[] buf = new byte[1024];
