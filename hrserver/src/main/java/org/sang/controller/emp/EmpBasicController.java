@@ -333,7 +333,7 @@ public class EmpBasicController {
             emp.setWedlock("未婚");
         }
         if(StringUtils.isEmpty(emp.getTiptopDegree())){
-            emp.setWedlock("大专");
+            emp.setTiptopDegree("大专");
         }
         if (StringUtils.isEmpty(emp.getGender())) {
             emp.setGender(CommonUtis.MAN);
@@ -374,7 +374,7 @@ public class EmpBasicController {
                 employee.setWedlock("未婚");
             }
             if(StringUtils.isEmpty(employee.getTiptopDegree())){
-                employee.setWedlock("大专");
+                employee.setTiptopDegree("大专");
             }
             if (StringUtils.isEmpty(employee.getGender())) {
                 employee.setGender(CommonUtis.MAN);
