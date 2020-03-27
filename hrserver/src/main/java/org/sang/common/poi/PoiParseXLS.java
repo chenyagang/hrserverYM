@@ -226,6 +226,4 @@ public class PoiParseXLS {
         // 5.	错误 CELL_TYPE_ERROR
         return "";
     }
-
-
 }
