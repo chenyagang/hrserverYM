@@ -56,4 +56,14 @@ public class BaseServiceImpl<T> implements IBaseService<T>{
     public List<T> queryAll(T t) {
         return baseMapper.selectAll(t);
     }
+
+    public int updateShowEdit(String id){
+
+        try {
+          return baseMapper.updateShowEdit(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

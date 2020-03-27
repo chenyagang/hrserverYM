@@ -88,6 +88,11 @@ public class InductionController {
         try {
             TalentPool talentPool= talentPoolService.queryById(induction.getTalentpoolId());
             Employee employee =empService.queryById(String.valueOf(talentPool.getEmployeeId()));
+            String mes= "更新不可编辑失败 ！";
+            if(0!=talentPoolService.updateShowEdit(induction.getTalentpoolId().trim())){
+                mes= "更新不可编辑成功 ！！";
+            }
+            talentPoolService.updateShowEdit(induction.getTalentpoolId());
             induction.setName(employee.getName());
             induction.setGender(employee.getGender());
             induction.setCustomer(talentPool.getRecommendClient());
@@ -98,7 +103,7 @@ public class InductionController {
             induction.setChannel(employee.getChannel());
             induction.setHrId(HrUtils.getCurrentHr().getId().intValue());
             inductionService.add(induction);
-            return RespBean.ok("加入入职成功!");
+            return RespBean.ok("加入入职成功!"+mes);
         }catch (Exception ex){
             ex.printStackTrace();
         }

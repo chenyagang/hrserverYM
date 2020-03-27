@@ -118,4 +118,8 @@
         </if>
     </select>
 
+    <update id="updateShowEdit" parameterType="String">
+        update talentpool SET showInterview = '0' where id = #{id}
+    </update>
+
 </mapper>
