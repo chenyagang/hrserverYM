@@ -90,6 +90,7 @@
           <el-table
             :data="talents"
             v-loading="tableLoading"
+            @row-click="mouseEnter"
             :show-overflow-tooltip="overflow"
             stripe
             @row-dblclick="rightClick"
@@ -175,11 +176,15 @@
             <el-table-column
               align="center"
               fixed="right"
+              v-if="isShow"
               label="操作"
               width="195">
               <template slot-scope="scope">
                 <el-button @click="showEditTalentView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
+                </el-button>
+                <el-button type="warning" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="rightClick(scope.row)">加入入职
                 </el-button>
               </template>
             </el-table-column>
@@ -212,7 +217,7 @@
           <el-row>
             <el-col :span="8">
               <div>
-                <el-form-item label="姓名:" prop="name">
+                <el-form-item :rules="rules"  label="姓名:" prop="name" :model="talent" ref="talent">
                   <el-input prefix-icon="el-icon-edit" v-model="talent.name" size="mini" style="width: 200px"
                             placeholder="请输入姓名"></el-input>
                 </el-form-item>
@@ -659,6 +664,7 @@
         statusDialogTitle: '',
         inductionDialogTitle: '添加到入职信息',
         inductionDialogVisible: false,
+        isShow:false,
         depTextColor: '#c0c4cc',
         columnShow: false,
         multipleSelection: [],
@@ -738,8 +744,9 @@
           item: null,
         },
         rules: {
-          name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
-          phone: [{required: true, message: '必填:电话', trigger: 'blur'}]
+          name:[{required: true, message: '必填:姓名', trigger: 'blur'}],
+          recommendClient: [{required: true, message: '必填:介绍客户', trigger: 'blur'}],
+          recommendTime:[{required: true, message: '必填:介绍时间', trigger: 'blur'}],
         },
         inductionRules: {
           inductionDate: [{required: true, message: '必填:入职时间', trigger: 'blur'}],
@@ -812,6 +819,13 @@
             _this.totalCount = data.data.count;
           }
         })
+      },
+      mouseEnter(row, column, cell, event) {
+        if(this.isShow==false){
+          this.isShow=true
+        }else{
+          this.isShow=false
+        }
       },
       searchTalent: function () {
               var _this = this;

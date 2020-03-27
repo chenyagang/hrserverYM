@@ -83,6 +83,7 @@
             :data="emps"
             v-loading="tableLoading"
             stripe
+            @row-click="mouseEnter"
             @selection-change="handleSelectionChange"
             size="mini"
             style="width: 100%">
@@ -257,6 +258,7 @@
             <el-table-column
               fixed="right"
               label="操作"
+              v-if="isShow"
               width="195">
               <template slot-scope="scope">
                 <el-button @click="showEditEmpView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
@@ -293,7 +295,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="客户:" prop="customer">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.customer" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.customer" size="mini" style="width: 50%"
                             placeholder="请输入客户姓名"></el-input>
                 </el-form-item>
               </div>
@@ -301,7 +303,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="需求部门:" prop="department">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.department" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.department" size="mini" style="width: 50%"
                             placeholder="需求部门"></el-input>
                 </el-form-item>
               </div>
@@ -309,7 +311,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="岗位名称:" prop="jobName">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobName" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobName" size="mini" style="width: 50%"
                             placeholder="岗位名称..."></el-input>
                 </el-form-item>
               </div>
@@ -317,7 +319,7 @@
             <el-col :span="5">
               <div>
                 <el-form-item label="岗位类型:" prop="jobType">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobType" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobType" size="mini" style="width: 50%"
                             placeholder="岗位类型..."></el-input>
                 </el-form-item>
               </div>
@@ -365,7 +367,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="工作地点:" prop="workingPlace">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.workingPlace" size="mini" style="width: 140px"
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.workingPlace" size="mini" style="width: 50%"
                             placeholder="工作地点..."></el-input>
                 </el-form-item>
               </div>
@@ -384,7 +386,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="关键点:" prop="keyPoint">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.keyPoint" size="mini" style="width: 160px"
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.keyPoint" size="mini" style="width: 50%"
                             placeholder="关键点..."></el-input>
                 </el-form-item>
               </div>
@@ -393,7 +395,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="岗位职责:" prop="jobResponsibility">
-                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobResponsibility" size="mini" style="width: 160px"
+                  <el-input prefix-icon="el-icon-edit" v-model="emp.jobResponsibility" size="mini" style="width: 50%"
                             placeholder="岗位职责..."></el-input>
                 </el-form-item>
               </div>
@@ -415,7 +417,7 @@
                             type="textarea"
                             rows="8"
                             col="24"
-                            style="width: 1030px;margin-left:-10px;"
+                            style="width:90%;margin-left:-10px;"
                             placeholder="岗位描述..."></el-input>
                 </el-form-item>
               </div>
@@ -429,7 +431,7 @@
                             type="textarea"
                             rows="8"
                             col="24"
-                            style="width: 1030px"
+                            style="width:90%;"
                             placeholder="岗位要点"></el-input>
                 </el-form-item>
               </div>
@@ -438,32 +440,28 @@
           <el-row>
             <el-col :span="24">
                 <el-form-item label="考勤情况:" prop="workOvertime">
-                  <el-col :span="6">
                     <div>
                       <el-input prefix-icon="el-icon-edit" v-model="emp.workOvertime" size="mini"
                                 type="textarea"
                                 rows="8"
                                 col="24"
-                                style="width: 1030px"
+                                style="width:90%;"
                                 placeholder="考勤情况"></el-input>
                     </div>
-                  </el-col>
                 </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
               <el-form-item label="备注:" prop="note">
-                <el-col :span="6">
                   <div>
                     <el-input prefix-icon="el-icon-edit" v-model="emp.note" size="mini"
                               type="textarea"
                               rows="8"
                               col="24"
-                              style="margin-left:30px;width: 1030px"
+                              style="margin-left:30px;width:90%;"
                               placeholder="备注"></el-input>
                   </div>
-                </el-col>
               </el-form-item>
             </el-col>
           </el-row>
@@ -487,6 +485,7 @@
         beginDateScope: '',
         faangledoubleup: 'fa-angle-double-up',
         faangledoubledown: 'fa-angle-double-down',
+        isShow:false,
         dialogTitle: '',
         multipleSelection: [],
         depTextColor: '#c0c4cc',
@@ -559,6 +558,13 @@
         }
         this.loadEmps();
         this.fileUploadBtnText = '上传简历';
+      },
+      mouseEnter(row, column, cell, event) {
+        if(this.isShow==false){
+          this.isShow=true
+        }else{
+          this.isShow=false
+        }
       },
       fileUploadError(err, file, fileList) {
         this.$message({type: 'error', message: "导入失败!"});
