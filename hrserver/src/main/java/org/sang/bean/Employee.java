@@ -24,8 +24,12 @@ public class Employee {
     private String channel;
     private String communicationContent;
     private String hr;
-    private Date interviewTime;
-    private Date workTime;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8" )
+    private Date interviewTime = new Date();
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat( pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date workTime = new Date();
     private String introduction;
     private String workExperience;
     private String projectExperience;

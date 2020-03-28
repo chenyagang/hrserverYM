@@ -39,6 +39,9 @@ public class CommonUtis {
     private static String education = "学历";
     private static String dazhuan = "大专";
     private static String benke = "本科";
+    private static String boshi = "博士";
+    private static String shuoshi = "硕士";
+    private static String gaozhong = "高中";
     private static String jybj = "教育背景";
     private static String education_space = "学 历";
     private static String gender = "性别";
@@ -48,6 +51,9 @@ public class CommonUtis {
     private static String weizhi = "位置";
     private static String communicationcontent = "沟通内容";
     private static String wedlock = "婚姻状况";
+    private static String yihun = "已婚";
+    private static String weihun = "未婚";
+    private static String liyi = "离异";
 
 
 
@@ -73,10 +79,12 @@ public class CommonUtis {
         //2、获取匹配器
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(str);
-        m.find();
+        if(m.find()){
+            return str.substring(m.start(),m.end());
+        }
 //        int a = m.start();
 //        int b = m.end();
-        return str.substring(m.start(),m.end());
+        return "";
 
     }
 
@@ -128,42 +136,59 @@ public class CommonUtis {
                 a += 3;
                 employee.setName(getKeyword(a, str, 3));
                 if(StringUtils.isEmpty(employee.getName())){
-                    employee.setName(str.substring(0,4));//设置为第一行前3个字符串
+                    employee.setName(str.substring(0,4).trim());//设置为第一行前3个字符串
                 }
             }else{
                 if(StringUtils.isEmpty(employee.getName())){
-                    employee.setName(str.substring(0,4));//设置为第一行前3个字符串
+                    employee.setName(str.substring(0,4).trim());//设置为第一行前3个字符串
                 }
             }
         }
 
-        a = str.indexOf(education_space);
-        if (a != -1) {
-            a += 4;
-            employee.setTiptopDegree(getKeyword(a, str, 4));
-            if(!StringUtils.isEmpty(employee.getTiptopDegree())){
-                a = -1;
-            }
-        }
+//        a = str.indexOf(education_space);
+//        if (a != -1) {
+//            a += 4;
+//            employee.setTiptopDegree(getKeyword(a, str, 4));
+//            if(!StringUtils.isEmpty(employee.getTiptopDegree())){
+//                a = -1;
+//            }
+//        }
+//
+//        if(StringUtils.isEmpty(employee.getTiptopDegree())){
+//            a = str.indexOf(education);
+//            if (a != -1) {
+//                a += 3;
+//                employee.setTiptopDegree(getKeyword(a, str, 3));
+//                if(StringUtils.isEmpty(employee.getTiptopDegree())){
+//                    //正则匹配学历 本科
+//                    employee.setTiptopDegree(CommonUtis.getMatchGroup(str, benke));
+//                    if(StringUtils.isEmpty(employee.getTiptopDegree())){
+//                        employee.setTiptopDegree(CommonUtis.getMatchGroup(str, dazhuan)); //正则匹配学历 大专
+//                    }
+//                }
+//            }else{//正则匹配学历
+//                employee.setTiptopDegree(CommonUtis.getMatchGroup(str, benke));
+//                if(StringUtils.isEmpty(employee.getTiptopDegree())){
+//                    employee.setTiptopDegree(CommonUtis.getMatchGroup(str, dazhuan));
+//                }
+//            }
+//        }
 
+        //正则匹配学历 本科
         if(StringUtils.isEmpty(employee.getTiptopDegree())){
-            a = str.indexOf(education);
-            if (a != -1) {
-                a += 3;
-                employee.setTiptopDegree(getKeyword(a, str, 3));
-                if(StringUtils.isEmpty(employee.getTiptopDegree())){
-                    //正则匹配学历 本科
-                    employee.setTiptopDegree(CommonUtis.getMatchGroup(str, benke));
-                    if(StringUtils.isEmpty(employee.getTiptopDegree())){
-                        employee.setTiptopDegree(CommonUtis.getMatchGroup(str, dazhuan)); //正则匹配学历 大专
-                    }
-                }
-            }else{//正则匹配学历
-                employee.setTiptopDegree(CommonUtis.getMatchGroup(str, benke));
-                if(StringUtils.isEmpty(employee.getTiptopDegree())){
-                    employee.setTiptopDegree(CommonUtis.getMatchGroup(str, dazhuan));
-                }
-            }
+            employee.setTiptopDegree(CommonUtis.getMatchGroup(str, boshi));
+        }
+        if(StringUtils.isEmpty(employee.getTiptopDegree())){
+            employee.setTiptopDegree(CommonUtis.getMatchGroup(str, shuoshi));
+        }
+        if(StringUtils.isEmpty(employee.getTiptopDegree())){
+            employee.setTiptopDegree(CommonUtis.getMatchGroup(str, benke));
+        }
+        if(StringUtils.isEmpty(employee.getTiptopDegree())){
+            employee.setTiptopDegree(CommonUtis.getMatchGroup(str, dazhuan));
+        }
+        if(StringUtils.isEmpty(employee.getTiptopDegree())){
+            employee.setTiptopDegree(CommonUtis.getMatchGroup(str, gaozhong));
         }
 
         a = str.indexOf(phone_space);
@@ -282,10 +307,20 @@ public class CommonUtis {
             }
         }
 
-        a = str.indexOf(wedlock);
-        if (a != -1) {
-            a += 5;
-            employee.setWedlock(getKeyword(a, str, 5));
+//        a = str.indexOf(wedlock);
+//        if (a != -1) {
+//            a += 5;
+//            employee.setWedlock(getKeyword(a, str, 5));
+//        }
+        if(StringUtils.isEmpty(employee.getWedlock())){
+            employee.setWedlock(CommonUtis.getMatchGroup(str, yihun));
+        }
+        if(StringUtils.isEmpty(employee.getWedlock())){
+            employee.setWedlock(CommonUtis.getMatchGroup(str, weihun));
+        }
+
+        if(StringUtils.isEmpty(employee.getWedlock())){
+            employee.setWedlock(CommonUtis.getMatchGroup(str, liyi));
         }
         a = str.indexOf(communicationcontent);
         if (a != -1) {
@@ -301,7 +336,7 @@ public class CommonUtis {
         if (a != -1 && !StringUtils.isEmpty(str)) {
             temp = str.substring(a - index, a);//预期截取关键字+：
             str = str.substring(a);//截取需要值
-            str = str.replaceAll("\r|\n", " ");//去除r n换成空格
+//            str = str.replaceAll("\r|\n", " ");//去除r n换成空格
             if (temp.indexOf(":") != -1 || temp.indexOf("：") != -1) {
                 return getProcessingField(str);
             }
@@ -309,6 +344,7 @@ public class CommonUtis {
                 char[] stringArr = str.toCharArray();
                 if (stringArr[i] == '\0' || Character.isSpace(stringArr[i]) || stringArr[i] == ':' || stringArr[i] == '：' || stringArr[i] == '\n') {
                     str = str.substring(i + 1);
+                    str = str.replaceAll("\r|\n", " ");//去除r n换成空格
                     return getProcessingField(str);
                 }
             }

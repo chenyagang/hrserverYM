@@ -9,6 +9,7 @@ import org.sang.common.poi.PoiParseWord;
 import org.sang.common.poi.PoiParseXLS;
 import org.sang.common.poi.PoiUtils;
 import org.sang.service.*;
+import org.sang.utils.DateTimeUtil;
 import org.sang.utils.WordDocx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -329,31 +330,30 @@ public class EmpBasicController {
         emp.setFileURL(filePath);
         emp.setHr(HrUtils.getCurrentHr().getName());
         emp.setHr_id(Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId())));
-//        Employee employeePhone = null;
-//        String name = employee.getName();
-//        String phone =  employee.getPhone();
-//        if(StringUtils.isEmpty(name) || StringUtils.isEmpty(phone)){
-//            CommonUtis.deleteFile(fileRespBean.getMsg());
-//            return RespBean.error("姓名或手机号码必填，请检查是否填写或者检查格式问题");
-//        }
-//        employeePhone = empService.getEmpByPhone(phone);
-//        if(null==employeePhone){
-//            return RespBean.error("根据电话号码查找数据库失败，请查看日志");
-//        }
-//        if(null != employeePhone){
-//            CommonUtis.deleteFile(fileRespBean.getMsg());
-//            return RespBean.error("重复上传！手机号码 已存在!");
-//        }
-            if (StringUtils.isEmpty(emp.getWedlock())) {
-                emp.setWedlock(CommonUtis.UNMARRIED);
-            }
-            if (StringUtils.isEmpty(emp.getGender())) {
-                emp.setGender(CommonUtis.MAN);
-            }
-//        if(empService.addEmp(employee)==0){
-//            CommonUtis.deleteFile(fileRespBean.getMsg());
-//            return RespBean.error("添加候选人失败！");
-//        }emp
+        if(StringUtils.isEmpty(emp.getWedlock())){
+            emp.setWedlock("未婚");
+        }
+        if(StringUtils.isEmpty(emp.getTiptopDegree())){
+            emp.setTiptopDegree("大专");
+        }
+        if (StringUtils.isEmpty(emp.getGender())) {
+            emp.setGender(CommonUtis.MAN);
+        }
+
+        if (null == emp.getInterviewTime()) {
+            emp.setInterviewTime(new Date());
+        }
+
+        if (null == emp.getWorkTime()) {
+            emp.setWorkTime(new Date());
+        }
+
+        if (null == emp.getTransferTime()) {
+            emp.setTransferTime(new Date());
+        }
+        if (StringUtils.isEmpty(emp.getGraduationTime())) {
+            emp.setGraduationTime(DateTimeUtil.getNewDateToStr(DateTimeUtil.FORMATTIME_DATE_1));
+        }
             return RespBean.ok("上传成功!", emp);
         }
 
@@ -371,6 +371,32 @@ public class EmpBasicController {
                 CommonUtis.deleteFile(employee.getFileURL());
                 return RespBean.error("重复上传！手机号码 已存在!");
             }
+            if(StringUtils.isEmpty(employee.getWedlock())){
+                employee.setWedlock("未婚");
+            }
+            if(StringUtils.isEmpty(employee.getTiptopDegree())){
+                employee.setTiptopDegree("大专");
+            }
+            if (StringUtils.isEmpty(employee.getGender())) {
+                employee.setGender(CommonUtis.MAN);
+            }
+
+            if (StringUtils.isEmpty(employee.getGraduationTime())) {
+                employee.setGraduationTime(DateTimeUtil.getNewDateToStr(DateTimeUtil.FORMATTIME_DATE_1));
+            }
+
+            if (null == employee.getInterviewTime()) {
+                employee.setInterviewTime(new Date());
+            }
+
+            if (null == employee.getWorkTime()) {
+                employee.setWorkTime(new Date());
+            }
+
+            if (null == employee.getTransferTime()) {
+                employee.setTransferTime(new Date());
+            }
+
             if (empService.addEmp(employee) == 0) {
                 CommonUtis.deleteFile(employee.getFileURL());
                 return RespBean.error("添加候选人失败！");

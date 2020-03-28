@@ -62,8 +62,8 @@ public class DateTimeUtil {
         return dateToStamp(s , FORMATTIME_DATE_3);
     }
 
-    public static String strToDate(String s) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(FORMATTIME_DATE_1);
+    public static String getNewDateToStr(String strFmt) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(strFmt);
         try {
             return simpleDateFormat.format(new Date(System.currentTimeMillis()));
         } catch (Exception e) {
