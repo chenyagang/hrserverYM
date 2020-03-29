@@ -380,6 +380,7 @@
       <div style="text-align: left">
         <el-dialog
           :title="dialogTitle"
+          :before-close="doDeleteFile"
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
@@ -530,6 +531,22 @@
                             placeholder="HR..."></el-input>
                 </el-form-item>
               </div>
+<!--
+              <div>
+              <el-form-item label="HR:" prop="hr">
+                <template>
+                  <el-select v-model="emp.hr" filterable placeholder="请选择HR"  style="width: 150px" size="mini" >
+                    <el-option
+                      v-for="item in hrList"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id">
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-form-item>
+              </div>
+   -->
             </el-col>
             <el-col :span="6">
               <div>
@@ -690,8 +707,8 @@
   export default {
     data() {
       return {
-
         emps: [],
+        hrList: [],
         keywords: '',
         fileUploadBtnText: '导入数据',
         uploadResumeBtnText: '上传简历',
@@ -967,6 +984,18 @@
         this.currentPage = currentChange;
         this.loadEmps();
       },
+      searchHRList() {
+         var _this = this;
+         this.tableLoading = true;
+         this.getRequest("/system/hr/getAllHrList").then(resp => {
+           this.tableLoading = false;
+           if (resp && resp.status == 200) {
+            var data = resp.data;
+             debugger
+             _this.hrList = data.hrs;
+           }
+         })
+       },
       searchEmpsList() {
               var _this = this;
               this.tableLoading = true;
@@ -1028,6 +1057,8 @@
                   _this.dialogVisible = false;
                   _this.emptyEmpData();
                   _this.loadEmps();
+                }else{
+                  _this.doDeleteFile();//删除上传成功的文件
                 }
               })
             }
@@ -1060,9 +1091,26 @@
           }
         });
       },
+     doDeleteFile() {
+       var _this = this;
+       this.dialogVisible = false;
+       debugger
+       if (!this.emp.id || this.emp.isDeletFile=="1") {
+       debugger
+          this.putRequest("/employee/basic/deleteFile", {fileURL: this.emp.fileURL}).then(resp => {
+             if (resp && resp.status == 200) {
+               debugger
+                var data = resp.data;
+             }
+           })
+       }
+      },
       cancelEidt() {
         this.dialogVisible = false;
+        debugger
+        this.doDeleteFile();
         this.emptyEmpData();
+
       },
       talentCancelEidt() {
         this.talentDialogVisible = false;
@@ -1100,7 +1148,8 @@
         console.log(row)
         this.dialogTitle = "编辑员工";
         this.emp = row;
-
+        debugger
+       // this.searchHRList();
         this.emp.interviewTime = this.formatDate(row.interviewTime);
         this.emp.workTime = this.formatDate(row.workTime);
         this.dialogVisible = true;
@@ -1176,6 +1225,7 @@
           beginContract: '',
           endContract: '',
           workAge: '',
+          isDeletFile: '0',
           isShow: 0
         }
       },

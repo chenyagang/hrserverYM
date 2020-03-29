@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sang on 2018/1/2.
@@ -77,5 +80,22 @@ public class SystemHrController {
         }
         return RespBean.error("注册失败!");
     }
+
+    @RequestMapping(value = "/getAllHrList", method = RequestMethod.GET)
+    public Map<String, Object> getAllHrList() {
+        List<Map<Long, String>> hrList = new ArrayList<>();
+        Map<String, Object> hrMap = new HashMap<>();
+        List<Hr> hrs = hrService.getAllHr();
+//        for (Hr h :hrs){
+//            Map<Long, String> map = new HashMap<>();
+//            map.put(h.getId(),h.getName());
+//            hrList.add(map);
+//        }
+        hrMap.put("hrs",hrs);
+        return hrMap;
+    }
+
+
+
 
 }

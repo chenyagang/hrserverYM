@@ -24,6 +24,14 @@ public class Employee {
     private String channel;
     private String communicationContent;
     private String hr;
+    private String education;
+    private String post;
+    private String workingPlace;
+    private String fileURL;
+    private String jobDescription;
+    private String showInterview;
+    private int hr_id;
+    private String isDeletFile="0";// 给前段判断 0不删除  1删除
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8" )
     private Date interviewTime = new Date();
@@ -33,7 +41,6 @@ public class Employee {
     private String introduction;
     private String workExperience;
     private String projectExperience;
-
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @JsonFormat(
             pattern = "yyyy-MM-dd HH:mm:ss",
@@ -41,14 +48,6 @@ public class Employee {
     )
     private Date transferTime = new Date();
 
-
-    private String education;
-    private String post;
-    private String workingPlace;
-    private String fileURL;
-    private String jobDescription;
-    private String showInterview;
-    private int hr_id;
 
     public Date getTransferTime() {
         return transferTime;
@@ -209,6 +208,13 @@ public class Employee {
         this.gender = gender;
     }
 
+    public String getIsDeletFile() {
+        return isDeletFile;
+    }
+
+    public void setIsDeletFile(String isDeletFile) {
+        this.isDeletFile = isDeletFile;
+    }
 
     public String getWorkplace() {
         return workplace;

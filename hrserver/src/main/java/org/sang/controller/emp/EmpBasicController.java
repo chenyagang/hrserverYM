@@ -1,5 +1,6 @@
 package org.sang.controller.emp;
 
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.sang.bean.Employee;
 import org.sang.bean.Position;
@@ -8,6 +9,7 @@ import org.sang.common.*;
 import org.sang.common.poi.PoiParseWord;
 import org.sang.common.poi.PoiParseXLS;
 import org.sang.common.poi.PoiUtils;
+import org.sang.resources.Resource;
 import org.sang.service.*;
 import org.sang.utils.DateTimeUtil;
 import org.sang.utils.WordDocx;
@@ -49,6 +51,8 @@ public class EmpBasicController {
     JavaMailSender javaMailSender;
     @Autowired
     HrService hrService;
+    @Autowired
+    Resource resourcel;
 
     @RequestMapping(value = "/basicdata", method = RequestMethod.GET)
     public Map<String, Object> getAllNations() {
@@ -257,12 +261,13 @@ public class EmpBasicController {
 
     @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
     public RespBean uploadResumeFile(@RequestParam("file")MultipartFile file) {
-//        String filePathName = "F:\\photoTest";
+//        String filePathName = "F:\\photoTest\\"; /usr/local/vueHrUploadFile
 //        String fileName=filePathName+new Date().getTime()+file.getOriginalFilename();
-        String path="F:\\photoTest\\"+new Date().getTime()+file.getOriginalFilename();
+        String imgName = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
+        String path=resourcel.getServerFilePath()+File.separator+new Date().getTime()+file.getOriginalFilename();
         File newFile=null;
         try {
-            File fileMkdir=new File("F:\\photoTest");
+            File fileMkdir=new File(resourcel.getServerFilePath()+File.separator);
             if(!fileMkdir.exists()) {
                 fileMkdir.mkdir();
             }
@@ -270,9 +275,22 @@ public class EmpBasicController {
             //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
             file.transferTo(newFile);
         } catch (Exception e) {
+            CommonUtis.deleteFile(path);//上传失败删除上传文件
             return RespBean.error("上传失败");
         }
         return analysisWordPDF(newFile,path);//分析简历关键字返回实体
+    }
+
+//    public static void main(String[] args) {
+//        deleteFile("F:\\photoTest\\20200329114428谢艳明-项目经理简历.pdf");
+//    }
+
+    @RequestMapping(value = "/deleteFile", method = RequestMethod.PUT)
+    public RespBean deleteFile(String fileURL){
+        if(CommonUtis.deleteFile(fileURL)){
+            return RespBean.ok("删除文件成功");
+        }
+        return RespBean.error("删除文件失败");
     }
 
     @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
@@ -354,6 +372,7 @@ public class EmpBasicController {
         if (StringUtils.isEmpty(emp.getGraduationTime())) {
             emp.setGraduationTime(DateTimeUtil.getNewDateToStr(DateTimeUtil.FORMATTIME_DATE_1));
         }
+        emp.setIsDeletFile("1");//设置取消创建employee删除已上传的文件
             return RespBean.ok("上传成功!", emp);
         }
 
@@ -404,7 +423,6 @@ public class EmpBasicController {
             return RespBean.ok("添加成功!");
 
         }
-
 
 }
 

@@ -92,6 +92,7 @@ public class PoiParseWord {
 //               String a = retriveText(content,xingming,1);
 //                return employee = substring_index(content, employee);
             }
+            document.close();
             return CommonUtis.substring_index(content);
         } catch (Exception e) {
             System.out.println(e);
@@ -115,17 +116,25 @@ public class PoiParseWord {
     }
 
     public static void inputStreamToFile(InputStream ins, File file) {
+        OutputStream os = null;
         try {
-            OutputStream os = new FileOutputStream(file);
+            os = new FileOutputStream(file);
             int bytesRead = 0;
             byte[] buffer = new byte[8192];
             while ((bytesRead = ins.read(buffer, 0, 8192)) != -1) {
                 os.write(buffer, 0, bytesRead);
             }
-            os.close();
-            ins.close();
+
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            try{
+                os.close();
+                ins.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -162,16 +171,21 @@ public class PoiParseWord {
 //        File file = null;
 //        file = getFile(Mfiles);
         FileInputStream fis = null;
+        XWPFDocument xdoc = null;
+        XWPFWordExtractor extractor = null;
         try {
             fis = new FileInputStream(file);
-            XWPFDocument xdoc = new XWPFDocument(fis);
-            XWPFWordExtractor extractor = new XWPFWordExtractor(xdoc);
+            xdoc = new XWPFDocument(fis);
+            xdoc.close();
+            extractor = new XWPFWordExtractor(xdoc);
             String doc1 = extractor.getText();
             return CommonUtis.substring_index(doc1);
         } catch (Exception e) {
             e.printStackTrace();
         }finally {
             try{
+                extractor.close();
+                xdoc.close();
                 fis.close();
             }catch (Exception e){
                 e.printStackTrace();
@@ -260,6 +274,12 @@ public class PoiParseWord {
                 hwpfDocument = new HWPFDocument(poifsFileSystem);
             }
         } catch (IOException e) {
+//            oPCPackage.close();
+//            xwpfDocument.close();
+//
+//            fileInputStream.close();
+//            poifsFileSystem.close();
+//            hwpfDocument.close();
             e.printStackTrace();
         }
     }
