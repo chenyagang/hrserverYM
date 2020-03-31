@@ -59,6 +59,10 @@ public class HrService implements UserDetailsService {
         return hrMapper.getHrById(hrId);
     }
 
+    public Hr getHrByIdEdit(int id) {
+        return hrMapper.getHrByIdEdit(id);
+    }
+
     public int deleteHr(Long hrId) {
         return hrMapper.deleteHr(hrId);
     }

@@ -125,6 +125,9 @@
                   <el-form-item label="姓名">
                     <span>{{ scope.row.name }}</span>
                   </el-form-item>
+                  <el-form-item label="岗位">
+                    <span>{{ scope.row.job }}</span>
+                  </el-form-item>
                   <el-form-item label="电话">
                     <span>{{ scope.row.phone }}</span>
                   </el-form-item>
@@ -143,8 +146,8 @@
                   <el-form-item label="工作地点">
                     <span>{{ scope.row.workplace }}</span>
                   </el-form-item>
-                  <el-form-item label="岗位">
-                    <span>{{ scope.row.job }}</span>
+                  <el-form-item label="HR">
+                    <span>{{ scope.row.hr }}</span>
                   </el-form-item>
                   <el-form-item label="工作经验">
                     <span>{{ scope.row.workExperience }}</span>
@@ -167,9 +170,6 @@
                   <el-form-item label="渠道">
                     <span>{{ scope.row.channel }}</span>
                   </el-form-item>
-                  <el-form-item label="HR">
-                    <span>{{ scope.row.hr }}</span>
-                  </el-form-item>
                 </el-form>
               </template>
             </el-table-column>
@@ -183,8 +183,17 @@
               </template>
             </el-table-column>
             <el-table-column
+               prop="job"
+               label="岗位"
+               align="center"
+               width="80">
+               <template slot-scope="scope">
+                 <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.job }}</span>
+                 <span v-if="scope.row.isShow==1">{{scope.row.job }}</span>
+               </template>
+             </el-table-column>
+            <el-table-column
               prop="phone"
-
               label="电话"
               align="center"
               width="100">
@@ -199,16 +208,6 @@
               width="100">
               <template slot-scope="scope">
                 <span class="is-overflow">{{scope.row.school }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              prop="hr"
-              label="HR"
-              align="center"
-              width="90">
-              <template slot-scope="scope">
-                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.hr }}</span>
-                <span v-if="scope.row.isShow==1">{{scope.row.hr }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -243,16 +242,16 @@
                 <span v-if="scope.row.isShow==1">{{scope.row.workplace }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              prop="job"
-              label="岗位"
-              align="center"
-              width="50">
-              <template slot-scope="scope">
-                <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.job }}</span>
-                <span v-if="scope.row.isShow==1">{{scope.row.job }}</span>
-              </template>
-            </el-table-column>
+             <el-table-column
+               prop="hr"
+               label="HR"
+               align="center"
+               width="90">
+               <template slot-scope="scope">
+                 <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.hr }}</span>
+                 <span v-if="scope.row.isShow==1">{{scope.row.hr }}</span>
+               </template>
+             </el-table-column>
             <el-table-column
               prop="workExperience"
               label="工作经验"
@@ -308,7 +307,6 @@
               label="沟通内容"
               align="center"
               width="200">
-
               <template slot-scope="scope">
                 <span v-if="scope.row.isShow==0" class="is-overflow">{{scope.row.communicationContent }}</span>
                 <span v-if="scope.row.isShow==1">{{scope.row.communicationContent }}</span>
@@ -324,7 +322,6 @@
                 <span v-if="scope.row.isShow==1">{{scope.row.channel }}</span>
               </template>
             </el-table-column>
-
             <el-table-column
               fixed="right"
               label="操作"
@@ -337,7 +334,7 @@
                            size="mini">编辑
                 </el-button>-->
 <!--                {{hr.id}} ..{{scope.row.hr_id}}-->
-                <el-button v-if="hr.id==scope.row.hr_id" @click="showEditEmpView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button v-if="hr.id==scope.row.hr_id || new Date(currentTime).getTime() > new Date(scope.row.transferTime).getTime()" @click="showEditEmpView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini" :disabled="'0' == scope.row.showInterview">编辑
                 </el-button>
                 <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
@@ -346,10 +343,12 @@
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="exportExecl(scope.row)">导出表格
                 </el-button>
+<!--
                 <el-button type="success" v-if="hr.id!=scope.row.hr_id" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini"
                            @click="transferAuthority(scope.row)">转让
                 </el-button>
+-->
                 <el-button style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="downloadFile(scope.row)">下载简历
                 </el-button>
@@ -525,17 +524,18 @@
               </div>
             </el-col>
             <el-col :span="6">
+ <!--
               <div>
                 <el-form-item label="HR:" prop="hr">
                   <el-input prefix-icon="el-icon-edit" v-model="emp.hr" size="mini" style="width: 200px"
                             placeholder="HR..."></el-input>
                 </el-form-item>
               </div>
-<!--
+  -->
               <div>
               <el-form-item label="HR:" prop="hr">
                 <template>
-                  <el-select v-model="emp.hr" filterable placeholder="请选择HR"  style="width: 150px" size="mini" >
+                  <el-select v-model="emp.hr_id" filterable placeholder="请选择HR"  style="width: 200px" size="mini" >
                     <el-option
                       v-for="item in hrList"
                       :key="item.id"
@@ -546,7 +546,7 @@
                 </template>
               </el-form-item>
               </div>
-   -->
+
             </el-col>
             <el-col :span="6">
               <div>
@@ -710,6 +710,7 @@
         emps: [],
         hrList: [],
         keywords: '',
+        currentTime: '',
         fileUploadBtnText: '导入数据',
         uploadResumeBtnText: '上传简历',
         beginDateScope: '',
@@ -748,6 +749,7 @@
           school: '',
           tiptopDegree: '',
           graduationTime: '',
+          transferTime: '',
           gender: 0,
           workplace: '',
           job: '',
@@ -759,6 +761,7 @@
           channel: '',
           communicationContent: '',
           hr: '',
+          hr_id: '',
           interviewTime: '',
           workTime: '',
           introduction: '',
@@ -996,11 +999,32 @@
            }
          })
        },
+       // 获取当前时间，day为number，getDay(-1),表示昨天的日期
+       getDay(day){
+       　　var today = new Date();
+       　　var targetday_milliseconds=today.getTime() + 1000*60*60*24*day;
+       　　today.setTime(targetday_milliseconds); //注意，这行是关键代码
+       　　var tYear = today.getFullYear();
+       　　var tMonth = today.getMonth();
+       　　var tDate = today.getDate();
+       　　tMonth = this.doHandleMonth(tMonth + 1);
+       　　tDate =  this.doHandleMonth(tDate);
+       　　return tYear+"-"+tMonth+"-"+tDate;
+       },
+       doHandleMonth(month){
+        　　var m = month;
+        　　if(month.toString().length == 1){
+          　　m = "0" + month;
+        　　}
+        　　return m;
+        },
       searchEmpsList() {
               var _this = this;
               this.tableLoading = true;
               this.getRequest("/employee/basic/emp?page=" + this.currentPage + "&size=10&name=" + this.keywords + "&hrFlag= NO").then(resp => {
                 this.tableLoading = false;
+                this.currentTime = this.getDay(-7);
+                console.log(this.currentTime)
                 if (resp && resp.status == 200) {
                   debugger
                   var data = resp.data;
@@ -1037,6 +1061,8 @@
             if (this.emp.id) {
               //更新
               this.tableLoading = true;
+              debugger
+              console.log(this.emp)
               this.putRequest("/employee/basic/updateEmp", this.emp).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
@@ -1100,7 +1126,7 @@
           this.putRequest("/employee/basic/deleteFile", {fileURL: this.emp.fileURL}).then(resp => {
              if (resp && resp.status == 200) {
                debugger
-                var data = resp.data;
+                //var data = resp.data;
              }
            })
        }
@@ -1149,7 +1175,7 @@
         this.dialogTitle = "编辑员工";
         this.emp = row;
         debugger
-       // this.searchHRList();
+        this.searchHRList();
         this.emp.interviewTime = this.formatDate(row.interviewTime);
         this.emp.workTime = this.formatDate(row.workTime);
         this.dialogVisible = true;

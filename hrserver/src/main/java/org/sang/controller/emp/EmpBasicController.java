@@ -3,6 +3,7 @@ package org.sang.controller.emp;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.sang.bean.Employee;
+import org.sang.bean.Hr;
 import org.sang.bean.Position;
 import org.sang.bean.RespBean;
 import org.sang.common.*;
@@ -16,6 +17,7 @@ import org.sang.utils.WordDocx;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,6 +91,11 @@ public class EmpBasicController {
 
     @RequestMapping(value = "/updateEmp", method = RequestMethod.PUT)
     public RespBean updateEmp(Employee employee) {
+        Hr hr = new Hr();
+        if(0!=employee.getHr_id()){
+            hr = hrService.getHrByIdEdit( employee.getHr_id());
+        }
+        employee.setHr(hr.getName());
         if (empService.updateEmp(employee) == 1) {
             return RespBean.ok("更新成功!");
         }
@@ -230,6 +237,7 @@ public class EmpBasicController {
         Employee employee = empService.getById(id);
         employee.setTransferTime(new Date());
         employee.setHr_id(HrUtils.getCurrentHr().getId().intValue());
+        employee.setHr(HrUtils.getCurrentHr().getName());
         try {
             if (empService.updateEmp(employee) == 1) {
                 return RespBean.ok("转让成功!");
@@ -257,28 +265,33 @@ public class EmpBasicController {
 //        return "/success";
 //    }
 
-
-
-    @RequestMapping(value="/uploadFile",method=RequestMethod.POST)
-    public RespBean uploadResumeFile(@RequestParam("file")MultipartFile file) {
-//        String filePathName = "F:\\photoTest\\"; /usr/local/vueHrUploadFile
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public RespBean uploadResumeFile(@RequestParam("file") MultipartFile file) {
 //        String fileName=filePathName+new Date().getTime()+file.getOriginalFilename();
-        String imgName = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
-        String path=resourcel.getServerFilePath()+File.separator+new Date().getTime()+file.getOriginalFilename();
-        File newFile=null;
+        String timeName = DateFormatUtils.format(new Date(), "yyyyMMddHHmmss");
+        String osName = System.getProperties().getProperty("os.name");
+        String fileSeparator = System.getProperties().getProperty("file.separator");
+        String path = resourcel.getServerFilePath() + File.separator + timeName + file.getOriginalFilename();
+        String mkdirName = resourcel.getServerFilePath() + File.separator;
+        if (osName.contains("Windows") || "\\".equals(fileSeparator)) {//如果是windows使用win路径
+            path = resourcel.getWinFilePath() + File.separator + timeName + file.getOriginalFilename();
+            mkdirName = resourcel.getWinFilePath() + File.separator;
+        }
+
+        File newFile = null;
         try {
-            File fileMkdir=new File(resourcel.getServerFilePath()+File.separator);
-            if(!fileMkdir.exists()) {
+            File fileMkdir = new File(mkdirName);
+            if (!fileMkdir.exists()) {
                 fileMkdir.mkdir();
             }
-             newFile=new File(path);
+            newFile = new File(path);
             //通过CommonsMultipartFile的方法直接写文件（注意这个时候）
             file.transferTo(newFile);
         } catch (Exception e) {
             CommonUtis.deleteFile(path);//上传失败删除上传文件
             return RespBean.error("上传失败");
         }
-        return analysisWordPDF(newFile,path);//分析简历关键字返回实体
+        return analysisWordPDF(newFile, path);//分析简历关键字返回实体
     }
 
 //    public static void main(String[] args) {
@@ -286,8 +299,8 @@ public class EmpBasicController {
 //    }
 
     @RequestMapping(value = "/deleteFile", method = RequestMethod.PUT)
-    public RespBean deleteFile(String fileURL){
-        if(CommonUtis.deleteFile(fileURL)){
+    public RespBean deleteFile(String fileURL) {
+        if (CommonUtis.deleteFile(fileURL)) {
             return RespBean.ok("删除文件成功");
         }
         return RespBean.error("删除文件失败");
@@ -299,59 +312,60 @@ public class EmpBasicController {
             InputStream inStream = new FileInputStream(fileName);
             response.reset();
             response.setContentType("bin");
-            String[] file=fileName.split("\\\\");
+            String[] file = fileName.split("\\\\");
             response.setContentType("application/force-download");
-            response.addHeader("Content-disposition", "attachment;fileName=" + file[file.length-1]);
+            response.addHeader("Content-disposition", "attachment;fileName=" + file[file.length - 1]);
             // 循环取出流中的数据
-             byte[] buf = new byte[1024];
+            byte[] buf = new byte[1024];
             int len = 0;
             // 创建输出对象
             OutputStream os = response.getOutputStream();
-            while((len = inStream.read(buf)) != -1) {
+            while ((len = inStream.read(buf)) != -1) {
                 os.write(buf, 0, len);
             }
             inStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-        /*
-         * @author ll
-         * @Description 导入数据
-         * @date 2018/11/13 15:50
-         * @param [file]
-         * @return org.sang.common.ResponseData
-         */
+
+    /*
+     * @author ll
+     * @Description 导入数据
+     * @date 2018/11/13 15:50
+     * @param [file]
+     * @return org.sang.common.ResponseData
+     */
 //    @RequestMapping(value = "/importEmp", method = RequestMethod.POST)
-    public RespBean analysisWordPDF(@RequestParam("file")File file,String filePath) {
+    public RespBean analysisWordPDF(@RequestParam("file") File file, String filePath) {
         Employee emp = new Employee();
-        String suffixName = filePath.substring(filePath.lastIndexOf(".")+1);
+        String suffixName = filePath.substring(filePath.lastIndexOf(".") + 1);
         if (PoiParseWord.DOCX.equals(suffixName) || PoiParseWord.DOC.equals(suffixName)) {
             emp = PoiParseWord.readWord(file);
-        }else if(PoiParseWord.PDF.equals(suffixName)){
+        } else if (PoiParseWord.PDF.equals(suffixName)) {
             emp = PoiParseWord.readPDF(file);
-        }else if(PoiParseWord.TXT.equals(suffixName)){
+        } else if (PoiParseWord.TXT.equals(suffixName)) {
             emp = PoiParseWord.readTXT(file);
-        }else if(PoiParseWord.XLS.equals(suffixName) || PoiParseWord.XLSX.equals(suffixName)){ //解析 xlsx，xls
+        } else if (PoiParseWord.XLS.equals(suffixName) || PoiParseWord.XLSX.equals(suffixName)) { //解析 xlsx，xls
             try {
                 String strExcel = PoiParseXLS.readExcel(file);
                 emp = CommonUtis.substring_index(strExcel);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             return RespBean.error("文件格式不正确！");
         }
         emp.setFileURL(filePath);
         emp.setHr(HrUtils.getCurrentHr().getName());
         emp.setHr_id(Integer.parseInt(String.valueOf(HrUtils.getCurrentHr().getId())));
-        if(StringUtils.isEmpty(emp.getWedlock())){
+        if (StringUtils.isEmpty(emp.getWedlock())) {
             emp.setWedlock("未婚");
         }
-        if(StringUtils.isEmpty(emp.getTiptopDegree())){
+        if (StringUtils.isEmpty(emp.getTiptopDegree())) {
             emp.setTiptopDegree("大专");
         }
         if (StringUtils.isEmpty(emp.getGender())) {
@@ -373,56 +387,56 @@ public class EmpBasicController {
             emp.setGraduationTime(DateTimeUtil.getNewDateToStr(DateTimeUtil.FORMATTIME_DATE_1));
         }
         emp.setIsDeletFile("1");//设置取消创建employee删除已上传的文件
-            return RespBean.ok("上传成功!", emp);
+        return RespBean.ok("上传成功!", emp);
+    }
+
+    @RequestMapping(value = "/addEmp", method = RequestMethod.POST)
+    public RespBean addEmp(Employee employee) {
+        String name = employee.getName();
+        String phone = employee.getPhone();
+        if (StringUtils.isEmpty(name) || StringUtils.isEmpty(phone)) {
+            CommonUtis.deleteFile(employee.getFileURL());
+            return RespBean.error("姓名或手机号码必填，请检查是否填写或者检查格式问题");
+        }
+        Employee employeeByPhone = null;
+        employeeByPhone = empService.getEmpByPhone(phone);
+        if (null != employeeByPhone) {
+            CommonUtis.deleteFile(employee.getFileURL());
+            return RespBean.error("重复上传！手机号码 已存在!");
+        }
+        if (StringUtils.isEmpty(employee.getWedlock())) {
+            employee.setWedlock("未婚");
+        }
+        if (StringUtils.isEmpty(employee.getTiptopDegree())) {
+            employee.setTiptopDegree("大专");
+        }
+        if (StringUtils.isEmpty(employee.getGender())) {
+            employee.setGender(CommonUtis.MAN);
         }
 
-        @RequestMapping(value = "/addEmp", method = RequestMethod.POST)
-        public RespBean addEmp (Employee employee){
-            String name = employee.getName();
-            String phone = employee.getPhone();
-            if (StringUtils.isEmpty(name) || StringUtils.isEmpty(phone)) {
-                CommonUtis.deleteFile(employee.getFileURL());
-                return RespBean.error("姓名或手机号码必填，请检查是否填写或者检查格式问题");
-            }
-            Employee employeeByPhone = null;
-            employeeByPhone = empService.getEmpByPhone(phone);
-            if (null != employeeByPhone) {
-                CommonUtis.deleteFile(employee.getFileURL());
-                return RespBean.error("重复上传！手机号码 已存在!");
-            }
-            if(StringUtils.isEmpty(employee.getWedlock())){
-                employee.setWedlock("未婚");
-            }
-            if(StringUtils.isEmpty(employee.getTiptopDegree())){
-                employee.setTiptopDegree("大专");
-            }
-            if (StringUtils.isEmpty(employee.getGender())) {
-                employee.setGender(CommonUtis.MAN);
-            }
-
-            if (StringUtils.isEmpty(employee.getGraduationTime())) {
-                employee.setGraduationTime(DateTimeUtil.getNewDateToStr(DateTimeUtil.FORMATTIME_DATE_1));
-            }
-
-            if (null == employee.getInterviewTime()) {
-                employee.setInterviewTime(new Date());
-            }
-
-            if (null == employee.getWorkTime()) {
-                employee.setWorkTime(new Date());
-            }
-
-            if (null == employee.getTransferTime()) {
-                employee.setTransferTime(new Date());
-            }
-
-            if (empService.addEmp(employee) == 0) {
-                CommonUtis.deleteFile(employee.getFileURL());
-                return RespBean.error("添加候选人失败！");
-            }
-            return RespBean.ok("添加成功!");
-
+        if (StringUtils.isEmpty(employee.getGraduationTime())) {
+            employee.setGraduationTime(DateTimeUtil.getNewDateToStr(DateTimeUtil.FORMATTIME_DATE_1));
         }
+
+        if (null == employee.getInterviewTime()) {
+            employee.setInterviewTime(new Date());
+        }
+
+        if (null == employee.getWorkTime()) {
+            employee.setWorkTime(new Date());
+        }
+
+        if (null == employee.getTransferTime()) {
+            employee.setTransferTime(new Date());
+        }
+
+        if (empService.addEmp(employee) == 0) {
+            CommonUtis.deleteFile(employee.getFileURL());
+            return RespBean.error("添加候选人失败！");
+        }
+        return RespBean.ok("添加成功!");
+
+    }
 
 }
 

@@ -99,4 +99,7 @@
             WHERE id !=#{currentId}
         </if>
     </select>
+    <select id="getHrByIdEdit" resultType="org.sang.bean.Hr">
+        select * from hr WHERE id=#{id}
+    </select>
 </mapper>
