@@ -13,7 +13,7 @@
     "axios": "^0.18.0",
     "element-ui": "^2.12.0",
     "font-awesome": "^4.7.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-stomp": "0.0.5",
